@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.thirsty.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "PurityTooltip",
+    "ThirstManager"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}

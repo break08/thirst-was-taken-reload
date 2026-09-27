@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "thirst",
+	"version": "${version}",
+	"name": "Thirst Was Taken",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/thirst/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.thirsty.ThirstWasTaken"
+		],
+		"cardinal-components": [
+			"com.thirsty.api.cca.ModComponent"
+		],
+		"modmenu": [
+			"com.thirsty.config.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"thirst.mixins.json"
+	],
+	"custom": {
+		"cardinal-components": [
+			"thirst:player_thirst"
+		]
+	},
+	"accessWidener": "thirst.classtweaker",
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*",
+		"cardinal-components": ">=5.2.3",
+		"cloth-config": "*"
+	}
+}
