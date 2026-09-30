@@ -128,10 +128,10 @@ public class WaterPurity {
                         world.setBlock(
                                 pos,
                                 blockState1.setValue(BLOCK_PURITY, Math.min(purity, blockPurity) + 1),
-                                0
+                                3
                         );
                     });
-                    return InteractionResult.SUCCESS;
+                    return InteractionResult.PASS;
                 }
             }
             return InteractionResult.PASS;
@@ -170,15 +170,15 @@ public class WaterPurity {
         UseItemCallback.EVENT.register((Player player, Level world, InteractionHand hand)->{
             ItemStack item = player.getItemInHand(hand);
             if (player == null)
-                return InteractionResultHolder.success(item);
+                return InteractionResultHolder.pass(item);
 
             if (!canHarvestRunningWater(item))
-                return InteractionResultHolder.success(item);
+                return InteractionResultHolder.pass(item);
 
             BlockPos blockPos = MathHelper.getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY).getBlockPos();
 
             if (world.getFluidState(blockPos).is(FluidTags.WATER))
-                return InteractionResultHolder.success(item);
+                return InteractionResultHolder.pass(item);
 
             SoundEvent sound;
             ItemStack filledItem;
@@ -194,7 +194,7 @@ public class WaterPurity {
                 filledItem = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL);
             }
             else
-                return InteractionResultHolder.success(item);
+                return InteractionResultHolder.pass(item);
 
             world.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
             world.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
@@ -263,13 +263,12 @@ public class WaterPurity {
      */
     public static int getPurity(ItemStack item)
     {
-        if(!item.getOrCreateTag().contains("Purity"))
+        if(item.getTag() == null || !item.getTag().contains("Purity"))
         {
-
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         }
 
-        return Objects.requireNonNull(item.getTag()).getInt("Purity");
+        return item.getTag().getInt("Purity");
     }
 
     /**
@@ -277,7 +276,7 @@ public class WaterPurity {
      */
     public static int getPurity(FluidVariant fluid)
     {
-        if(!fluid.copyOrCreateNbt().contains("Purity"))
+        if(!fluid.getNbt().contains("Purity"))
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
 
         return fluid.getNbt().getInt("Purity");
@@ -365,7 +364,7 @@ public class WaterPurity {
      */
     public static FluidVariant addPurity(FluidVariant fluid, int purity)
     {
-        CompoundTag tag = fluid.copyOrCreateNbt();
+        CompoundTag tag = fluid.getNbt();
 
         if(purity==AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY)
             tag.remove("Purity");

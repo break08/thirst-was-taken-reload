@@ -283,7 +283,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         }
     }
 
-    void updateExhaustion(Player player)
+    static void updateExhaustion(Player player)
     {
         float prev = getPrevTickExhaustion();
         float current = player.getFoodData().getExhaustionLevel();
