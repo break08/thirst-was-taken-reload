@@ -25,7 +25,7 @@ public class ItemInit {
     public static final Item TERRACOTTA_WATER_BOWL = register(
             // Ignore the food component for now, we'll cover it later in the food section.
             new DrinkableItem().setContainer(TERRACOTTA_BOWL),
-            "terracotta_bowl"
+            "terracotta_water_bowl"
     );
 
     public static Item register(Item item, String id) {

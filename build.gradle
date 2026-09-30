@@ -48,9 +48,6 @@ dependencies {
 
 	// Mod Menu
 	modImplementation("com.terraformersmc:modmenu:${modmenu}")
-
-	// ToughAsNails
-	modImplementation "maven.modrinth:ge1sOdFH:VaFrDMPi"
 }
 
 processResources {

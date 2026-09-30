@@ -1,6 +1,6 @@
 package com.thirsty.item;
 
-import com.thirsty.misc.PlayerThirstHelper;
+import com.thirsty.thirst.ThirstData;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -52,7 +52,7 @@ public class DrinkableItem extends Item{
         }
         if(player != null)
         {
-            PlayerThirstHelper.drink(item, player);
+            ThirstData.drink(item, player);
         }
 
         if (player != null)

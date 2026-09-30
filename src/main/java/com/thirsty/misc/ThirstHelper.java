@@ -19,8 +19,8 @@ public class ThirstHelper {
     private static final float MODIFIER_HARSHNESS = 0.5f;
     public static CommonConfig commonConfig = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
 
-    public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(commonConfig.DRINKS);
-    public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(commonConfig.FOODS);
+    public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(ModListData.DRINKS);
+    public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(ModListData.FOODS);
 
     public static boolean itemRestoresThirst(ItemStack itemStack)
     {
