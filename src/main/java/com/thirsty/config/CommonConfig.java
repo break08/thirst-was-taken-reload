@@ -66,7 +66,7 @@ public class CommonConfig implements ConfigData {
     public boolean MOVE_SLOW_WHEN_THIRSTY = true;
 
     @ConfigEntry.BoundedDiscrete(min = 1, max = 64)
-    public int WATER_BOTTLE_STACKSIZE = 16;
+    public int WATER_BOTTLE_STACKSIZE = 64;
 
     public boolean DEHYDRATION_HALTS_HEALTH_REGEN = true;
 

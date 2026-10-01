@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PotionItem.class)
 public class MixinPotionItem {
@@ -25,10 +24,10 @@ public class MixinPotionItem {
         return true;
     }
 
-    @Inject(method = "finishUsingItem", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onFinishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity, CallbackInfoReturnable<ItemStack> cir, Player player)
+    @Inject(method = "finishUsingItem", at = @At("HEAD"))
+    public void onFinishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity, CallbackInfoReturnable<ItemStack> cir)
     {
-        if(player != null)
+        if(livingEntity instanceof Player player)
         {
             ThirstData.drink(itemStack, player);
         }

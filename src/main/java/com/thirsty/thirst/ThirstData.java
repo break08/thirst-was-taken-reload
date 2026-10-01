@@ -176,7 +176,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         if(!AutoConfig.getConfigHolder(CommonConfig.class).getConfig().EXTRA_HYDRATION_CONVERT_TO_QUENCHED)
             extra_quenched = 0;
         thirstData.setThirst(Math.min(thirstData.getThirst() + thirst, 20));
-        thirstData.setQuenched(Math.min(thirstData.getThirst() + quenched + extra_quenched, thirstData.getThirst()));
+        thirstData.setQuenched(Math.min(thirstData.getQuenched() + quenched + extra_quenched, thirstData.getThirst()));
         PLAYER_THIRST.sync(player);
     }
 
@@ -283,7 +283,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         }
     }
 
-    static void updateExhaustion(Player player)
+    public void updateExhaustion(Player player)
     {
         float prev = getPrevTickExhaustion();
         float current = player.getFoodData().getExhaustionLevel();

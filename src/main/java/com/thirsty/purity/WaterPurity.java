@@ -177,13 +177,13 @@ public class WaterPurity {
 
             BlockPos blockPos = MathHelper.getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY).getBlockPos();
 
-            if (world.getFluidState(blockPos).is(FluidTags.WATER))
+            if (!world.getFluidState(blockPos).is(FluidTags.WATER))
                 return InteractionResultHolder.pass(item);
 
             SoundEvent sound;
             ItemStack filledItem;
 
-            if(item.getItem() == Items.GLASS_BOTTLE && world.getFluidState(blockPos).isSource())
+            if(!(item.getItem() == Items.GLASS_BOTTLE && world.getFluidState(blockPos).isSource()))
             {
                 sound = SoundEvents.BOTTLE_FILL;
                 filledItem = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);

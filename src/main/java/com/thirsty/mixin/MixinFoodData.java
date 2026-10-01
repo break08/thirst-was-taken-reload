@@ -79,7 +79,7 @@ public abstract class MixinFoodData {
     private void DealWithExhaustionBySaturation(Player player, CallbackInfo ci){
         if(exhaustionLevel>4.0F){
             ThirstData thirstData =  PLAYER_THIRST.get(player);
-            thirstData.;
+            thirstData.updateExhaustion(player);
         }
     }
 }
