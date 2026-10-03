@@ -22,7 +22,10 @@
 			"com.thirsty.api.cca.ModComponent"
 		],
 		"modmenu": [
-			"com.thirsty.config.ModMenuIntegration"
+			"com.thirsty.api.config.ModMenuIntegration"
+		],
+		"jei_mod_plugin": [
+			"com.thirsty.api.compat.jei.ThirstJEI"
 		]
 	},
 	"mixins": [

@@ -1,6 +1,6 @@
 package com.thirsty.thirst;
 
-import com.thirsty.config.CommonConfig;
+import com.thirsty.api.config.CommonConfig;
 import com.thirsty.misc.ModDamageSource;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.purity.WaterPurity;
@@ -265,6 +265,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                 PLAYER_THIRST.sync(player);
             }
 
+            PLAYER_THIRST.sync(player);
             syncTimer = 0;
         }
 
@@ -276,8 +277,10 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                 if (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 0 && difficulty == Difficulty.NORMAL)
                 {
                     player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), 1.0F);
+                    PLAYER_THIRST.sync(player);
                 }
 
+                PLAYER_THIRST.sync(player);
                 damageTimer = 0;
             }
         }

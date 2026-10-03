@@ -1,6 +1,6 @@
 package com.thirsty.misc;
 
-import com.thirsty.config.CommonConfig;
+import com.thirsty.api.config.CommonConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffects;

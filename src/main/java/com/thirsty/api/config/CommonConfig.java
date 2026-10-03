@@ -1,16 +1,12 @@
-package com.thirsty.config;
+package com.thirsty.api.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Config(name = "thirst")
-@Config.Gui.Background("minecraft:textures/block/stone")
+@Config.Gui.Background("minecraft:textures/block/stone.png")
 public class CommonConfig implements ConfigData {
     @Comment("How much faster is hydration depletion when players with fire resistance(Range 0 to 100, 0 means not to depletion,100 means depletion like normal)")
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)

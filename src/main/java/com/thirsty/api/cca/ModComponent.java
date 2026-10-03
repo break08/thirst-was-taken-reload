@@ -18,6 +18,6 @@ public class ModComponent implements EntityComponentInitializer {
      */
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(PLAYER_THIRST, ThirstData::new, RespawnCopyStrategy.ALWAYS_COPY);
+        registry.registerForPlayers(PLAYER_THIRST, ThirstData::new, RespawnCopyStrategy.NEVER_COPY);
     }
 }

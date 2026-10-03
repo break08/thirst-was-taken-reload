@@ -1,6 +1,6 @@
 package com.thirsty.purity;
 
-import com.thirsty.config.CommonConfig;
+import com.thirsty.api.config.CommonConfig;
 import com.thirsty.item.ItemInit;
 import com.thirsty.misc.MathHelper;
 import com.thirsty.misc.ReflectionUtil;
@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -50,7 +49,6 @@ import com.thirsty.misc.ThirstHelper;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class WaterPurity {
@@ -183,7 +181,7 @@ public class WaterPurity {
             SoundEvent sound;
             ItemStack filledItem;
 
-            if(!(item.getItem() == Items.GLASS_BOTTLE && world.getFluidState(blockPos).isSource()))
+            if(item.getItem() == Items.GLASS_BOTTLE && !world.getFluidState(blockPos).isSource())
             {
                 sound = SoundEvents.BOTTLE_FILL;
                 filledItem = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);

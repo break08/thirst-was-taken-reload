@@ -1,6 +1,6 @@
 package com.thirsty.mixin;
 
-import com.thirsty.config.CommonConfig;
+import com.thirsty.api.config.CommonConfig;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.world.entity.player.Player;

@@ -1,20 +1,25 @@
 package com.thirsty.mixin;
 
-import com.mojang.serialization.Codec;
-import com.thirsty.config.CommonConfig;
+import com.mojang.authlib.GameProfile;
+import com.thirsty.api.config.CommonConfig;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
+
 @Mixin(LocalPlayer.class)
-public class MixinLocalPlayer{
+public abstract class MixinLocalPlayer extends Player {
+
+    public MixinLocalPlayer(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
+        super(level, blockPos, f, gameProfile);
+    }
 
     /**
      * @reason prevent sprinting when thirst
@@ -29,11 +34,7 @@ public class MixinLocalPlayer{
         if(Food < 6.0F){
             return Food;
         }else {
-            final AttachmentType<Integer> THIRST = AttachmentRegistry.createPersistent(
-                    new ResourceLocation("thirst", "player_thirst"),
-                    Codec.INT
-            );
-            Food = Minecraft.getInstance().player.getAttachedOrElse(THIRST, Food);
+            Food = PLAYER_THIRST.get(this).getThirst();
         }
         return Food;
     }

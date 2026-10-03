@@ -1,0 +1,10 @@
+{
+  "filters": [
+    {"id": "thirst:water_bucket_from_smelting"},
+    {"id":  "thirst:water_bucket_from_campfire_cooking"},
+    {"id":  "thirst:water_bottle_from_smelting"},
+    {"id":  "thirst:water_bottle_from_campfire_cooking"},
+    {"id":  "thirst:terracotta_water_bowl_from_smelting"},
+    {"id":  "thirst:terracotta_water_bowl_from_campfire_cooking"}
+  ]
+}

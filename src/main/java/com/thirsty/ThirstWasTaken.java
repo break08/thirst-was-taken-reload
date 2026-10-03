@@ -1,6 +1,6 @@
 package com.thirsty;
 
-import com.thirsty.config.CommonConfig;
+import com.thirsty.api.config.CommonConfig;
 import com.thirsty.gui.ThirstBarRenderer;
 import com.thirsty.item.ItemInit;
 import com.thirsty.misc.TickHelper;
@@ -32,6 +32,11 @@ public class ThirstWasTaken implements ModInitializer {
 		TickHelper.initialize();
 		WaterPurity.eventInit();
     }
+
+	public static ResourceLocation asResource(String path)
+	{
+		return new ResourceLocation(MOD_ID, path);
+	}
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);

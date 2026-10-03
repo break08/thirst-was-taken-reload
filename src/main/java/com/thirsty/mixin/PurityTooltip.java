@@ -19,7 +19,7 @@ import static com.thirsty.purity.WaterPurity.*;
 
 @Mixin(Item.class)
 public class PurityTooltip {
-    @Inject(method="appendHoverText", at = @At("HEAD"))
+    @Inject(method="appendHoverText", at = @At("TAIL"))
     private void addTooltip(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag, CallbackInfo ci){
 
         if(isWaterFilledContainer(itemStack))
