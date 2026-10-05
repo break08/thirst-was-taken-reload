@@ -25,9 +25,7 @@ public class MixinAbstractFurnaceEntity {
     private static void canBurn(RegistryAccess registryAccess, Recipe<?> recipe, NonNullList<ItemStack> nonNullList, int i, CallbackInfoReturnable<Boolean> cir){
         ItemStack itemStack = nonNullList.get(0);
         if (!WaterPurity.isWaterFilledContainer(itemStack) || !cir.getReturnValueZ()){return;}
-        if (!WaterPurity.hasPurity(itemStack)
-                || WaterPurity.getPurity(itemStack) == 0
-                || WaterPurity.getPurity(itemStack) == 3) {
+        if (!WaterPurity.hasPurity(itemStack) || WaterPurity.getPurity(itemStack) == 3){
             cir.setReturnValue(false);
         }
     }
@@ -40,8 +38,11 @@ public class MixinAbstractFurnaceEntity {
     private static ItemStack overrideItemStack2(ItemStack itemStack2, RegistryAccess registryAccess, @Nullable Recipe<?> recipe, NonNullList<ItemStack> nonNullList, int i){
         ItemStack itemStack = nonNullList.get(0);
         ItemStack stack2 = itemStack.copy();
-        if (WaterPurity.isWaterFilledContainer(itemStack) && WaterPurity.hasPurity(itemStack) && !(WaterPurity.getPurity(itemStack) == 0 || WaterPurity.getPurity(itemStack) == 3)){
-            WaterPurity.addPurity(stack2, WaterPurity.getPurity(itemStack) + 1);
+        if (WaterPurity.isWaterFilledContainer(itemStack) && WaterPurity.hasPurity(itemStack)){
+            WaterPurity.addPurity(stack2, WaterPurity.getPurity(itemStack) + 2);
+            if (WaterPurity.getPurity(stack2) > 3){
+                WaterPurity.addPurity(stack2, 3);
+            }
             stack2.setCount(1);
         } else {
             return itemStack2;

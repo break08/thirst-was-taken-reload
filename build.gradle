@@ -49,6 +49,7 @@ repositories {
 		name = "Sleeping Town"
 		url = "https://repo.sleeping.town/"
 	}
+	maven { url "https://maven.ryanliptak.com/" }
 }
 
 dependencies {
@@ -82,6 +83,11 @@ dependencies {
 
 	// EMI
 	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
+
+	// AppleSkin
+	modCompileOnly("squeek.appleskin:appleskin-fabric:${apple_skin}") {
+		transitive = false
+	}
 }
 
 processResources {
@@ -135,4 +141,11 @@ publishing {
 
 loom {
 	accessWidenerPath = file("src/main/resources/thirst.classtweaker")
+	splitEnvironmentSourceSets()
+	mods {
+		"thirst" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
 }

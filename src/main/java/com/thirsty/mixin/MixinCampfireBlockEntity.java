@@ -63,9 +63,8 @@ public class MixinCampfireBlockEntity
     }
 
     @Inject(method = "getCookableRecipe", at = @At("HEAD"), cancellable = true)
-    private static void removeInvalidPurity(ItemStack itemStack, CallbackInfoReturnable<Optional<CampfireCookingRecipe>> cir){
-        int purity = WaterPurity.getPurity(itemStack);
-        if (WaterPurity.isWaterFilledContainer(itemStack) && (purity == 0 || purity == 3)){
+    private void removeInvalidPurity(ItemStack itemStack, CallbackInfoReturnable<Optional<CampfireCookingRecipe>> cir){
+        if (WaterPurity.getPurity(itemStack) == 3){
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -83,7 +82,7 @@ public class MixinCampfireBlockEntity
     ) {
         ItemStack itemStack = campfireBlockEntity.items.get(i);
         int original_pur = WaterPurity.getPurity(itemStack);
-        if (WaterPurity.isWaterFilledContainer(itemStack) && WaterPurity.isWaterFilledContainer(itemStack2) && WaterPurity.hasPurity(itemStack2) && !(original_pur == 0 || original_pur == 3)) {
+        if (WaterPurity.isWaterFilledContainer(itemStack) && WaterPurity.isWaterFilledContainer(itemStack2)) {
             WaterPurity.addPurity(itemStack2, original_pur + 1);
         }
         return itemStack2;

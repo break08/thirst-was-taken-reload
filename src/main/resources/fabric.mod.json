@@ -3,9 +3,9 @@
 	"id": "thirst",
 	"version": "${version}",
 	"name": "Thirst Was Taken",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Add Thirst bar and hydration. A fork of Thirst Was Taken combining with Thirst Was Reclaimed",
 	"authors": [
-		"Me!"
+		"break08"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -16,20 +16,28 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.thirsty.ThirstWasTaken"
+			"com.thirsty.ThirstWasTaken",
+			"com.thirsty.effect.ModEffect"
+		],
+		"client" : [
+			"com.thirst.ThirstWasTakenClient"
 		],
 		"cardinal-components": [
 			"com.thirsty.api.cca.ModComponent"
 		],
 		"modmenu": [
-			"com.thirsty.api.config.ModMenuIntegration"
+			"com.thirst.compat.ModMenuIntegration"
 		],
 		"jei_mod_plugin": [
-			"com.thirsty.api.compat.jei.ThirstJEI"
+            "com.thirst.compat.jei.ThirstJEI"
 		]
 	},
 	"mixins": [
-		"thirst.mixins.json"
+		"thirst.mixins.json",
+		{
+			"config": "thirst.client.mixins.json",
+			"environment": "client"
+		}
 	],
 	"custom": {
 		"cardinal-components": [

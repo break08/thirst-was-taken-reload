@@ -364,6 +364,8 @@ public class WaterPurity {
     {
         CompoundTag tag = fluid.getNbt();
 
+        if (tag == null){return null;}
+
         if(purity==AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY)
             tag.remove("Purity");
         else

@@ -1,4 +1,4 @@
-package com.thirsty.gui;
+package com.thirst.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;
@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
@@ -16,18 +17,41 @@ public class ThirstBarRenderer implements HudRenderCallback {
     /**
      * Called after rendering the whole hud, which is displayed in game, in a world.
      *
-     * @param guiGraphics the {@link GuiGraphics} instance
-     * @param tickDelta   Progress for linearly interpolating between the previous and current game state
      */
+
+    public static final ResourceLocation THIRST_ICONS = new ResourceLocation(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
+    public static final ResourceLocation MC_ICONS = new ResourceLocation("minecraft", "textures/gui/icons.png");
+    public static Boolean cancelRender = false;
+
+    public static void unRender(){
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null){return;}
+        boolean isMounted = minecraft.player.getVehicle() instanceof LivingEntity;
+        cancelRender =false;
+        boolean isSur = !minecraft.player.isCreative() && !minecraft.player.isSpectator();
+        if (!isMounted && !minecraft.options.hideGui && isSur)
+        {
+            ThirstData thirst = PLAYER_THIRST.get(minecraft.player);;
+            if(minecraft.player.isAlive() && !thirst.isShouldTickThirst()){
+                cancelRender = true;
+            }
+        }
+    }
+
     @Override
     public void onHudRender(GuiGraphics guiGraphics, float tickDelta) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!minecraft.player.isCreative() && !minecraft.player.isSpectator()) {
-            final ResourceLocation THIRST_ICONS = new ResourceLocation(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
+        renderingHUD(guiGraphics, tickDelta);
+    }
 
-            final ResourceLocation MC_ICONS = new ResourceLocation(ThirstWasTaken.MOD_ID, "textures/gui/icons.png");
-            Boolean cancelRender = false;
-            Boolean checkIfPlayerIsVampire = false;
+    public static void renderingHUD(GuiGraphics guiGraphics, float tickDelta){
+        unRender();
+        if (cancelRender){
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null){return;}
+        if (!minecraft.player.isCreative() && !minecraft.player.isSpectator()) {
+
             ThirstData thirstdata;
 
             {
@@ -39,7 +63,6 @@ public class ThirstBarRenderer implements HudRenderCallback {
             int level = thirstdata.getThirst();
 
             RenderSystem.enableBlend();
-            RenderSystem.setShaderTexture(0, THIRST_ICONS);
             int width = guiGraphics.guiWidth();
             int height = guiGraphics.guiHeight();
             //+ ClientConfig.THIRST_BAR_X_OFFSET.get()
@@ -69,7 +92,6 @@ public class ThirstBarRenderer implements HudRenderCallback {
                     guiGraphics.blit(THIRST_ICONS, x, y, 8, 0, 9, 9, 25, 9);
             }
             RenderSystem.disableBlend();
-            RenderSystem.setShaderTexture(0, MC_ICONS);
         }
     }
 }

@@ -1,15 +1,14 @@
 package com.thirsty;
 
 import com.thirsty.api.config.CommonConfig;
-import com.thirsty.gui.ThirstBarRenderer;
 import com.thirsty.item.ItemInit;
 import com.thirsty.misc.TickHelper;
+import com.thirsty.network.ThirstNetwork;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.resources.ResourceLocation;
 
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ public class ThirstWasTaken implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		HudRenderCallback.EVENT.register(new ThirstBarRenderer());
 		AutoConfig.register(CommonConfig.class, GsonConfigSerializer::new);
 		ItemInit.initialize();
         try {
@@ -31,6 +29,7 @@ public class ThirstWasTaken implements ModInitializer {
         }
 		TickHelper.initialize();
 		WaterPurity.eventInit();
+		ThirstNetwork.onInitialize();
     }
 
 	public static ResourceLocation asResource(String path)

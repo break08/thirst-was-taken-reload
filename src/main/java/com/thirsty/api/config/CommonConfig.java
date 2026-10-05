@@ -66,4 +66,10 @@ public class CommonConfig implements ConfigData {
 
     public boolean DEHYDRATION_HALTS_HEALTH_REGEN = true;
 
+    public boolean DRINK_BOTH_HAND_NEEDED = false;
+
+    public int HAND_DRINKING_HYDRATION = 1;
+
+    public int HAND_DRINKING_QUENCHED = 1;
+
 }

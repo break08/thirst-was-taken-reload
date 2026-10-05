@@ -1,4 +1,4 @@
-package com.thirsty.api.compat.jei;
+package com.thirst.compat.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.constants.RecipeTypes;

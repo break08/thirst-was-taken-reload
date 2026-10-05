@@ -14,6 +14,7 @@
     "MixinLayeredCauldronBlock",
     "MixinPlayer",
     "MixinPotionItem",
+    "MixinPotionUtils",
     "PurityTooltip"
   ],
   "injectors": {
@@ -21,8 +22,5 @@
   },
   "overwrites": {
     "requireAnnotations": true
-  },
-  "client": [
-    "MixinLocalPlayer"
-  ]
+  }
 }
