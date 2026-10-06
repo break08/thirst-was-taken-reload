@@ -189,6 +189,8 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         if(player.getAbilities().invulnerable)
             return;
 
+        CommonConfig config = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
+
         if(!isShouldTickThirst()) {
             if (init) {
                 init = false;
@@ -251,14 +253,14 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         if(syncTimer > 10)
         {
             //&& !CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get()
-            if(difficulty == Difficulty.PEACEFUL){
+            if(difficulty == Difficulty.PEACEFUL && !config.THIRST_DEPLETION_IN_PEACEFUL){
                 setThirst(Math.min(thirst + 1,20));
             }
 
             final float angle = Mth.wrapDegrees(player.getXRot());
 
             //&& CommonConfig.CAN_DRINK_RAIN_WATETR.get()
-            if (angle <= -80  && player.level().isRainingAt(player.blockPosition().above()))
+            if (angle <= -80  && player.level().isRainingAt(player.blockPosition().above() ) && config.CAN_DRINK_RAIN_WATER)
             {
                 thirst = Math.min(thirst + 1,20);
                 quenched = Math.min(quenched +1,20);

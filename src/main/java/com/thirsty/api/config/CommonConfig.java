@@ -27,7 +27,7 @@ public class CommonConfig implements ConfigData {
     @Comment("% of getting sick (hunger and nausea) after drinking dirty water")
     public int DIRTY_NAUSEA_PERCENTAGE = 100;
 
-    @Comment ("% of getting sick (hunger and nausea) after drinking slightly dirty water")
+    @Comment("% of getting sick (hunger and nausea) after drinking slightly dirty water")
     public int SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE = 50;
 
     @Comment("% of getting sick (hunger and nausea) after drinking acceptable water")
@@ -57,19 +57,31 @@ public class CommonConfig implements ConfigData {
     @Comment("How many levels of purification does running water have compared to still water")
     public int RUNNING_WATER_PURIFICATION_AMOUNT = 1;
 
+    @Comment("Whether player should gain hydration even if they received a purity-related debuff")
     public boolean QUENCH_THIRST_WHEN_DEBUFFED = true;
 
+    @Comment("Whether players won't be able to sprint if their thirst bar is 3 droplets or less")
     public boolean MOVE_SLOW_WHEN_THIRSTY = true;
 
+    @Comment("Stack size for water bottles")
     @ConfigEntry.BoundedDiscrete(min = 1, max = 64)
     public int WATER_BOTTLE_STACKSIZE = 64;
 
+    @Comment("Whether the player can't regenerate as fast when hydration isn't full (like hunger)")
     public boolean DEHYDRATION_HALTS_HEALTH_REGEN = true;
 
+    @Comment("Whether players needs two hands available to drink water from source")
     public boolean DRINK_BOTH_HAND_NEEDED = false;
 
+    @Comment("How much the player is hydrated when drinking by hand")
     public int HAND_DRINKING_HYDRATION = 1;
 
+    @Comment("How much the player thirst is quenched when drinking by hand")
     public int HAND_DRINKING_QUENCHED = 1;
 
+    @Comment("Whether hydration depletion in peaceful mode")
+    public boolean THIRST_DEPLETION_IN_PEACEFUL = false;
+
+    @Comment("Whether players can drink rain water")
+    public boolean CAN_DRINK_RAIN_WATER = true;
 }

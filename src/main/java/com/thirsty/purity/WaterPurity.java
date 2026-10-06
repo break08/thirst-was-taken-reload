@@ -349,10 +349,7 @@ public class WaterPurity {
     public static ItemStack addPurity(ItemStack item, int purity)
     {
         CompoundTag tag = item.getOrCreateTag();
-        if(purity== AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY)
-            tag.remove("Purity");
-        else
-            tag.putInt("Purity", purity);
+        tag.putInt("Purity", purity);
 
         return item;
     }
@@ -574,5 +571,13 @@ public class WaterPurity {
     public static void eventInit(){
         fillablesHandler();
         harvestRunningWater();
+    }
+
+    // fck, why fabric doesn't support nbt cooking like forge
+    public static ItemStack cookResult(ItemStack input, int add) {
+        ItemStack r = input.copy();
+        r.setCount(1);
+        addPurity(r, Math.min(MAX_PURITY, getPurity(input) + add));
+        return r;
     }
 }

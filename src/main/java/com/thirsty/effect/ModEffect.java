@@ -12,7 +12,7 @@ public class ModEffect implements ModInitializer {
      * Runs the mod initializer.
      */
     public static final MobEffect DEHYDRATION = new DehydrationEffect(MobEffectCategory.HARMFUL, 32);
-    public static final MobEffect QUENCHNESS = new DehydrationEffect(MobEffectCategory.HARMFUL, 64);
+    public static final MobEffect QUENCHNESS = new QuenchnessEffect(MobEffectCategory.BENEFICIAL, 64);
 
     @Override
     public void onInitialize() {

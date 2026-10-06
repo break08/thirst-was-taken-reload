@@ -5,8 +5,11 @@ import com.thirsty.purity.WaterPurity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CampfireBlock;
@@ -62,9 +65,11 @@ public class MixinCampfireBlockEntity
         }
     }
 
-    @Inject(method = "getCookableRecipe", at = @At("HEAD"), cancellable = true)
+    // go crazy because fabric doesn not support nbt crafting
+
+    @Inject(method = "getCookableRecipe", at = @At("TAIL"), cancellable = true)
     private void removeInvalidPurity(ItemStack itemStack, CallbackInfoReturnable<Optional<CampfireCookingRecipe>> cir){
-        if (WaterPurity.getPurity(itemStack) == 3){
+        if (WaterPurity.getPurity(itemStack) == 3 || PotionUtils.getPotion(itemStack) != Potions.WATER){
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -81,10 +86,18 @@ public class MixinCampfireBlockEntity
                                                 @Local(ordinal = 0) int i
     ) {
         ItemStack itemStack = campfireBlockEntity.items.get(i);
-        int original_pur = WaterPurity.getPurity(itemStack);
-        if (WaterPurity.isWaterFilledContainer(itemStack) && WaterPurity.isWaterFilledContainer(itemStack2)) {
-            WaterPurity.addPurity(itemStack2, original_pur + 1);
+        if (!WaterPurity.isWaterFilledContainer(itemStack)) return itemStack2;
+
+        CompoundTag tag = itemStack.getTag();
+        if (tag == null) return itemStack2;
+
+        ItemStack result = itemStack.copy();
+        result.setCount(1);
+        result.setTag(tag.copy());
+        if (PotionUtils.getPotion(itemStack) == Potions.EMPTY && !WaterPurity.isWaterFilledContainer(itemStack2)) {
+            PotionUtils.setPotion(result, Potions.WATER);
         }
-        return itemStack2;
+        WaterPurity.addPurity(result, Math.min(WaterPurity.getPurity(itemStack) + 1, 3));
+        return result;
     }
 }
