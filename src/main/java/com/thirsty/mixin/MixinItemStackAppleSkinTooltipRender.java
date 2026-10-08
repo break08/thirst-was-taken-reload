@@ -1,6 +1,6 @@
-package com.thirst.mixin;
+package com.thirsty.mixin;
 
-import com.thirst.gui.appleskin.TooltipRenderer;
+import com.thirsty.gui.appleskin.TooltipRenderer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;

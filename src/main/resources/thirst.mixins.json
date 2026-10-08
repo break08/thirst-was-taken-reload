@@ -11,16 +11,21 @@
     "MixinCampfireBlockEntity",
     "MixinFoodData",
     "MixinItemStack",
+    "MixinItemStackAppleSkinTooltipRender",
     "MixinLayeredCauldronBlock",
     "MixinPlayer",
     "MixinPotionItem",
     "MixinPotionUtils",
-    "PurityTooltip"
+    "PurityTooltip",
+    "create.MixinGenericItemFilling"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "client": [
+    "MixinLocalPlayer"
+  ]
 }

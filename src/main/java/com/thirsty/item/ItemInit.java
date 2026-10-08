@@ -1,8 +1,10 @@
 package com.thirsty.item;
 
 import com.thirsty.ThirstWasTaken;
+import com.thirsty.api.create.CreateRegistry;
 import com.thirsty.purity.WaterPurity;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -58,9 +60,11 @@ public class ItemInit {
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 1));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 2));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 3));
-            itemGroup.accept(ItemInit.TERRACOTTA_WATER_BOWL.getDefaultInstance());
             itemGroup.accept(ItemInit.CLAY_BOWL.getDefaultInstance());
             itemGroup.accept(ItemInit.TERRACOTTA_BOWL.getDefaultInstance());
+            if (FabricLoader.getInstance().isModLoaded("create")){
+                itemGroup.accept(CreateRegistry.SAND_FILTER_BLOCK.get());
+            }
         });
     }
 }

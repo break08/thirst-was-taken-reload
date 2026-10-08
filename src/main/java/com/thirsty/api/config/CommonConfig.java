@@ -84,4 +84,8 @@ public class CommonConfig implements ConfigData {
 
     @Comment("Whether players can drink rain water")
     public boolean CAN_DRINK_RAIN_WATER = true;
+
+    public int SAND_FILTER_MB_PER_TICK = 10;
+
+    public int SAND_FILTER_FILTRATION_AMOUNT = 1;
 }

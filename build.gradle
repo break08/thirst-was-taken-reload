@@ -141,11 +141,4 @@ publishing {
 
 loom {
 	accessWidenerPath = file("src/main/resources/thirst.classtweaker")
-	splitEnvironmentSourceSets()
-	mods {
-		"thirst" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
 }

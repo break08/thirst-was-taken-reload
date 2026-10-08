@@ -1,4 +1,4 @@
-package com.thirst.gui;
+package com.thirsty.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;

@@ -1,11 +1,10 @@
-package com.thirst.gui.appleskin;
+package com.thirsty.gui.appleskin;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.thirst.gui.ThirstBarRenderer;
+import com.thirsty.gui.ThirstBarRenderer;
 import com.thirsty.ThirstWasTaken;
-import com.thirsty.item.TooltipHelper;
 import com.thirsty.misc.ThirstHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.minecraft.client.Minecraft;

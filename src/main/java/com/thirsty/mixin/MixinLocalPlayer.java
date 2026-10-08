@@ -1,4 +1,4 @@
-package com.thirst.mixin;
+package com.thirsty.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.thirsty.api.config.CommonConfig;

@@ -1,4 +1,4 @@
-package com.thirst.gui.appleskin;
+package com.thirsty.gui.appleskin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;
@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import squeek.appleskin.ModConfig;
 import squeek.appleskin.util.IntPoint;
-import com.thirst.gui.ThirstBarRenderer;
+import com.thirsty.gui.ThirstBarRenderer;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;

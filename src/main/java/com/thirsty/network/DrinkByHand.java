@@ -1,8 +1,6 @@
-package com.thirst.network;
+package com.thirsty.network;
 
-import com.thirsty.api.config.CommonConfig;
 import com.thirsty.misc.MathHelper;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -29,11 +27,7 @@ public class DrinkByHand {
 
             if (level.getFluidState(blockPos).is(FluidTags.WATER) && player.isCrouching() && !player.isInvulnerable() && client.options.keyUse.isDown()) {
 
-                if(!AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DRINK_BOTH_HAND_NEEDED){
-                    HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty();
-                }else {
-                    HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty();
-                }
+                HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty();
 
                 if(HandAvailable){
                     level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.NEUTRAL, 1.0F, 1.0F);

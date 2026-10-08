@@ -44,8 +44,7 @@ public class ThirstNetwork {
                         if(!player.isCrouching() || player.isInvulnerable())
                             return;
 
-                        if(!player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()
-                                || !player.getItemInHand(InteractionHand.OFF_HAND).isEmpty())
+                        if(!player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty())
                             return;
 
 

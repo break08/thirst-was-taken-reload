@@ -8,6 +8,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
@@ -65,11 +66,14 @@ public class MixinCampfireBlockEntity
         }
     }
 
-    // go crazy because fabric doesn not support nbt crafting
+    // go crazy because fabric does not support nbt crafting
 
     @Inject(method = "getCookableRecipe", at = @At("TAIL"), cancellable = true)
     private void removeInvalidPurity(ItemStack itemStack, CallbackInfoReturnable<Optional<CampfireCookingRecipe>> cir){
-        if (WaterPurity.getPurity(itemStack) == 3 || PotionUtils.getPotion(itemStack) != Potions.WATER){
+        if (WaterPurity.getPurity(itemStack) == 3){
+            cir.setReturnValue(Optional.empty());
+        }
+        if (itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) != Potions.WATER){
             cir.setReturnValue(Optional.empty());
         }
     }

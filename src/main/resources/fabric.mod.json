@@ -19,25 +19,18 @@
 			"com.thirsty.ThirstWasTaken",
 			"com.thirsty.effect.ModEffect"
 		],
-		"client" : [
-			"com.thirst.ThirstWasTakenClient"
-		],
 		"cardinal-components": [
 			"com.thirsty.api.cca.ModComponent"
 		],
 		"modmenu": [
-			"com.thirst.compat.ModMenuIntegration"
+			"com.thirsty.api.config.ModMenuIntegration"
 		],
 		"jei_mod_plugin": [
-            "com.thirst.compat.jei.ThirstJEI"
+          "com.thirsty.api.jei.ThirstJEI"
 		]
 	},
 	"mixins": [
-		"thirst.mixins.json",
-		{
-			"config": "thirst.client.mixins.json",
-			"environment": "client"
-		}
+		"thirst.mixins.json"
 	],
 	"custom": {
 		"cardinal-components": [

@@ -1,6 +1,5 @@
-package com.thirst.network;
+package com.thirsty.network;
 
-import com.thirsty.network.ThirstNetwork;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.core.BlockPos;

@@ -167,8 +167,6 @@ public class WaterPurity {
     {
         UseItemCallback.EVENT.register((Player player, Level world, InteractionHand hand)->{
             ItemStack item = player.getItemInHand(hand);
-            if (player == null)
-                return InteractionResultHolder.pass(item);
 
             if (!canHarvestRunningWater(item))
                 return InteractionResultHolder.pass(item);
@@ -274,7 +272,7 @@ public class WaterPurity {
      */
     public static int getPurity(FluidVariant fluid)
     {
-        if(!fluid.getNbt().contains("Purity"))
+        if(fluid.getNbt() == null || !fluid.getNbt().contains("Purity"))
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
 
         return fluid.getNbt().getInt("Purity");
@@ -324,7 +322,7 @@ public class WaterPurity {
 
     public static boolean hasPurity(FluidVariant fluid)
     {
-        if(!fluid.hasNbt())
+        if(!fluid.hasNbt() || fluid.getNbt() == null)
             return false;
         else
             return fluid.getNbt().contains("Purity");
@@ -361,12 +359,13 @@ public class WaterPurity {
     {
         CompoundTag tag = fluid.getNbt();
 
-        if (tag == null){return null;}
+        if (tag == null){
+            CompoundTag newTag = fluid.copyOrCreateNbt();
+            newTag.putInt("Purity", purity);
+            return fluid;
+        }
 
-        if(purity==AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY)
-            tag.remove("Purity");
-        else
-            tag.putInt("Purity", purity);
+        tag.putInt("Purity", purity);
 
         return fluid;
     }
@@ -378,8 +377,8 @@ public class WaterPurity {
     public static int getBlockPurity(Level level, BlockPos pos)
     {
         CommonConfig config = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
-        int purity = (pos.getY() > config.MOUNTAINS_Y || pos.getY() < config.CAVES_Y)
-                && pos.getY() < config.MOUNTAINS_Y - 32 ? 1 : 0;
+        int y = pos.getY();
+        int purity = (y > config.MOUNTAINS_Y || y < config.CAVES_Y) ? 1 : 0;
 
         if(level.getFluidState(pos).is(FluidTags.WATER))
         {
@@ -573,11 +572,5 @@ public class WaterPurity {
         harvestRunningWater();
     }
 
-    // fck, why fabric doesn't support nbt cooking like forge
-    public static ItemStack cookResult(ItemStack input, int add) {
-        ItemStack r = input.copy();
-        r.setCount(1);
-        addPurity(r, Math.min(MAX_PURITY, getPurity(input) + add));
-        return r;
-    }
+
 }

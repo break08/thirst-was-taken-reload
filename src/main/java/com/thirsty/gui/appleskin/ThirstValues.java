@@ -1,4 +1,4 @@
-package com.thirst.gui.appleskin;
+package com.thirsty.gui.appleskin;
 
 public class ThirstValues {
     /**

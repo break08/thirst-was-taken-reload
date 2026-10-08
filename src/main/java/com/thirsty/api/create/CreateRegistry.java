@@ -11,7 +11,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
-/*
 public class CreateRegistry
 {
     public static final NonNullSupplier<Registrate> REGISTRATE = NonNullSupplier.lazy(() ->Registrate.create(ThirstWasTaken.MOD_ID));
@@ -30,7 +29,4 @@ public class CreateRegistry
             .blockEntity("sand_filter",SandFilterTileEntity::new)
             .validBlocks(SAND_FILTER_BLOCK)
             .register();
-
 }
-
- */
