@@ -45,10 +45,13 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 import com.thirsty.misc.ThirstHelper;
+import toughasnails.api.item.TANItems;
+import toughasnails.item.EmptyCanteenItem;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class WaterPurity {
@@ -78,7 +81,7 @@ public class WaterPurity {
 
         if(FabricLoader.getInstance().isModLoaded("toughasnails"))
         {
-            // registerToughAsNailsContainers();
+            registerToughAsNailsContainers();
             tanLoaded = true;
         }
     }
@@ -92,6 +95,39 @@ public class WaterPurity {
                 new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(Items.BUCKET),
                 new ItemStack(Items.WATER_BUCKET), false).canHarvestRunningWater(false));
+    }
+
+    private static void registerToughAsNailsContainers()
+    {
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.LEATHER_DIRTY_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.COPPER_DIRTY_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.IRON_DIRTY_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.GOLD_DIRTY_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.DIAMOND_DIRTY_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.NETHERITE_DIRTY_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.LEATHER_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.COPPER_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.IRON_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.GOLD_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.DIAMOND_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.NETHERITE_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.LEATHER_PURIFIED_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.COPPER_PURIFIED_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.IRON_PURIFIED_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.GOLD_PURIFIED_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.DIAMOND_PURIFIED_WATER_CANTEEN)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.NETHERITE_PURIFIED_WATER_CANTEEN)));
+
+
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.PURIFIED_WATER_BOTTLE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.DIRTY_WATER_BOTTLE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.APPLE_JUICE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.CACTUS_JUICE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.CHORUS_FRUIT_JUICE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.GLOW_BERRY_JUICE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.MELON_JUICE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.PUMPKIN_JUICE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.SWEET_BERRY_JUICE)));
     }
 
     private static void registerFillables()
@@ -261,10 +297,27 @@ public class WaterPurity {
     {
         if(item.getTag() == null || !item.getTag().contains("Purity"))
         {
+            if(tanLoaded && Objects.equals(item.getItem().getCreatorModId(item), "toughasnails"))
+                return tanPurity(item);
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         }
 
         return item.getTag().getInt("Purity");
+    }
+
+    public static int tanPurity(ItemStack item)
+    {
+        if(item.is(TANItems.DIRTY_WATER_BOTTLE))
+            return 0;
+
+        if(item.getItem() instanceof EmptyCanteenItem canteenItem){
+            if(item.getItem().equals(canteenItem.getDirtyWaterCanteen())){
+                return 0;
+            }else if(item.getItem().equals(canteenItem.getWaterCanteen())){
+                return 2;
+            }
+        }
+        return 3;
     }
 
     /**

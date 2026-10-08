@@ -17,7 +17,16 @@
     "MixinPotionItem",
     "MixinPotionUtils",
     "PurityTooltip",
-    "create.MixinGenericItemFilling"
+    "create.MixinBasinRecipe",
+    "create.MixinFillingBySpout",
+    "create.MixinFluidDrainingBehaviour",
+    "create.MixinGenericItemEmptying",
+    "create.MixinGenericItemFilling",
+    "create.MixinOpenEndedPipe",
+    "toughasnails.MixinEmptyCanteenItem",
+    "toughasnails.MixinThirstHandler",
+    "toughasnails.MixinThirstHelperImpl",
+    "toughasnails.MixinTooltipHandler"
   ],
   "injectors": {
     "defaultRequire": 1
