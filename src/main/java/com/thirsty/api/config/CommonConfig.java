@@ -85,7 +85,18 @@ public class CommonConfig implements ConfigData {
     @Comment("Whether players can drink rain water")
     public boolean CAN_DRINK_RAIN_WATER = true;
 
+    @Comment("Millibuckets of water filtered per game tick with a Sand Filter")
     public int SAND_FILTER_MB_PER_TICK = 10;
 
+    @Comment("Purification levels gained by filtering water through a Sand Filter")
     public int SAND_FILTER_FILTRATION_AMOUNT = 1;
+
+    @Comment("Whether thirst depletes when player is nausea")
+    public boolean DEPLETES_WHEN_NAUSEA = true;
+
+    @Comment("Whether hydration depletes when the player's health is regenerating (like hunger)")
+    public boolean HEALTH_REGEN_DEPLETES_HYDRATION = true;
+
+    @Comment("Whether dehydration from regenerating health (if enabled above) should take into account temperature and humidity")
+    public boolean HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT = true;
 }

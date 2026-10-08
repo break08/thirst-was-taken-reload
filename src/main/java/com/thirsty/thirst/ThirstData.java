@@ -14,6 +14,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import vectorwing.farmersdelight.common.registry.ModEffects;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
@@ -202,8 +203,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         if(checkTombstoneEffects && player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("ghostly_shape")))
             return;
 
-        //&& player.hasEffect(ModEffects.NOURISHMENT.get())
-        boolean isNourished = checkFDEffects;
+        boolean isNourished = checkFDEffects && player.hasEffect(ModEffects.NOURISHMENT.get());
 
         boolean isHunger = player.hasEffect(MobEffects.HUNGER);
         boolean isStuffed = checkLetsDoBakeryEffects &&
@@ -212,8 +212,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                 player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("saturated"));
         boolean isSitting = player.isPassenger();
 
-        // CommonConfig.DEPLETES_WHEN_NAUSEA.get() &&
-        if(player.getActiveEffects().stream().anyMatch(e->e.getEffect().equals(MobEffects.CONFUSION))){
+        if(player.getActiveEffects().stream().anyMatch(e->e.getEffect().equals(MobEffects.CONFUSION)) && config.DEPLETES_WHEN_NAUSEA){
             addExhaustion(player,0.06F);
         }
 
@@ -243,7 +242,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                 setQuenched(quenched-1);
             }
             // || CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get()
-            else if (difficulty != Difficulty.PEACEFUL)
+            else if (difficulty != Difficulty.PEACEFUL || config.THIRST_DEPLETION_IN_PEACEFUL)
             {
                 setThirst(Math.max(thirst - 1, 0));
             }
@@ -303,15 +302,16 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
 
     public void addExhaustion(Player player, float amount)
     {
+        CommonConfig config = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
         float exhaustion = getExhaustion();
         boolean justHealed = isJustHealed();
         //!CommonConfig.HEALTH_REGEN_DEPLETES_HYDRATION.get() &&
-        if(justHealed)
+        if(justHealed && config.HEALTH_REGEN_DEPLETES_HYDRATION)
             amount = 0;
 
 
         //!CommonConfig.HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT.get() &&
-        if(justHealed)
+        if(justHealed && !config.HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT)
             exhaustion += amount;
         else
             exhaustion += (amount *
