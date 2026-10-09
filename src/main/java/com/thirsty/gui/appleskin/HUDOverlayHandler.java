@@ -2,8 +2,10 @@ package com.thirsty.gui.appleskin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;
+import com.thirsty.api.config.ClientConfig;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.thirst.ThirstData;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
@@ -31,6 +33,7 @@ public class HUDOverlayHandler {
     private static final Random random = new Random();
     private static final ResourceLocation modIcons;
     static ResourceLocation THIRST_LEVEL_ELEMENT;
+    public static ClientConfig clientConfig = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
     public HUDOverlayHandler() {
     }
@@ -83,11 +86,9 @@ public class HUDOverlayHandler {
             foodIconsOffset = 60;
         }
 
-        // ClientConfig.THIRST_BAR_X_OFFSET.get()
-        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91;
+        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET;
 
-        // + ClientConfig.THIRST_BAR_Y_OFFSET.get()
-        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset;
+        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset + clientConfig.THIRST_BAR_Y_OFFSET;
 
         ThirstData thirstData = PLAYER_THIRST.get(player);
         float exhaustion = thirstData.getExhaustion();
@@ -104,11 +105,9 @@ public class HUDOverlayHandler {
         assert player != null;
         ThirstData thirstData = PLAYER_THIRST.get(player);
 
-        // + ClientConfig.THIRST_BAR_Y_OFFSET.get();
-        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset;
+        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset + clientConfig.THIRST_BAR_Y_OFFSET;
 
-        // + ClientConfig.THIRST_BAR_X_OFFSET.get()
-        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91; // right of food bar
+        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET; // right of food bar
 
         generateHungerBarOffsets(top, right, mc.gui.getGuiTicks(), player);
         if (ModConfig.INSTANCE.showSaturationHudOverlay) {
@@ -324,9 +323,4 @@ public class HUDOverlayHandler {
         THIRST_LEVEL_ELEMENT = ThirstWasTaken.asResource("thirst_level");
     }
 
-    public static void event_reg(){
-        onClientTick();
-        onRenderGuiOverlayPre();
-        onRenderGuiOverlayPost();
-    }
 }

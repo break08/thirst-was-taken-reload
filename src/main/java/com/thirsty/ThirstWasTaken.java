@@ -2,6 +2,8 @@ package com.thirsty;
 
 import com.thirsty.api.config.ClientConfig;
 import com.thirsty.api.config.CommonConfig;
+import com.thirsty.api.config.ContainerConfig;
+import com.thirsty.api.config.KeyWordConfig;
 import com.thirsty.api.create.CreateRegistry;
 import com.thirsty.gui.appleskin.HUDOverlayHandler;
 import com.thirsty.gui.appleskin.TooltipRenderer;
@@ -35,13 +37,14 @@ public class ThirstWasTaken implements ModInitializer {
 		// Cloth Config API
 		AutoConfig.register(CommonConfig.class, GsonConfigSerializer::new);
 		AutoConfig.register(ClientConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(KeyWordConfig.class, GsonConfigSerializer::new);
 
 		ItemInit.initialize();
-        try {
-            WaterPurity.init();
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+		try {
+				WaterPurity.init();
+		} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+		}
 		TickHelper.initialize();
 		WaterPurity.eventInit();
 		ThirstNetwork.onInitialize();
@@ -70,7 +73,7 @@ public class ThirstWasTaken implements ModInitializer {
 						: be.dirtyTank.getCapability();
 			}, CreateRegistry.SAND_FILTER_TE.get());
 		}
-    }
+        }
 
 	public static ResourceLocation asResource(String path)
 	{

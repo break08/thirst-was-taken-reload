@@ -3,6 +3,7 @@ package com.thirsty.misc;
 import com.thirsty.api.config.CommonConfig;
 import com.thirsty.api.config.ContainerConfig;
 import com.thirsty.api.config.KeyWordConfig;
+import com.thirsty.api.config.ItemSettingsConfig;
 import com.thirsty.purity.ContainerWithPurity;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -11,6 +12,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -27,12 +29,14 @@ public class ThirstHelper {
     public static CommonConfig commonConfig = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
     public static KeyWordConfig keyWordConfig = AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig();
 
-    public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(ModListData.DRINKS);
-    public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(ModListData.FOODS);
+    public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.DRINKS);
+    public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.FOODS);
     public static List<Item> containers = ConfigHelper.getItems(ContainerConfig.CONTAINER);
 
     public static void init(){
         for (Item item : containers){
+            if(item.equals(Items.AIR))
+                continue;
             WaterPurity.addContainer(new ContainerWithPurity(new ItemStack(item)));
         }
     }

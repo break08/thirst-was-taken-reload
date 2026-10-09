@@ -27,7 +27,7 @@ public class ContainerConfig{
 
         general.addEntry(entryBuilder.startStrList(Component.translatable("thirst.container_config.container"), CONTAINER)
                 .setDefaultValue(CONTAINER) // Recommended: Used when user click "Reset"
-                .setTooltip(Component.translatable("Items that are considered as water container")) // Optional: Shown when the user hover over this option
+                .setTooltip(Component.literal("Items that are considered as water container")) // Optional: Shown when the user hover over this option
                 .setSaveConsumer(newValue -> CONTAINER = newValue) // Recommended: Called when user save the config
                 .build()); // Builds the option entry for cloth config
 

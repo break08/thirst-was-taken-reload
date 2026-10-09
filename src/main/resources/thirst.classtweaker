@@ -3,4 +3,3 @@ accessible field net/minecraft/world/level/biome/Biome climateSettings Lnet/mine
 accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity canBurn (Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/world/item/crafting/Recipe;Lnet/minecraft/core/NonNullList;I)Z
 accessible field net/minecraft/world/level/block/entity/CampfireBlockEntity items Lnet/minecraft/core/NonNullList;
-accessible field net/minecraft/world/food/FoodProperties nutrition I

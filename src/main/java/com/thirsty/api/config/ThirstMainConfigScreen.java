@@ -2,6 +2,7 @@ package com.thirsty.api.config;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.components.Button;
@@ -37,9 +38,25 @@ public class ThirstMainConfigScreen extends Screen {
             );
         }).bounds(40, 160, 120, 20).build();
 
+        Button itemSettingsConfig = Button.builder(Component.nullToEmpty("Item Settings Config"), (btn) -> {
+            Minecraft.getInstance().setScreen(ItemSettingsConfig.containerConfig(this));
+        }).bounds(40, 200, 120, 20).build();
+
 
         this.addRenderableWidget(commonConfig);
         this.addRenderableWidget(clientConfig);
         this.addRenderableWidget(containerConfig);
+        this.addRenderableWidget(keyWordConfig);
+        this.addRenderableWidget(itemSettingsConfig);
+    }
+
+    @Override
+    public void onClose() {
+        this.minecraft.setScreen(this.parent);
+    }
+
+    @Override
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
     }
 }

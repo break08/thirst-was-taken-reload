@@ -1,10 +1,16 @@
-package com.thirsty.misc;
+package com.thirsty.api.config;
+
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
+import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ModListData {
+public class ItemSettingsConfig {
     public static List<List<?>> DRINKS = new ArrayList<>(
             List.of(
                     Arrays.asList("minecraft:potion", 6, 8),
@@ -74,4 +80,28 @@ public class ModListData {
                     Arrays.asList("farmersdelight:noodle_soup", 4, 5)
             )
     );
+
+    public static List<String> ITEMS_BLACKLIST = List.of();
+
+    public static Screen containerConfig(Screen parent){
+        ConfigBuilder builder = ConfigBuilder.create()
+                .setParentScreen(parent)
+                .setTitle(Component.translatable("thirst.container_config.title"));
+
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("thirst.container_config.general"));
+
+        ConfigEntryBuilder entryBuilder = builder.entryBuilder();
+
+        general.addEntry(entryBuilder.startStrList(Component.literal("Blacklist"), ITEMS_BLACKLIST)
+                .setDefaultValue(ITEMS_BLACKLIST) // Recommended: Used when user click "Reset"
+                .setTooltip(Component.literal("Remove Thirst Support for Items in this List")) // Optional: Shown when the user hover over this option
+                .setSaveConsumer(newValue -> ITEMS_BLACKLIST = newValue) // Recommended: Called when user save the config
+                .build()); // Builds the option entry for cloth config
+
+        builder.setSavingRunnable(() -> {
+            // Serialise the config into the config file. This will be called last after all variables are updated.
+        });
+
+        return builder.build();
+    }
 }

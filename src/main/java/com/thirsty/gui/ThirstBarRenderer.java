@@ -2,7 +2,9 @@ package com.thirsty.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;
+import com.thirsty.api.config.ClientConfig;
 import com.thirsty.thirst.ThirstData;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,6 +24,7 @@ public class ThirstBarRenderer implements HudRenderCallback {
     public static final ResourceLocation THIRST_ICONS = new ResourceLocation(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
     public static final ResourceLocation MC_ICONS = new ResourceLocation("minecraft", "textures/gui/icons.png");
     public static Boolean cancelRender = false;
+    public static ClientConfig clientConfig = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
     public static void unRender(){
         Minecraft minecraft = Minecraft.getInstance();
@@ -66,9 +69,9 @@ public class ThirstBarRenderer implements HudRenderCallback {
             int width = guiGraphics.guiWidth();
             int height = guiGraphics.guiHeight();
             //+ ClientConfig.THIRST_BAR_X_OFFSET.get()
-            int left = width / 2 + 91;
+            int left = width / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET;
             //+ ClientConfig.THIRST_BAR_Y_OFFSET.get();
-            int top = 0;
+            int top = 0 + clientConfig.THIRST_BAR_Y_OFFSET;
             if (minecraft.player.isEyeInFluid(FluidTags.WATER)) {
                 top = height - 60;
             } else {
