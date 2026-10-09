@@ -6,7 +6,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "thirst")
-@Config.Gui.Background("minecraft:textures/block/stone.png")
 public class CommonConfig implements ConfigData {
     @Comment("How much faster is hydration depletion when players with fire resistance(Range 0 to 100, 0 means not to depletion,100 means depletion like normal)")
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
@@ -69,9 +68,6 @@ public class CommonConfig implements ConfigData {
 
     @Comment("Whether the player can't regenerate as fast when hydration isn't full (like hunger)")
     public boolean DEHYDRATION_HALTS_HEALTH_REGEN = true;
-
-    @Comment("Whether players needs two hands available to drink water from source")
-    public boolean DRINK_BOTH_HAND_NEEDED = false;
 
     @Comment("How much the player is hydrated when drinking by hand")
     public int HAND_DRINKING_HYDRATION = 1;

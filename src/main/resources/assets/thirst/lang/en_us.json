@@ -46,5 +46,9 @@
   "text.autoconfig.thirst.option.HAND_DRINKING_HYDRATION": "Hand Drinking Hydration",
   "text.autoconfig.thirst.option.HAND_DRINKING_QUENCHED": "Hand Drinking Quenched",
   "text.autoconfig.thirst.option.THIRST_DEPLETION_IN_PEACEFUL": "Thirst Depletion In Peaceful",
-  "text.autoconfig.thirst.option.CAN_DRINK_RAIN_WATETR": "Can Drink Rain Water"
+  "text.autoconfig.thirst.option.CAN_DRINK_RAIN_WATETR": "Can Drink Rain Water",
+
+  "thirst.container_config.title": "Thirst Container Config",
+  "thirst.container_config.general": "Container",
+  "thirst.container_config.container": "CONTAINER"
 }

@@ -1,10 +1,12 @@
 package com.thirsty;
 
+import com.thirsty.api.config.ClientConfig;
 import com.thirsty.api.config.CommonConfig;
 import com.thirsty.api.create.CreateRegistry;
 import com.thirsty.gui.appleskin.HUDOverlayHandler;
 import com.thirsty.gui.appleskin.TooltipRenderer;
 import com.thirsty.item.ItemInit;
+import com.thirsty.misc.ThirstHelper;
 import com.thirsty.misc.TickHelper;
 import com.thirsty.network.DrinkByHand;
 import com.thirsty.gui.ThirstBarRenderer;
@@ -30,7 +32,10 @@ public class ThirstWasTaken implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// Cloth Config API
 		AutoConfig.register(CommonConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(ClientConfig.class, GsonConfigSerializer::new);
+
 		ItemInit.initialize();
         try {
             WaterPurity.init();
@@ -40,7 +45,10 @@ public class ThirstWasTaken implements ModInitializer {
 		TickHelper.initialize();
 		WaterPurity.eventInit();
 		ThirstNetwork.onInitialize();
+		DrinkByHand.register();
+		ThirstHelper.init();
 
+		// AppleSkin + Thirst Bar registry
 		if (FabricLoader.getInstance().isModLoaded("appleskin")){
 			TooltipRenderer.register();
 			HUDOverlayHandler.onClientTick();
@@ -50,8 +58,8 @@ public class ThirstWasTaken implements ModInitializer {
 		if (FabricLoader.getInstance().isModLoaded("appleskin")){
 			HUDOverlayHandler.onRenderGuiOverlayPost();
 		}
-		DrinkByHand.register();
 
+		// Create
 		if (FabricLoader.getInstance().isModLoaded("create")){
 			CreateRegistry.register();
 			CreateRegistry.REGISTRATE.get().register();
