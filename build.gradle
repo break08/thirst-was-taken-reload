@@ -89,17 +89,16 @@ dependencies {
 		transitive = false
 	}
 
-	// Brewin And Chewin Fabric
-	modImplementation "maven.modrinth:e4G0uSdm:ZieRTW8y"
-
 	// Tough As Nails
 	modImplementation "maven.modrinth:ge1sOdFH:VaFrDMPi"
 
 	// Farmer's Delight Refabricated
-	modImplementation "maven.modrinth:7vxePowz:7H1g1o5h"
+	modCompileOnly "maven.modrinth:7vxePowz:7H1g1o5h"
 
 	// Glitch Core
 	modImplementation "maven.modrinth:s3dmwKy5:25HLOiOl"
+
+	runtimeOnly "net.jodah:typetools:0.6.3"
 }
 
 processResources {

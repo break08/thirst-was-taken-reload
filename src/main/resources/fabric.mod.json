@@ -38,6 +38,12 @@
 		]
 	},
 	"accessWidener": "thirst.classtweaker",
+	"suggests": {
+		"toughasnails": "*",
+		"create": "*",
+		"appleskin": "*",
+		"farmersdelight": "*"
+	},
 	"depends": {
 		"fabricloader": ">=0.19.5",
 		"minecraft": "~1.20.1",

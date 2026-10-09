@@ -75,6 +75,15 @@ public class SandFilterTileEntity extends SmartBlockEntity implements IHaveGoggl
 
      */
 
+    private void dbg(String why) {
+        if (level.getGameTime() % 40 != 0) return;
+        var d = dirtyTank.getPrimaryHandler();
+        var p = purifiedTank.getPrimaryHandler();
+        System.out.println("[SF] " + why
+                + " | dirty=" + d.getFluidAmount() + " " + d.getResource().getNbt()
+                + " | purified=" + p.getFluidAmount() + " " + p.getResource().getNbt());
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -82,21 +91,35 @@ public class SandFilterTileEntity extends SmartBlockEntity implements IHaveGoggl
 
         SmartFluidTank dirty = dirtyTank.getPrimaryHandler();
         SmartFluidTank purified = purifiedTank.getPrimaryHandler();
-        long perTick = config.SAND_FILTER_MB_PER_TICK * MB;
 
-        if (dirty.getFluidAmount() < perTick || purified.getFluidAmount() >= TANK_SIZE * MB) return;
+        long amt = Math.min(config.SAND_FILTER_MB_PER_TICK * MB, dirty.getFluidAmount());
+        if (amt <= 0) return;
+        if (purified.getFluidAmount() >= TANK_SIZE * MB) { dbg("A: purified day"); return; }
+
+        FluidVariant in = dirty.getResource();
+        if (in.isBlank()) { dbg("B: in blank"); return; }
+
+        FluidVariant out = in;
+        if (in.getFluid().isSame(Fluids.WATER)) {
+            int p = Math.min(WaterPurity.getPurity(in) + config.SAND_FILTER_FILTRATION_AMOUNT,
+                    WaterPurity.MAX_PURITY);
+            out = WaterPurity.addPurity(in, p);
+
+            FluidVariant cur = purified.getResource();
+            if (!cur.isBlank() && cur.getFluid().isSame(Fluids.WATER) && !cur.equals(out)) {
+                int mixed = Math.min(WaterPurity.getPurity(cur), p);
+                out = WaterPurity.addPurity(in, mixed);
+                if (!cur.equals(out))
+                    purified.setFluid(new FluidStack(out, purified.getFluidAmount()));
+            }
+        }
 
         try (Transaction t = Transaction.openOuter()) {
-            FluidStack water = drain(dirty, perTick, t);
-            if (water.isEmpty()) return;
-
-            if (water.getFluid().isSame(Fluids.WATER))
-                CreateWaterPurity.addPurity(water, Math.min(
-                        CreateWaterPurity.getPurity(water) + config.SAND_FILTER_FILTRATION_AMOUNT,
-                        WaterPurity.MAX_PURITY));
-
-            if (fill(purified, water, t) == water.getAmount())
-                t.commit();
+            long got = dirty.extract(in, amt, t);
+            if (got != amt) { dbg("C: extract " + got + "/" + amt); return; }
+            long ins = purified.insert(out, got, t);
+            if (ins != got) { dbg("D: insert " + ins + "/" + got + " out=" + out.getNbt()); return; }
+            t.commit();
         }
     }
 
@@ -160,12 +183,11 @@ public class SandFilterTileEntity extends SmartBlockEntity implements IHaveGoggl
         FluidVariant v = tank.getResource();
         if (v.isBlank()) return FluidStack.EMPTY;
         long got = tank.extract(v, amount, t);
-        if (got <= 0) return FluidStack.EMPTY;
-        return new FluidStack(v.getFluid(), got, v.copyNbt());
+        return got <= 0 ? FluidStack.EMPTY : new FluidStack(v, got);
     }
 
     private static long fill(SmartFluidTank tank, FluidStack stack, Transaction t) {
-        return tank.insert(FluidVariant.of(stack.getFluid(), stack.getTag()), stack.getAmount(), t);
+        return tank.insert(stack.getType(), stack.getAmount(), t);
     }
 
 }

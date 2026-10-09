@@ -12,20 +12,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = OpenEndedPipe.class,remap = false)
-public class MixinOpenEndedPipe
-{
-
-    @Inject(method = "removeFluidFromSpace", at = @At("HEAD"), cancellable = true, remap = false)
-    private void removeFluidFromSpace(TransactionContext ctx, CallbackInfoReturnable<FluidStack> cir)
-    {
+public class MixinOpenEndedPipe {
+    @Inject(method = "removeFluidFromSpace", at = @At("RETURN"), cancellable = true, remap = false)
+    private void thirst$purity(TransactionContext ctx, CallbackInfoReturnable<FluidStack> cir) {
         FluidStack stack = cir.getReturnValue();
         if (stack == null || stack.isEmpty() || !stack.getFluid().isSame(Fluids.WATER)) return;
 
         OpenEndedPipe pipe = (OpenEndedPipe) (Object) this;
         if (pipe.getWorld() == null) return;
 
-        CreateWaterPurity.addPurity(stack,
-                WaterPurity.getBlockPurity(pipe.getWorld(), pipe.getOutputPos()));
-        cir.setReturnValue(stack);
+        cir.setReturnValue(CreateWaterPurity.addPurity(stack,
+                WaterPurity.getBlockPurity(pipe.getWorld(), pipe.getOutputPos())));
     }
 }

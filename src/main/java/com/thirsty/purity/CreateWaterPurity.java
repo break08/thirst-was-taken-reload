@@ -8,34 +8,16 @@ import net.minecraft.nbt.CompoundTag;
 public class CreateWaterPurity {
     // Purity helper for Create mod
 
-    public static FluidStack addPurity(FluidStack fluid, int purity)
-    {
-        CompoundTag tag = fluid.getTag();
-
-        if (tag == null){
-            CompoundTag newTag = fluid.getOrCreateTag();
-            newTag.putInt("Purity", purity);
-            return fluid;
-        }
-
-        tag.putInt("Purity", purity);
-
-        return fluid;
+    public static FluidStack addPurity(FluidStack fluid, int purity) {
+        if (fluid.isEmpty()) return fluid;
+        return new FluidStack(WaterPurity.addPurity(fluid.getType(), purity), fluid.getAmount());
     }
 
-    public static int getPurity(FluidStack fluid)
-    {
-        if(fluid.getTag() == null || !fluid.getTag().contains("Purity"))
-            return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
-
-        return fluid.getTag().getInt("Purity");
+    public static int getPurity(FluidStack fluid) {
+        return WaterPurity.getPurity(fluid.getType());
     }
 
-    public static boolean hasPurity(FluidStack fluid)
-    {
-        if(!fluid.hasTag() || fluid.getTag() == null)
-            return false;
-        else
-            return fluid.getTag().contains("Purity");
+    public static boolean hasPurity(FluidStack fluid) {
+        return WaterPurity.hasPurity(fluid.getType());
     }
 }

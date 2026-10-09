@@ -1,6 +1,7 @@
 package com.thirsty.thirst;
 
 import com.thirsty.api.config.CommonConfig;
+import com.thirsty.misc.FDEHelper;
 import com.thirsty.misc.ModDamageSource;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.purity.WaterPurity;
@@ -14,7 +15,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import vectorwing.farmersdelight.common.registry.ModEffects;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
@@ -203,7 +203,8 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         if(checkTombstoneEffects && player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("ghostly_shape")))
             return;
 
-        boolean isNourished = checkFDEffects && player.hasEffect(ModEffects.NOURISHMENT.get());
+
+        boolean isNourished = checkFDEffects && FDEHelper.hasNourishment(player);
 
         boolean isHunger = player.hasEffect(MobEffects.HUNGER);
         boolean isStuffed = checkLetsDoBakeryEffects &&

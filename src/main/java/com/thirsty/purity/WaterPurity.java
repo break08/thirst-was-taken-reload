@@ -6,6 +6,7 @@ import com.thirsty.misc.MathHelper;
 import com.thirsty.misc.ReflectionUtil;
 import com.thirsty.misc.TickHelper;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -81,7 +82,7 @@ public class WaterPurity {
 
         if(FabricLoader.getInstance().isModLoaded("toughasnails"))
         {
-            registerToughAsNailsContainers();
+            CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> registerToughAsNailsContainers());
             tanLoaded = true;
         }
     }
@@ -410,17 +411,10 @@ public class WaterPurity {
      */
     public static FluidVariant addPurity(FluidVariant fluid, int purity)
     {
-        CompoundTag tag = fluid.getNbt();
-
-        if (tag == null){
-            CompoundTag newTag = fluid.copyOrCreateNbt();
-            newTag.putInt("Purity", purity);
-            return fluid;
-        }
-
+        if (fluid.isBlank()) return fluid;
+        CompoundTag tag = fluid.copyOrCreateNbt();
         tag.putInt("Purity", purity);
-
-        return fluid;
+        return FluidVariant.of(fluid.getFluid(), tag);
     }
 
 

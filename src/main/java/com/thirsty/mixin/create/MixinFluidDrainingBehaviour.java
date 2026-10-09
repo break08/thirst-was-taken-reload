@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinFluidDrainingBehaviour
 {
     @Inject(method = "getDrainableFluid", at = @At("RETURN"), remap = false, cancellable = true)
-    public void getDrainableFluid(BlockPos rootPos, CallbackInfoReturnable<FluidStack> cir){
-        FluidDrainingBehaviour behaviour = ((FluidDrainingBehaviour)(Object) this);
-        FluidStack output=cir.getReturnValue();
-        if (FluidHelper.isWater(output.getFluid())){
-            CreateWaterPurity.addPurity(output,WaterPurity.getBlockPurity(behaviour.getWorld(), rootPos));
-            cir.setReturnValue(output);
-        }
+    public void getDrainableFluid(BlockPos rootPos, CallbackInfoReturnable<FluidStack> cir) {
+        FluidDrainingBehaviour behaviour = (FluidDrainingBehaviour) (Object) this;
+        FluidStack output = cir.getReturnValue();
+        if (output.isEmpty() || !FluidHelper.isWater(output.getFluid())) return;
+
+        cir.setReturnValue(CreateWaterPurity.addPurity(output,
+                WaterPurity.getBlockPurity(behaviour.getWorld(), rootPos)));
     }
 }
