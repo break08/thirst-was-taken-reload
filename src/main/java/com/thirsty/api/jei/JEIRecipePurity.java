@@ -9,8 +9,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
 public class JEIRecipePurity {
-    public JEIRecipePurity(){}
-
     public SmeltingRecipe puritySmelt(String recipe_name, ItemStack input, ItemStack output, float exp, int cook_time)
     {
         return new SmeltingRecipe(
@@ -32,8 +30,9 @@ public class JEIRecipePurity {
     }
 
     public ItemStack stackWithPurity(int purity, ItemStack item){
-        CompoundTag tag = item.getOrCreateTag();
+        ItemStack newStack = item.copy();
+        CompoundTag tag = newStack.getOrCreateTag();
         tag.putInt("Purity", purity);
-        return item;
+        return newStack;
     }
 }

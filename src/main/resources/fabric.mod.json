@@ -8,8 +8,8 @@
 		"break08"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/thirst-was-taken-reload/",
+		"sources": "https://github.com/break08/thirst-was-taken-reload"
 	},
 	"license": "MIT",
 	"icon": "assets/thirst/icon.png",
@@ -28,6 +28,9 @@
 		"jei_mod_plugin": [
             "com.thirsty.api.jei.ThirstJEI"
 		],
+		"emi": [
+			"com.thirsty.api.emi.ThirstEMI"
+		],
 		"client": [
 			"com.thirsty.ThirstWasTakenClient"
 		]
@@ -45,7 +48,9 @@
 		"toughasnails": "*",
 		"create": "*",
 		"appleskin": "*",
-		"farmersdelight": "*"
+		"farmersdelight": "*",
+		"jei": "*",
+		"emi": "*"
 	},
 	"depends": {
 		"fabricloader": ">=0.19.5",
