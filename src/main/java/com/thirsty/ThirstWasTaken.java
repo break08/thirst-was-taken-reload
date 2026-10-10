@@ -36,7 +36,6 @@ public class ThirstWasTaken implements ModInitializer {
 	public void onInitialize() {
 		// Cloth Config API
 		AutoConfig.register(CommonConfig.class, GsonConfigSerializer::new);
-		AutoConfig.register(ClientConfig.class, GsonConfigSerializer::new);
 		AutoConfig.register(KeyWordConfig.class, GsonConfigSerializer::new);
 
 		ItemInit.initialize();
@@ -47,20 +46,8 @@ public class ThirstWasTaken implements ModInitializer {
 		}
 		TickHelper.initialize();
 		WaterPurity.eventInit();
-		ThirstNetwork.onInitialize();
-		DrinkByHand.register();
 		ThirstHelper.init();
-
-		// AppleSkin + Thirst Bar registry
-		if (FabricLoader.getInstance().isModLoaded("appleskin")){
-			TooltipRenderer.register();
-			HUDOverlayHandler.onClientTick();
-			HUDOverlayHandler.onRenderGuiOverlayPre();
-		}
-		HudRenderCallback.EVENT.register(new ThirstBarRenderer());
-		if (FabricLoader.getInstance().isModLoaded("appleskin")){
-			HUDOverlayHandler.onRenderGuiOverlayPost();
-		}
+		ThirstNetwork.onInitialize();
 
 		// Create
 		if (FabricLoader.getInstance().isModLoaded("create")){
@@ -73,7 +60,7 @@ public class ThirstWasTaken implements ModInitializer {
 						: be.dirtyTank.getCapability();
 			}, CreateRegistry.SAND_FILTER_TE.get());
 		}
-        }
+	}
 
 	public static ResourceLocation asResource(String path)
 	{

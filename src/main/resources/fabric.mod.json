@@ -26,7 +26,10 @@
 			"com.thirsty.api.config.ModMenuIntegration"
 		],
 		"jei_mod_plugin": [
-          "com.thirsty.api.jei.ThirstJEI"
+            "com.thirsty.api.jei.ThirstJEI"
+		],
+		"client": [
+			"com.thirsty.ThirstWasTakenClient"
 		]
 	},
 	"mixins": [

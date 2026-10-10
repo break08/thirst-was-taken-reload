@@ -6,6 +6,7 @@ import com.thirsty.misc.MathHelper;
 import com.thirsty.purity.WaterPurity;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -36,8 +37,8 @@ public class ThirstNetwork {
     public static void registerServerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(MOD_PACKET_ID,
                 (MinecraftServer server, ServerPlayer player_, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> {
+                    BlockPos blockPos_get = buf.readBlockPos();
                     server.execute(() -> {
-                        BlockPos blockPos_get = buf.readBlockPos();
                         Player player = player_;
                         Level level = player.level();
 

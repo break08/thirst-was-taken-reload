@@ -27,6 +27,8 @@
     "toughasnails.MixinServerConfig",
     "toughasnails.MixinThirstHandler",
     "toughasnails.MixinThirstHelperImpl",
+    "toughasnails.MixinThirstHooks",
+    "toughasnails.MixinThirstHooksClient",
     "toughasnails.MixinThirstOverlayRenderer",
     "toughasnails.MixinTooltipHandler"
   ],

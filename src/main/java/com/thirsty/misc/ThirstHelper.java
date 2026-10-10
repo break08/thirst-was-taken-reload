@@ -54,12 +54,14 @@ public class ThirstHelper {
 
     public static boolean isDrink(ItemStack itemStack)
     {
-        return VALID_DRINKS.containsKey(itemStack.getItem());
+        return !ItemSettingsConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
+                VALID_DRINKS.containsKey(itemStack.getItem());
     }
 
     public static boolean isFood(ItemStack itemStack)
     {
-        return VALID_FOODS.containsKey(itemStack.getItem());
+        return !ItemSettingsConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
+                VALID_FOODS.containsKey(itemStack.getItem());
     }
 
 
