@@ -1,12 +1,14 @@
 package com.thirsty;
 
 import com.thirsty.api.config.ClientConfig;
+import com.thirsty.api.create.ponder.ThirstPonderPlugin;
 import com.thirsty.gui.ThirstBarRenderer;
 import com.thirsty.gui.appleskin.HUDOverlayHandler;
 import com.thirsty.gui.appleskin.TooltipRenderer;
 import com.thirsty.network.DrinkByHand;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -32,5 +34,8 @@ public class ThirstWasTakenClient implements ClientModInitializer {
         }
 
         DrinkByHand.register();
+
+        // Create Ponder
+        PonderIndex.addPlugin(new ThirstPonderPlugin());
     }
 }

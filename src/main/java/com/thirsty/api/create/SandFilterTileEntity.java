@@ -178,16 +178,4 @@ public class SandFilterTileEntity extends SmartBlockEntity implements IHaveGoggl
                     .forGoggles(tooltip, 1);
         }
     }
-
-    private static FluidStack drain(SmartFluidTank tank, long amount, Transaction t) {
-        FluidVariant v = tank.getResource();
-        if (v.isBlank()) return FluidStack.EMPTY;
-        long got = tank.extract(v, amount, t);
-        return got <= 0 ? FluidStack.EMPTY : new FluidStack(v, got);
-    }
-
-    private static long fill(SmartFluidTank tank, FluidStack stack, Transaction t) {
-        return tank.insert(stack.getType(), stack.getAmount(), t);
-    }
-
 }

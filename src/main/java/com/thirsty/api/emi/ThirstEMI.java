@@ -74,5 +74,42 @@ public class ThirstEMI implements EmiPlugin {
                 EmiStack.of(RecipePurityHelper.stackWithPurity(3, terra))));
 
         // Campfire
+
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/0_to_1_bottlec"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(0, base)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(1, base))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/1_to_2_bottlec"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(1, base)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(2, base))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/2_to_3_bottlec"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(2, base)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(3, base))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/0_to_1_bucketc"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(0, bucket)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(1, bucket))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/1_to_2_bucketc"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(1, bucket)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(2, bucket))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/2_to_3_bucketc"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(2, bucket)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(3, bucket))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/0_to_1_terrac"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(0, terra)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(1, terra))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/1_to_2_terrac"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(1, terra)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(2, terra))));
+        emiRegistry.addRecipe(new ThirstWithEMIRecipeCampfire(
+                new ResourceLocation(ThirstWasTaken.MOD_ID, "/purify/2_to_3_terrac"),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(2, terra)),
+                EmiStack.of(RecipePurityHelper.stackWithPurity(3, terra))));
     }
 }

@@ -1,6 +1,7 @@
 package com.thirsty.network;
 
 import com.thirsty.ThirstWasTaken;
+import com.thirsty.api.config.ClientConfig;
 import com.thirsty.api.config.CommonConfig;
 import com.thirsty.misc.MathHelper;
 import com.thirsty.purity.WaterPurity;
@@ -45,9 +46,11 @@ public class ThirstNetwork {
                         if(!player.isCrouching() || player.isInvulnerable())
                             return;
 
-                        if(!player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty())
-                            return;
+                        ClientConfig config = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
+                        if(!(config.DRINK_BOTH_HAND_NEEDED && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty() && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty())
+                                && !(!config.DRINK_BOTH_HAND_NEEDED && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()))
+                            return;
 
                         BlockPos blockPos = MathHelper.getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
                         if(!level.getFluidState(blockPos).is(FluidTags.WATER))
