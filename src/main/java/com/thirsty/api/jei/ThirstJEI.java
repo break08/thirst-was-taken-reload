@@ -1,5 +1,6 @@
 package com.thirsty.api.jei;
 
+import com.thirsty.api.thirst_api.jei_emi_compat.RecipePurityHelper;
 import com.thirsty.item.ItemInit;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -75,151 +76,151 @@ public class ThirstJEI implements IModPlugin {
         ItemStack terra = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL);
 
         // Water bottle - SM
-        SmeltingRecipe bottle_dirty2accept = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe bottle_dirty2accept = RecipePurityHelper.puritySmelt(
                 "waterbottle_dirty2accept",
-                new JEIRecipePurity().stackWithPurity(0, water_bottle),
-                new JEIRecipePurity().stackWithPurity(2, water_bottle),
+                RecipePurityHelper.stackWithPurity(0, water_bottle),
+                RecipePurityHelper.stackWithPurity(2, water_bottle),
                 0.35f,
                 200
         );
 
-        SmeltingRecipe bottle_accept2pur = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe bottle_accept2pur = RecipePurityHelper.puritySmelt(
                 "waterbottle_accept2pur",
-                new JEIRecipePurity().stackWithPurity(2, water_bottle),
-                new JEIRecipePurity().stackWithPurity(3, water_bottle),
+                RecipePurityHelper.stackWithPurity(2, water_bottle),
+                RecipePurityHelper.stackWithPurity(3, water_bottle),
                 0.35f,
                 200
         );
 
-        SmeltingRecipe bottle_sightly2pur = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe bottle_sightly2pur = RecipePurityHelper.puritySmelt(
                 "waterbottle_sightly2pur",
-                new JEIRecipePurity().stackWithPurity(1, water_bottle),
-                new JEIRecipePurity().stackWithPurity(3, water_bottle),
+                RecipePurityHelper.stackWithPurity(1, water_bottle),
+                RecipePurityHelper.stackWithPurity(3, water_bottle),
                 0.35f,
                 200
         );
 
         // Water Bucket - SM
-        SmeltingRecipe bucket_dirty2accept = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe bucket_dirty2accept = RecipePurityHelper.puritySmelt(
                 "bucket_dirty2accept",
-                new JEIRecipePurity().stackWithPurity(0, water_bucket),
-                new JEIRecipePurity().stackWithPurity(2, water_bucket),
+                RecipePurityHelper.stackWithPurity(0, water_bucket),
+                RecipePurityHelper.stackWithPurity(2, water_bucket),
                 0.35f,
                 200
         );
 
-        SmeltingRecipe bucket_accept2pur = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe bucket_accept2pur = RecipePurityHelper.puritySmelt(
                 "bucket_accept2pur",
-                new JEIRecipePurity().stackWithPurity(2, water_bucket),
-                new JEIRecipePurity().stackWithPurity(3, water_bucket),
+                RecipePurityHelper.stackWithPurity(2, water_bucket),
+                RecipePurityHelper.stackWithPurity(3, water_bucket),
                 0.35f,
                 200
         );
 
-        SmeltingRecipe bucket_sightly2pur = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe bucket_sightly2pur = RecipePurityHelper.puritySmelt(
                 "bucket_sightly2pur",
-                new JEIRecipePurity().stackWithPurity(1, water_bucket),
-                new JEIRecipePurity().stackWithPurity(3, water_bucket),
+                RecipePurityHelper.stackWithPurity(1, water_bucket),
+                RecipePurityHelper.stackWithPurity(3, water_bucket),
                 0.35f,
                 200
         );
 
         // Terracotta Bowl - SM
-        SmeltingRecipe terra_dirty2accept = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe terra_dirty2accept = RecipePurityHelper.puritySmelt(
                 "terra_dirty2accept",
-                new JEIRecipePurity().stackWithPurity(0, terra),
-                new JEIRecipePurity().stackWithPurity(2, terra),
+                RecipePurityHelper.stackWithPurity(0, terra),
+                RecipePurityHelper.stackWithPurity(2, terra),
                 0.35f,
                 200
         );
 
-        SmeltingRecipe terra_accept2pur = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe terra_accept2pur = RecipePurityHelper.puritySmelt(
                 "terra_accept2pur",
-                new JEIRecipePurity().stackWithPurity(2, terra),
-                new JEIRecipePurity().stackWithPurity(3, terra),
+                RecipePurityHelper.stackWithPurity(2, terra),
+                RecipePurityHelper.stackWithPurity(3, terra),
                 0.35f,
                 200
         );
 
-        SmeltingRecipe terra_sightly2pur = new JEIRecipePurity().puritySmelt(
+        SmeltingRecipe terra_sightly2pur = RecipePurityHelper.puritySmelt(
                 "terra_sightly2pur",
-                new JEIRecipePurity().stackWithPurity(1, terra),
-                new JEIRecipePurity().stackWithPurity(3, terra),
+                RecipePurityHelper.stackWithPurity(1, terra),
+                RecipePurityHelper.stackWithPurity(3, terra),
                 0.35f,
                 200
         );
 
         // Water Bottle - CC
-        CampfireCookingRecipe bottle_dirty2acceptc = new JEIRecipePurity().purityCampfireCook(
-                "waterbottle_dirty2acceptc",
-                new JEIRecipePurity().stackWithPurity(0, water_bottle),
-                new JEIRecipePurity().stackWithPurity(2, water_bottle),
+        CampfireCookingRecipe bottle_dirty2sightlyc = RecipePurityHelper.purityCampfireCook(
+                "bottle_dirty2sightlyc",
+                RecipePurityHelper.stackWithPurity(0, water_bottle),
+                RecipePurityHelper.stackWithPurity(1, water_bottle),
                 0.35f,
                 300
         );
 
-        CampfireCookingRecipe bottle_accept2purc = new JEIRecipePurity().purityCampfireCook(
-                "waterbottle_accept2purc",
-                new JEIRecipePurity().stackWithPurity(2, water_bottle),
-                new JEIRecipePurity().stackWithPurity(3, water_bottle),
+        CampfireCookingRecipe bottle_sightly2accpetc = RecipePurityHelper.purityCampfireCook(
+                "bottle_sightly2accpetc",
+                RecipePurityHelper.stackWithPurity(1, water_bottle),
+                RecipePurityHelper.stackWithPurity(2, water_bottle),
                 0.35f,
                 300
         );
 
-        CampfireCookingRecipe bottle_sightly2purc = new JEIRecipePurity().purityCampfireCook(
-                "waterbottle_sightly2purc",
-                new JEIRecipePurity().stackWithPurity(1, water_bottle),
-                new JEIRecipePurity().stackWithPurity(3, water_bottle),
+        CampfireCookingRecipe bottle_accept2purc = RecipePurityHelper.purityCampfireCook(
+                "bottle_accept2purc",
+                RecipePurityHelper.stackWithPurity(2, water_bottle),
+                RecipePurityHelper.stackWithPurity(3, water_bottle),
                 0.35f,
                 300
         );
 
         // Water Bucket - CC
-        CampfireCookingRecipe bucket_dirty2acceptc = new JEIRecipePurity().purityCampfireCook(
-                "bucket_dirty2acceptc",
-                new JEIRecipePurity().stackWithPurity(0, water_bucket),
-                new JEIRecipePurity().stackWithPurity(2, water_bucket),
+        CampfireCookingRecipe bucket_dirty2sightlyc = RecipePurityHelper.purityCampfireCook(
+                "bucket_dirty2sightlyc",
+                RecipePurityHelper.stackWithPurity(0, water_bucket),
+                RecipePurityHelper.stackWithPurity(1, water_bucket),
                 0.35f,
                 300
         );
 
-        CampfireCookingRecipe bucket_accept2purc = new JEIRecipePurity().purityCampfireCook(
+        CampfireCookingRecipe bucket_sightly2acceptc = RecipePurityHelper.purityCampfireCook(
+                "bucket_sightly2acceptc",
+                RecipePurityHelper.stackWithPurity(1, water_bucket),
+                RecipePurityHelper.stackWithPurity(2, water_bucket),
+                0.35f,
+                300
+        );
+
+        CampfireCookingRecipe bucket_accept2purc = RecipePurityHelper.purityCampfireCook(
                 "bucket_accept2purc",
-                new JEIRecipePurity().stackWithPurity(2, water_bucket),
-                new JEIRecipePurity().stackWithPurity(3, water_bucket),
-                0.35f,
-                300
-        );
-
-        CampfireCookingRecipe bucket_sightly2purc = new JEIRecipePurity().purityCampfireCook(
-                "bucket_sightly2purc",
-                new JEIRecipePurity().stackWithPurity(1, water_bucket),
-                new JEIRecipePurity().stackWithPurity(3, water_bucket),
+                RecipePurityHelper.stackWithPurity(2, water_bucket),
+                RecipePurityHelper.stackWithPurity(3, water_bucket),
                 0.35f,
                 300
         );
 
         // Terracotta - CC
-        CampfireCookingRecipe terra_dirty2acceptc = new JEIRecipePurity().purityCampfireCook(
-                "terra_dirty2acceptc",
-                new JEIRecipePurity().stackWithPurity(0, terra),
-                new JEIRecipePurity().stackWithPurity(2, terra),
+        CampfireCookingRecipe terra_dirty2sightlyc = RecipePurityHelper.purityCampfireCook(
+                "terra_dirty2sightlyc",
+                RecipePurityHelper.stackWithPurity(0, terra),
+                RecipePurityHelper.stackWithPurity(1, terra),
                 0.35f,
                 300
         );
 
-        CampfireCookingRecipe terra_accept2purc = new JEIRecipePurity().purityCampfireCook(
+        CampfireCookingRecipe terra_sightly2acceptc = RecipePurityHelper.purityCampfireCook(
+                "terra_sightly2acceptc",
+                RecipePurityHelper.stackWithPurity(1, terra),
+                RecipePurityHelper.stackWithPurity(2, terra),
+                0.35f,
+                300
+        );
+
+        CampfireCookingRecipe terra_accept2purc = RecipePurityHelper.purityCampfireCook(
                 "terra_accept2purc",
-                new JEIRecipePurity().stackWithPurity(2, terra),
-                new JEIRecipePurity().stackWithPurity(3, terra),
-                0.35f,
-                300
-        );
-
-        CampfireCookingRecipe terra_sightly2purc = new JEIRecipePurity().purityCampfireCook(
-                "terra_sightly2purc",
-                new JEIRecipePurity().stackWithPurity(1, terra),
-                new JEIRecipePurity().stackWithPurity(3, terra),
+                RecipePurityHelper.stackWithPurity(2, terra),
+                RecipePurityHelper.stackWithPurity(3, terra),
                 0.35f,
                 300
         );
@@ -238,15 +239,15 @@ public class ThirstJEI implements IModPlugin {
         );
 
         List<CampfireCookingRecipe> cookingCamp = List.of(
+                bottle_sightly2accpetc,
+                bottle_dirty2sightlyc,
                 bottle_accept2purc,
-                bottle_dirty2acceptc,
-                bottle_sightly2purc,
+                bucket_sightly2acceptc,
                 bucket_accept2purc,
-                bucket_sightly2purc,
-                bucket_dirty2acceptc,
+                bucket_dirty2sightlyc,
+                terra_sightly2acceptc,
                 terra_accept2purc,
-                terra_sightly2purc,
-                terra_dirty2acceptc
+                terra_dirty2sightlyc
         );
 
         reg.addRecipes(RecipeTypes.SMELTING, smelting);

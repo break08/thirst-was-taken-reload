@@ -6,8 +6,12 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "thirst_client")
 public class ClientConfig implements ConfigData {
+    // I found that ONLY_SHOW_PURITY_WHEN_SHIFTING wasn't used in any other file for config in original project, so it's redundant
+
+    /*
     @Comment("If the purity tooltip should be shown only when the player is pressing the shift key")
     public boolean ONLY_SHOW_PURITY_WHEN_SHIFTING = false;
+     */
 
     @Comment("How many pixels should the thirst bar be shifted vertically from its original position")
     public int THIRST_BAR_Y_OFFSET = 0;

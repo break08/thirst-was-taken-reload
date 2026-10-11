@@ -46,7 +46,17 @@
   "text.autoconfig.thirst.option.HAND_DRINKING_HYDRATION": "Hand Drinking Hydration",
   "text.autoconfig.thirst.option.HAND_DRINKING_QUENCHED": "Hand Drinking Quenched",
   "text.autoconfig.thirst.option.THIRST_DEPLETION_IN_PEACEFUL": "Thirst Depletion In Peaceful",
-  "text.autoconfig.thirst.option.CAN_DRINK_RAIN_WATETR": "Can Drink Rain Water",
+  "text.autoconfig.thirst.option.CAN_DRINK_RAIN_WATER": "Can Drink Rain Water",
+  "text.autoconfig.thirst.option.SAND_FILTER_MB_PER_TICK": "SAND FILTER MB PER TICK",
+  "text.autoconfig.thirst.option.SAND_FILTER_FILTRATION_AMOUNT": "SAND FILTER FILTRATION AMOUNT",
+  "text.autoconfig.thirst.option.DEPLETES_WHEN_NAUSEA": "DEPLETES WHEN NAUSEA",
+  "text.autoconfig.thirst.option.HEALTH_REGEN_DEPLETES_HYDRATION": "HEALTH REGEN DEPLETES HYDRATION",
+  "text.autoconfig.thirst.option.HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT": "HEALTH REGEN DEHYDRATION IS BIOME DEPENDENT",
+  "text.autoconfig.thirst_client.option.ONLY_SHOW_PURITY_WHEN_SHIFTING": "ONLY SHOW PURITY WHEN SHIFTING",
+  "text.autoconfig.thirst_client.option.THIRST_BAR_Y_OFFSET": "THIRST BAR Y OFFSET",
+  "text.autoconfig.thirst_client.option.THIRST_BAR_X_OFFSET": "THIRST BAR X OFFSET",
+  "text.autoconfig.thirst_client.option.DRINK_BOTH_HAND_NEEDED": " DRINK BOTH HAND NEEDED",
+
 
   "thirst.container_config.title": "Thirst Container Config",
   "thirst.container_config.general": "Container",
