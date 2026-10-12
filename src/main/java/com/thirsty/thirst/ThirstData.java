@@ -307,7 +307,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         float exhaustion = getExhaustion();
         boolean justHealed = isJustHealed();
         //!CommonConfig.HEALTH_REGEN_DEPLETES_HYDRATION.get() &&
-        if(justHealed && config.HEALTH_REGEN_DEPLETES_HYDRATION)
+        if(justHealed && !config.HEALTH_REGEN_DEPLETES_HYDRATION)
             amount = 0;
 
 

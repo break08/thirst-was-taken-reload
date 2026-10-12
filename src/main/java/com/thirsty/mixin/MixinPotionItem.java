@@ -24,6 +24,8 @@ public class MixinPotionItem {
         return true;
     }
 
+    /*
+
     @Inject(method = "finishUsingItem", at = @At("HEAD"))
     public void onFinishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity, CallbackInfoReturnable<ItemStack> cir)
     {
@@ -32,4 +34,6 @@ public class MixinPotionItem {
             ThirstData.drink(itemStack, player);
         }
     }
+
+     */
 }

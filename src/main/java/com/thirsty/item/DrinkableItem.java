@@ -50,10 +50,14 @@ public class DrinkableItem extends Item{
         {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer)player, item);
         }
+
+        /*
         if(player != null)
         {
             ThirstData.drink(item, player);
         }
+
+         */
 
         if (player != null)
         {
