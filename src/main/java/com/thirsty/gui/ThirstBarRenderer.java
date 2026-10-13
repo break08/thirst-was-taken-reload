@@ -73,9 +73,9 @@ public class ThirstBarRenderer implements HudRenderCallback {
             //+ ClientConfig.THIRST_BAR_Y_OFFSET.get();
             int top = 0 + clientConfig.THIRST_BAR_Y_OFFSET;
             if (minecraft.player.isEyeInFluid(FluidTags.WATER)) {
-                top = height - 60;
+                top += height - 60;
             } else {
-                top = height - 49;
+                top += height - 49;
             }
             boolean unused = false;
             for (int i = 0; i < 10; ++i) {
