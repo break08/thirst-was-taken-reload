@@ -76,7 +76,7 @@ dependencies {
 	modImplementation("com.terraformersmc:modmenu:${modmenu}")
 
 	// Create
-	modImplementation("com.simibubi.create:create-fabric-$minecraft_version:$create_version")
+	modCompileOnly("com.simibubi.create:create-fabric-$minecraft_version:$create_version")
 
 	// JEI
 	modCompileOnly("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
@@ -90,13 +90,13 @@ dependencies {
 	}
 
 	// Tough As Nails
-	modImplementation "maven.modrinth:ge1sOdFH:VaFrDMPi"
+	modCompileOnly "maven.modrinth:ge1sOdFH:VaFrDMPi"
 
 	// Farmer's Delight Refabricated
 	modCompileOnly "maven.modrinth:7vxePowz:7H1g1o5h"
 
 	// Glitch Core
-	modImplementation "maven.modrinth:s3dmwKy5:25HLOiOl"
+	modCompileOnly "maven.modrinth:s3dmwKy5:25HLOiOl"
 
 	runtimeOnly "net.jodah:typetools:0.6.3"
 }

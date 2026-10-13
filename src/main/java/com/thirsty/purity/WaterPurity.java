@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -295,7 +296,7 @@ public class WaterPurity {
     {
         if(item.getTag() == null || !item.getTag().contains("Purity"))
         {
-            if(tanLoaded && Objects.equals(item.getItem().getCreatorModId(item), "toughasnails"))
+            if (tanLoaded && Objects.equals(BuiltInRegistries.ITEM.getKey(item.getItem()).getNamespace(), "toughasnails"))
                 return tanPurity(item);
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         }

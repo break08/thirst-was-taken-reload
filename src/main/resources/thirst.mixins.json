@@ -38,5 +38,6 @@
   },
   "client": [
     "MixinLocalPlayer"
-  ]
+  ],
+  "plugin": "com.thirsty.ThirstMixinPlugin"
 }
