@@ -24,13 +24,15 @@ public class ThirstWasTakenClient implements ClientModInitializer {
         // AppleSkin + Thirst Bar registry
         if (FabricLoader.getInstance().isModLoaded("appleskin")){
             TooltipRenderer.register();
-            HUDOverlayHandler.onClientTick();
-            HUDOverlayHandler.onRenderGuiOverlayPre();
+            // HUDOverlayHandler.onClientTick();
+            // HUDOverlayHandler.onRenderGuiOverlayPre();
         }
-        HudRenderCallback.EVENT.register(new ThirstBarRenderer());
-        if (FabricLoader.getInstance().isModLoaded("appleskin")){
-            HUDOverlayHandler.onRenderGuiOverlayPost();
-        }
+
+        // HudRenderCallback.EVENT.register(new ThirstBarRenderer());
+
+        // if (FabricLoader.getInstance().isModLoaded("appleskin")){
+        //     HUDOverlayHandler.onRenderGuiOverlayPost();
+        // }
 
         DrinkByHand.register();
 

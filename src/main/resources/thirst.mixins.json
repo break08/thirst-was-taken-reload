@@ -37,6 +37,7 @@
     "requireAnnotations": true
   },
   "client": [
+    "MixinGui",
     "MixinLocalPlayer"
   ],
   "plugin": "com.thirsty.ThirstMixinPlugin"

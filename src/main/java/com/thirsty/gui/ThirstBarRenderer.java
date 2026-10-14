@@ -6,6 +6,7 @@ import com.thirsty.api.config.ClientConfig;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,7 @@ public class ThirstBarRenderer implements HudRenderCallback {
         boolean isMounted = minecraft.player.getVehicle() instanceof LivingEntity;
         cancelRender =false;
         boolean isSur = !minecraft.player.isCreative() && !minecraft.player.isSpectator();
-        if (!isMounted && !minecraft.options.hideGui && isSur)
+        if (isMounted && !minecraft.options.hideGui && isSur)
         {
             ThirstData thirst = PLAYER_THIRST.get(minecraft.player);;
             if(minecraft.player.isAlive() && !thirst.isShouldTickThirst()){
@@ -71,12 +72,17 @@ public class ThirstBarRenderer implements HudRenderCallback {
             //+ ClientConfig.THIRST_BAR_X_OFFSET.get()
             int left = width / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET;
             //+ ClientConfig.THIRST_BAR_Y_OFFSET.get();
-            int top = 0 + clientConfig.THIRST_BAR_Y_OFFSET;
-            if (minecraft.player.isEyeInFluid(FluidTags.WATER)) {
+            int top = clientConfig.THIRST_BAR_Y_OFFSET;
+
+            /*
+            if (minecraft.player.getAirSupply() < minecraft.player.getMaxAirSupply() && !FabricLoader.getInstance().isModLoaded("toughasnails")) {
                 top += height - 60;
-            } else {
-                top += height - 49;
-            }
+
+             */
+            top += height - 49;
+
+
+
             boolean unused = false;
             for (int i = 0; i < 10; ++i) {
                 int idx = i * 2 + 1;

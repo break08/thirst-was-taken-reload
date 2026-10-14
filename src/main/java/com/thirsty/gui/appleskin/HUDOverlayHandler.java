@@ -8,6 +8,7 @@ import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +24,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
+import static com.thirsty.gui.ThirstBarRenderer.unRender;
 
 public class HUDOverlayHandler {
     private static float unclampedFlashAlpha = 0.0F;
@@ -45,8 +47,8 @@ public class HUDOverlayHandler {
     */
 
     // @SubscribeEvent
-    public static void onRenderGuiOverlayPre() {
-        HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> {
+    public static void onRenderGuiOverlayPre(GuiGraphics guiGraphics, float tickDelta) {
+            unRender();
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null){return;}
             boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
@@ -56,12 +58,11 @@ public class HUDOverlayHandler {
             if (isAlive && ModConfig.INSTANCE.showFoodExhaustionHudUnderlay && !isMounted && !mc.options.hideGui && isSur && !ThirstBarRenderer.cancelRender) {
                 renderExhaustion(guiGraphics);
             }
-        });
     }
 
     // @SubscribeEvent
-    public static void onRenderGuiOverlayPost() {
-        HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> {
+    public static void onRenderGuiOverlayPost(GuiGraphics guiGraphics, float tickDelta) {
+            unRender();
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null){return;}
             boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
@@ -72,7 +73,6 @@ public class HUDOverlayHandler {
             if (isAlive && !isMounted && !mc.options.hideGui && isSur && !ThirstBarRenderer.cancelRender) {
                 renderThirstOverlay(guiGraphics);
             }
-        });
     }
 
     public static void renderExhaustion(GuiGraphics mStack) {
@@ -82,9 +82,9 @@ public class HUDOverlayHandler {
         Player player = mc.player;
         assert player != null;
 
-        if (player.isEyeInFluid(FluidTags.WATER)) {
-            foodIconsOffset = 60;
-        }
+        // if (mc.player.getAirSupply() < mc.player.getMaxAirSupply()) {
+        //    foodIconsOffset = 60;
+        // }
 
         int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET;
 
@@ -261,16 +261,13 @@ public class HUDOverlayHandler {
 
     // @SubscribeEvent
     public static void onClientTick() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-
-            unclampedFlashAlpha += alphaDir * 0.125f;
-            if (unclampedFlashAlpha >= 1.5f) {
-                alphaDir = -1;
-            } else if (unclampedFlashAlpha <= -0.5f) {
-                alphaDir = 1;
-            }
-            flashAlpha = Math.max(0F, Math.min(1F, unclampedFlashAlpha)) * 0.65f;
-        });
+        unclampedFlashAlpha += alphaDir * 0.125f;
+        if (unclampedFlashAlpha >= 1.5f) {
+            alphaDir = -1;
+        } else if (unclampedFlashAlpha <= -0.5f) {
+            alphaDir = 1;
+        }
+        flashAlpha = Math.max(0F, Math.min(1F, unclampedFlashAlpha)) * 0.65f;
     }
 
     public static void resetFlash() {
