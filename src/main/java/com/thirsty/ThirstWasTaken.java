@@ -1,9 +1,6 @@
 package com.thirsty;
 
-import com.thirsty.api.config.ClientConfig;
-import com.thirsty.api.config.CommonConfig;
-import com.thirsty.api.config.ContainerConfig;
-import com.thirsty.api.config.KeyWordConfig;
+import com.thirsty.api.config.*;
 import com.thirsty.api.create.CreateRegistry;
 import com.thirsty.gui.appleskin.HUDOverlayHandler;
 import com.thirsty.gui.appleskin.TooltipRenderer;
@@ -19,6 +16,7 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Direction;
@@ -38,6 +36,7 @@ public class ThirstWasTaken implements ModInitializer {
 		AutoConfig.register(CommonConfig.class, GsonConfigSerializer::new);
 		AutoConfig.register(KeyWordConfig.class, GsonConfigSerializer::new);
 
+		// Item + Thirst init
 		ItemInit.initialize();
 		try {
 				WaterPurity.init();
@@ -48,6 +47,10 @@ public class ThirstWasTaken implements ModInitializer {
 		WaterPurity.eventInit();
 		ThirstHelper.init();
 		ThirstNetwork.onInitialize();
+		CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> ThirstHelper.reload());
+
+		// Loot init
+		ThirstLootModifier.init();
 
 		// Create
 		if (FabricLoader.getInstance().isModLoaded("create")){

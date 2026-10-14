@@ -4,6 +4,7 @@ import com.thirsty.purity.WaterPurity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Recipe;
@@ -20,11 +21,16 @@ public class MixinAbstractFurnaceEntity {
     @Inject(method = "canBurn",at= @At("RETURN"), cancellable = true)
     private static void canBurn(RegistryAccess registryAccess, Recipe<?> recipe, NonNullList<ItemStack> nonNullList, int i, CallbackInfoReturnable<Boolean> cir){
         ItemStack itemStack = nonNullList.get(0);
-        if (!WaterPurity.isWaterFilledContainer(itemStack) || !cir.getReturnValueZ() || PotionUtils.getPotion(itemStack) != Potions.WATER){return;}
+        if (!WaterPurity.isWaterFilledContainer(itemStack) || !cir.getReturnValueZ()){return;}
+
+        if (itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) != Potions.WATER){
+            cir.setReturnValue(false);
+        }
 
         if (!WaterPurity.hasPurity(itemStack) || WaterPurity.getPurity(itemStack) == 3){
             cir.setReturnValue(false);
         }
+
         ItemStack out = nonNullList.get(2);
         if (!out.isEmpty()) {
             ItemStack expected = itemStack.copy();

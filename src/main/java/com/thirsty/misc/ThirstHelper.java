@@ -27,7 +27,6 @@ import static com.thirsty.purity.WaterPurity.hasPurity;
 public class ThirstHelper {
     private static final float MODIFIER_HARSHNESS = 0.5f;
     public static CommonConfig commonConfig = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
-    public static KeyWordConfig keyWordConfig = AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig();
 
     public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.DRINKS);
     public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.FOODS);
@@ -41,10 +40,17 @@ public class ThirstHelper {
         }
     }
 
-    public static String keywordBlackList = keyWordConfig.KEYWORD_BLACKLIST;
-    public static String keywordDrink = keyWordConfig.KEYWORD_DRINK;
-    public static String keywordSoup = keyWordConfig.KEYWORD_SOUP;
-    public static String keywordFruit = keyWordConfig.KEYWORD_FRUIT;
+    public static void reload() {
+        VALID_DRINKS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.DRINKS);
+        VALID_FOODS  = ConfigHelper.getItemsWithValues(ItemSettingsConfig.FOODS);
+        containers   = ConfigHelper.getItems(ContainerConfig.CONTAINER);
+        init();
+    }
+
+    public static String keywordBlackList = AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().KEYWORD_BLACKLIST;
+    public static String keywordDrink = AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().KEYWORD_DRINK;
+    public static String keywordSoup = AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().KEYWORD_SOUP;
+    public static String keywordFruit = AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().KEYWORD_FRUIT;
 
     public static boolean itemRestoresThirst(ItemStack itemStack)
     {
@@ -148,7 +154,7 @@ public class ThirstHelper {
 
     private static boolean checkKeywords(ItemStack itemStack)
     {
-        if(!keyWordConfig.ENABLE_KEYWORD_CONFIG)
+        if(!AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().ENABLE_KEYWORD_CONFIG)
             return false;
 
         if(!itemStack.isEdible())
@@ -205,31 +211,31 @@ public class ThirstHelper {
 
     public static int getDrinkHydration()
     {
-        return keyWordConfig.DEFAULT_DRINK_HYDRATION;
+        return AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().DEFAULT_DRINK_HYDRATION;
     }
 
     public static int getDrinkQuenchness()
     {
-        return keyWordConfig.DEFAULT_DRINK_QUENCHNESS;
+        return AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().DEFAULT_DRINK_QUENCHNESS;
     }
 
     public static int getSoupHydration()
     {
-        return keyWordConfig.DEFAULT_SOUP_HYDRATION;
+        return AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().DEFAULT_SOUP_HYDRATION;
     }
 
     public static int getSoupQuenchness()
     {
-        return keyWordConfig.DEFAULT_SOUP_QUENCHNESS;
+        return AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().DEFAULT_SOUP_QUENCHNESS;
     }
 
     public static int getFruitHydration()
     {
-        return keyWordConfig.DEFAULT_FRUIT_HYDRATION;
+        return AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().DEFAULT_FRUIT_HYDRATION;
     }
 
     public static int getFruitQuenchness()
     {
-        return keyWordConfig.DEFAULT_FRUIT_QUENCHNESS;
+        return AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().DEFAULT_FRUIT_QUENCHNESS;
     }
 }
