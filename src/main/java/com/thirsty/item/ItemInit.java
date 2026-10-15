@@ -3,11 +3,13 @@ package com.thirsty.item;
 import com.thirsty.ThirstWasTaken;
 import com.thirsty.api.create.CreateRegistry;
 import com.thirsty.purity.WaterPurity;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -36,6 +38,12 @@ public class ItemInit {
             // Ignore the food component for now, we'll cover it later in the food section.
             new DrinkableItem().setContainer(TERRACOTTA_BOWL),
             "terracotta_water_bowl"
+    );
+
+    public static final Item porridge_test = register(
+            // Ignore the food component for now, we'll cover it later in the food section.
+            new Item(new FabricItemSettings().food(new FoodProperties.Builder().alwaysEat().nutrition(1).build())),
+            "porridge_thirst_test_item"
     );
 
     public static Item register(Item item, String id) {

@@ -53,34 +53,6 @@ public class ThirstLootModifier {
                             .add(LootTableReference.lootTableReference(
                                     new ResourceLocation(ID, "chests_loot_modifier/abandoned_mineshaft_fr"))));
                 }
-
-                // Bastion
-                if (id.equals(new ResourceLocation("minecraft", "chests/bastion_other"))) {
-                    tableBuilder.withPool(LootPool.lootPool()
-                            .add(LootTableReference.lootTableReference(
-                                    new ResourceLocation(ID, "chests_loot_modifier/bastion_other_fr"))));
-                }
-
-                // nether bridge
-                if (id.equals(new ResourceLocation("minecraft", "chests/nether_bridge"))) {
-                    tableBuilder.withPool(LootPool.lootPool()
-                            .add(LootTableReference.lootTableReference(
-                                    new ResourceLocation(ID, "chests_loot_modifier/nether_bridge_fr"))));
-                }
-
-                // shipwreck
-                if (id.equals(new ResourceLocation("minecraft", "chests/shipwreck_supply"))) {
-                    tableBuilder.withPool(LootPool.lootPool()
-                            .add(LootTableReference.lootTableReference(
-                                    new ResourceLocation(ID, "chests_loot_modifier/shipwreck_supply_fr"))));
-                }
-
-                // simple dungeon
-                if (id.equals(new ResourceLocation("minecraft", "chests/simple_dungeon"))) {
-                    tableBuilder.withPool(LootPool.lootPool()
-                            .add(LootTableReference.lootTableReference(
-                                    new ResourceLocation(ID, "chests_loot_modifier/simple_dungeon_fr"))));
-                }
             }
         });
     }

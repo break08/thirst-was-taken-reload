@@ -98,6 +98,9 @@ dependencies {
 	// Glitch Core
 	modImplementation "maven.modrinth:s3dmwKy5:25HLOiOl"
 
+	// Jade
+	modImplementation "maven.modrinth:nvQzSEkH:ahavHbAT"
+
 	runtimeOnly "net.jodah:typetools:0.6.3"
 }
 

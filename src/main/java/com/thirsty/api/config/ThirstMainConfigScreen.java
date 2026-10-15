@@ -29,7 +29,7 @@ public class ThirstMainConfigScreen extends Screen {
         }).bounds(40, 80, 120, 20).build();
 
         Button containerConfig = Button.builder(Component.nullToEmpty("Container Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(ContainerConfig.containerConfig(this));
+            Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(ContainerConfig.class, this).get());
         }).bounds(40, 120, 120, 20).build();
 
         Button keyWordConfig = Button.builder(Component.nullToEmpty("Key Word Config"), (btn) -> {
@@ -39,7 +39,7 @@ public class ThirstMainConfigScreen extends Screen {
         }).bounds(40, 160, 120, 20).build();
 
         Button itemSettingsConfig = Button.builder(Component.nullToEmpty("Item Settings Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(ItemSettingsConfig.containerConfig(this));
+            Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(ItemSettingsConfig.class, this).get());
         }).bounds(40, 200, 120, 20).build();
 
 

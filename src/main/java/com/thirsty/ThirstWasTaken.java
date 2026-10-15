@@ -35,6 +35,8 @@ public class ThirstWasTaken implements ModInitializer {
 		// Cloth Config API
 		AutoConfig.register(CommonConfig.class, GsonConfigSerializer::new);
 		AutoConfig.register(KeyWordConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(ContainerConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(ItemSettingsConfig.class, GsonConfigSerializer::new);
 
 		// Item + Thirst init
 		ItemInit.initialize();

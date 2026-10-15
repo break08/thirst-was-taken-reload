@@ -119,8 +119,6 @@ public class WaterPurity {
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.GOLD_PURIFIED_WATER_CANTEEN)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.DIAMOND_PURIFIED_WATER_CANTEEN)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.NETHERITE_PURIFIED_WATER_CANTEEN)));
-
-
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.PURIFIED_WATER_BOTTLE)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.DIRTY_WATER_BOTTLE)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.APPLE_JUICE)));

@@ -30,7 +30,7 @@ public class ThirstHelper {
 
     public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.DRINKS);
     public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.FOODS);
-    public static List<Item> containers = ConfigHelper.getItems(ContainerConfig.CONTAINER);
+    public static List<Item> containers = ConfigHelper.getItems(AutoConfig.getConfigHolder(ContainerConfig.class).getConfig().CONTAINER);
 
     public static void init(){
         for (Item item : containers){

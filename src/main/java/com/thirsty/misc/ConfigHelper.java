@@ -18,7 +18,7 @@ public class ConfigHelper
      * This class was taken from <a href="https://github.com/Momo-Studios/Cold-Sweat/blob/1.18.x-FG/src/main/java/dev/momostudios/coldsweat/util/config/ConfigHelper.java">Cold Sweat</a>
      */
 
-    public static Map<Item, Number[]> getItemsWithValues(List<? extends List<?>> source)
+    public static Map<Item, Number[]> getItemsWithValuesOrigin(List<? extends List<?>> source)
     {
         Map<Item, Number[]> map = new HashMap<>();
         for (List<?> entry : source)
@@ -81,5 +81,40 @@ public class ConfigHelper
         }
 
         return items;
+    }
+
+    // Testing method
+    public static Map<Item, Number[]> getItemsWithValues(List<String> source)
+    {
+        Map<Item, Number[]> map = new HashMap<>();
+        for (String entry : source)
+        {
+            String[] catalog = entry.split(",");
+            String itemID = catalog[0];
+
+            if (itemID.startsWith("#"))
+            {
+                final String tagID = itemID.replace("#", "");
+
+                try {
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(tagID));
+                    for (Item item : getItemsInTag(tagKey)) {
+                        map.put(item, new Number[]{Integer.parseInt(catalog[1]), Integer.parseInt(catalog[2])});
+                    }
+                } catch (Exception e){
+                    System.out.print("[Thirst/ERROR] Bad Config:" + e);
+                }
+            }
+            else
+            {
+                Item newItem = BuiltInRegistries.ITEM.get(new ResourceLocation(itemID));
+                try {
+                    map.put(newItem, new Number[]{Integer.parseInt(catalog[1]), Integer.parseInt(catalog[2])});
+                } catch (Exception e){
+                    System.out.print("[Thirst/ERROR] Bad Config:" + e);
+                }
+            }
+        }
+        return map;
     }
 }

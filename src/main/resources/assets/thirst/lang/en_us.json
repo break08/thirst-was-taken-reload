@@ -72,7 +72,10 @@
   "text.autoconfig.thirst_keyword.option.KEYWORD_DRINK": "Drink Keywords",
   "text.autoconfig.thirst_keyword.option.KEYWORD_BLACKLIST": "Blacklist Keywords",
 
-  "thirst.container_config.title": "Thirst Container Config",
-  "thirst.container_config.general": "Container",
-  "thirst.container_config.container": "CONTAINER"
+  "text.autoconfig.thirst_item.option.DRINKS": "DRINKS",
+  "text.autoconfig.thirst_item.option.FOODS": "FOODS",
+  "text.autoconfig.thirst_item.option.ITEMS_BLACKLIST": "BLACK LIST",
+
+  "text.autoconfig.thirst_container.title": "Thirst Container Config",
+  "text.autoconfig.thirst_container.option.CONTAINER": "CONTAINER"
 }

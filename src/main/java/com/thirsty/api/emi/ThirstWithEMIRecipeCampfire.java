@@ -17,7 +17,7 @@ public class ThirstWithEMIRecipeCampfire extends BasicEmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgetHolder) {
-        widgetHolder.addTexture(EmiTexture.EMPTY_ARROW, 26, 1);
+        widgetHolder.addTexture(EmiTexture.EMPTY_FLAME, 26, 1);
         widgetHolder.addSlot(inputs.get(0), 0, 0);
         widgetHolder.addSlot(outputs.get(0), 58, 0).recipeContext(this);
     }

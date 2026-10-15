@@ -23,6 +23,7 @@
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
     "create.MixinOpenEndedPipe",
+    "jade.MixinFluidView",
     "toughasnails.MixinEmptyCanteenItem",
     "toughasnails.MixinServerConfig",
     "toughasnails.MixinThirstHandler",
