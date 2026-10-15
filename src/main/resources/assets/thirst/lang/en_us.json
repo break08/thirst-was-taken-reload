@@ -77,5 +77,8 @@
   "text.autoconfig.thirst_item.option.ITEMS_BLACKLIST": "BLACK LIST",
 
   "text.autoconfig.thirst_container.title": "Thirst Container Config",
-  "text.autoconfig.thirst_container.option.CONTAINER": "CONTAINER"
+  "text.autoconfig.thirst_container.option.CONTAINER": "CONTAINER",
+
+  "emi.category.thirst.purify_smelting": "Purify Smelting",
+  "emi.category.thirst.purify_campfire_cooking": "Purify Campfire Cooking"
 }

@@ -2,6 +2,7 @@ package com.thirsty.api.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -14,7 +15,8 @@ import java.util.List;
 
 @Config(name="thirst_item")
 public class ItemSettingsConfig implements ConfigData {
-    public static List<String> DRINKS = List.of(
+    @Comment("List of drink and its thirst and quenchness values. Format: item_id,thirst,quenchness . No white space allowed")
+    public List<String> DRINKS = List.of(
                     "minecraft:potion,6,8",
                     "thirst:terracotta_water_bowl,4,5",
                     "create:builders_tea,12,22",
@@ -52,7 +54,8 @@ public class ItemSettingsConfig implements ConfigData {
                     "toughasnails:ice_cream,6,12"
     );
 
-    public static List<String> FOODS = List.of(
+    @Comment("List of food and its thirst and quenchness values. Format: item_id,thirst,quenchness . No white space allowed")
+    public List<String> FOODS = List.of(
                     "minecraft:apple,2,3",
                     "minecraft:golden_apple,2,3",
                     "minecraft:enchanted_golden_apple,2,3",
@@ -80,6 +83,6 @@ public class ItemSettingsConfig implements ConfigData {
                     "farmersdelight:noodle_soup,4,5"
     );
 
-    public static List<String> ITEMS_BLACKLIST = List.of();
-
+    @Comment("List of items that are blocked from thirst restoration. Format: item_id")
+    public List<String> ITEMS_BLACKLIST = List.of();
 }

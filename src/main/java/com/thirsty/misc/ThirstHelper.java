@@ -27,9 +27,10 @@ import static com.thirsty.purity.WaterPurity.hasPurity;
 public class ThirstHelper {
     private static final float MODIFIER_HARSHNESS = 0.5f;
     public static CommonConfig commonConfig = AutoConfig.getConfigHolder(CommonConfig.class).getConfig();
+    public static ItemSettingsConfig itemConfig = AutoConfig.getConfigHolder(ItemSettingsConfig.class).getConfig();
 
-    public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.DRINKS);
-    public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.FOODS);
+    public static Map<Item, Number[]> VALID_DRINKS = ConfigHelper.getItemsWithValues(itemConfig.DRINKS);
+    public static Map<Item, Number[]> VALID_FOODS = ConfigHelper.getItemsWithValues(itemConfig.FOODS);
     public static List<Item> containers = ConfigHelper.getItems(AutoConfig.getConfigHolder(ContainerConfig.class).getConfig().CONTAINER);
 
     public static void init(){
@@ -41,9 +42,9 @@ public class ThirstHelper {
     }
 
     public static void reload() {
-        VALID_DRINKS = ConfigHelper.getItemsWithValues(ItemSettingsConfig.DRINKS);
-        VALID_FOODS  = ConfigHelper.getItemsWithValues(ItemSettingsConfig.FOODS);
-        containers   = ConfigHelper.getItems(ContainerConfig.CONTAINER);
+        VALID_DRINKS = ConfigHelper.getItemsWithValues(AutoConfig.getConfigHolder(ItemSettingsConfig.class).getConfig().DRINKS);
+        VALID_FOODS  = ConfigHelper.getItemsWithValues(AutoConfig.getConfigHolder(ItemSettingsConfig.class).getConfig().FOODS);
+        containers   = ConfigHelper.getItems(AutoConfig.getConfigHolder(ContainerConfig.class).getConfig().CONTAINER);
         init();
     }
 
@@ -60,13 +61,13 @@ public class ThirstHelper {
 
     public static boolean isDrink(ItemStack itemStack)
     {
-        return !ItemSettingsConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
+        return !itemConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
                 VALID_DRINKS.containsKey(itemStack.getItem());
     }
 
     public static boolean isFood(ItemStack itemStack)
     {
-        return !ItemSettingsConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
+        return !itemConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
                 VALID_FOODS.containsKey(itemStack.getItem());
     }
 
@@ -159,6 +160,10 @@ public class ThirstHelper {
 
         if(!itemStack.isEdible())
             return false;
+
+        if (itemConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString())){
+            return false;
+        }
 
         String pattern = keywordBlackList;
         Matcher matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
