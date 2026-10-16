@@ -8,6 +8,7 @@ import com.thirsty.purity.ContainerWithPurity;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -55,19 +56,23 @@ public class ThirstHelper {
 
     public static boolean itemRestoresThirst(ItemStack itemStack)
     {
+        if (itemConfig.ITEMS_BLACKLIST.contains(BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString())){
+            return false;
+        }
+
         return isDrink(itemStack) ||
                 isFood(itemStack) || checkKeywords(itemStack);
     }
 
     public static boolean isDrink(ItemStack itemStack)
     {
-        return !itemConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
+        return !itemConfig.ITEMS_BLACKLIST.contains(BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString()) &&
                 VALID_DRINKS.containsKey(itemStack.getItem());
     }
 
     public static boolean isFood(ItemStack itemStack)
     {
-        return !itemConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString()) &&
+        return !itemConfig.ITEMS_BLACKLIST.contains(BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString()) &&
                 VALID_FOODS.containsKey(itemStack.getItem());
     }
 

@@ -13,7 +13,7 @@
   ],
   "key": {
     "A": {
-      "tag": "forge:sand"
+      "tag": "minecraft:sand"
     },
     "B": {
       "item": "create:nozzle"

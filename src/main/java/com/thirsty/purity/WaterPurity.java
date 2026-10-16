@@ -445,8 +445,7 @@ public class WaterPurity {
     public static boolean givePurityEffects(Player player, ItemStack item)
     {
         if(!isWaterFilledContainer(item)) return true;
-        if(!hasPurity(item)) return true;
-        return givePurityEffects(player, ThirstHelper.getPurity(item));
+        return givePurityEffects(player, getPurity(item));
     }
 
     /**
