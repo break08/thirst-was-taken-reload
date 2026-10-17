@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(AbstractCookingRecipe.class)
 public class MixinAbstractCookingRecipe {
-    @ModifyArg(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/crafting/Ingredient;test(Lnet/minecraft/world/item/ItemStack;)Z"))
+    @ModifyArg(method = "matches(Lnet/minecraft/world/item/crafting/SingleRecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/crafting/Ingredient;test(Lnet/minecraft/world/item/ItemStack;)Z"))
     public ItemStack matches(ItemStack itemStack){
         if(WaterPurity.isWaterFilledContainer(itemStack) && !WaterPurity.hasPurity(itemStack)){
             ItemStack matched = itemStack.copy();
