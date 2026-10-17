@@ -47,8 +47,6 @@
   "text.autoconfig.thirst.option.HAND_DRINKING_QUENCHED": "Hand Drinking Quenched",
   "text.autoconfig.thirst.option.THIRST_DEPLETION_IN_PEACEFUL": "Thirst Depletion In Peaceful",
   "text.autoconfig.thirst.option.CAN_DRINK_RAIN_WATER": "Can Drink Rain Water",
-  "text.autoconfig.thirst.option.SAND_FILTER_MB_PER_TICK": "Sand Filter Mb Per Tick",
-  "text.autoconfig.thirst.option.SAND_FILTER_FILTRATION_AMOUNT": "Sand Filter Filtration Amount",
   "text.autoconfig.thirst.option.DEPLETES_WHEN_NAUSEA": "Depletes When Nausea",
   "text.autoconfig.thirst.option.HEALTH_REGEN_DEPLETES_HYDRATION": "Health Regen Depletes Hydration",
   "text.autoconfig.thirst.option.HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT": "Health Regen Dehydration Is Biome Dependent",

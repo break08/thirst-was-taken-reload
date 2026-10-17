@@ -32,8 +32,7 @@ public class RecipePurityHelper {
 
     public static ItemStack stackWithPurity(int purity, ItemStack item){
         ItemStack newStack = item.copy();
-        CompoundTag tag = NbtHelper.get(newStack);
-        tag.putInt("Purity", purity);
+        NbtHelper.edit(newStack, tag -> tag.putInt("Purity", purity));
         return newStack;
     }
 }

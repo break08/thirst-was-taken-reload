@@ -1,46 +1,34 @@
 package com.thirsty.network;
 
-import com.thirsty.ThirstWasTaken;
 import com.thirsty.api.config.ClientConfig;
 import com.thirsty.api.config.CommonConfig;
 import com.thirsty.misc.MathHelper;
 import com.thirsty.purity.WaterPurity;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
-public class ThirstNetwork {
-    public static final String MOD_ID_P = ThirstWasTaken.MOD_ID;
-
-    public static final ResourceLocation MOD_PACKET_ID = new ResourceLocation(MOD_ID_P, "hand_drink_pack");
+public class ThirstNetwork {;
 
     public static void onInitialize() {
         registerServerPackets();
     }
 
     public static void registerServerPackets() {
-        ServerPlayNetworking.registerGlobalReceiver(MOD_PACKET_ID,
-                (MinecraftServer server, ServerPlayer player_, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> {
-                    BlockPos blockPos_get = buf.readBlockPos();
-                    server.execute(() -> {
-                        Player player = player_;
+        ServerPlayNetworking.registerGlobalReceiver(ThirstPayload.TYPE,
+                (payload, context) -> {
+                    ServerPlayer player = context.player();
+                    context.server().execute(() -> {
                         Level level = player.level();
 
                         if(!player.isCrouching() || player.isInvulnerable())

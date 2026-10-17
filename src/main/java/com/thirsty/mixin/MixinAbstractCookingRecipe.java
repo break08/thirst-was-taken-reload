@@ -17,8 +17,7 @@ public class MixinAbstractCookingRecipe {
     public ItemStack matches(ItemStack itemStack){
         if(WaterPurity.isWaterFilledContainer(itemStack) && !WaterPurity.hasPurity(itemStack)){
             ItemStack matched = itemStack.copy();
-            CompoundTag tag = NbtHelper.get(matched);
-            tag.putInt("Purity", AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY);
+            NbtHelper.edit(matched, tag -> tag.putInt("Purity", AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY));
             return matched;
         }
         return itemStack;

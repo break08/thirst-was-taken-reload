@@ -20,6 +20,7 @@ import java.util.Objects;
 
 @Mixin(value = FluidView.class,remap = false)
 public class MixinFluidView {
+    /*
     @Redirect(method ="readDefault", at = @At(value = "INVOKE",target = "Lsnownee/jade/util/CommonProxy;getFluidName(Lsnownee/jade/api/fluid/JadeFluidObject;)Lnet/minecraft/network/chat/Component;"))
     private static Component read(JadeFluidObject fluidObject){
         Fluid instance = fluidObject.getType();
@@ -39,4 +40,6 @@ public class MixinFluidView {
 
         return CommonProxy.getFluidName(fluidObject);
     }
+
+     */
 }

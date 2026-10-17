@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.core.component.DataComponents;
 
 public class ThirstEMI implements EmiPlugin {
     public static final EmiStack WORKSTATION_FURNACE = EmiStack.of(Items.FURNACE);
@@ -29,7 +30,7 @@ public class ThirstEMI implements EmiPlugin {
         emiRegistry.addWorkstation(CAMP_PURIFY_CATEGORY, WORKSTATION_CAMPFIRE);
 
         ItemStack base = new ItemStack(Items.POTION);
-        PotionContents.createItemStack(base.getItem(), Potions.WATER);
+        base.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
 
         ItemStack bucket = new ItemStack(Items.WATER_BUCKET);
 

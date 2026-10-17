@@ -7,6 +7,6 @@ public class FDEHelper {
     private FDEHelper() {}
 
     public static boolean hasNourishment(Player player) {
-        return player.hasEffect(ModEffects.NOURISHMENT.get());
+        return  player.hasEffect(ModEffects.NOURISHMENT);
     }
 }

@@ -8,6 +8,7 @@ import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
+
+import static com.thirsty.ThirstWasTaken.MOD_ID;
 
 public class ThirstJEI implements IModPlugin {
     /**
@@ -33,26 +38,32 @@ public class ThirstJEI implements IModPlugin {
         return ResourceLocation.fromNamespaceAndPath("thirst", "jei_plugin");
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T extends Recipe<?>> RecipeHolder<T> getHolder(Level level, ResourceLocation id) {
+        return (RecipeHolder<T>) level.getRecipeManager().byKey(id).orElse(null);
+    }
+
     @Override
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         IRecipeManager manager = jeiRuntime.getRecipeManager();
         Level level = Minecraft.getInstance().level;
+        if (level == null) return;
 
-        if (level == null){
-            return;
-        }
+        List<RecipeHolder<SmeltingRecipe>> hideS = Stream.of(
+                        "water_bucket_from_smelting",
+                        "water_bottle_from_smelting",
+                        "terracotta_water_bowl_from_smelting")
+                .map(p -> ThirstJEI.<SmeltingRecipe>getHolder(level, ResourceLocation.fromNamespaceAndPath("thirst", p)))
+                .filter(Objects::nonNull)
+                .toList();
 
-        List<SmeltingRecipe> hideS = List.of(
-                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bucket_from_smelting"), SmeltingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bottle_from_smelting"), SmeltingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "terracotta_water_bowl_from_smelting"), SmeltingRecipe.class))
-        );
-
-        List<CampfireCookingRecipe> hideC = List.of(
-                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bucket_from_campfire_cooking"), CampfireCookingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bottle_from_campfire_cooking"), CampfireCookingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "terracotta_water_bowl_from_campfire_cooking"), CampfireCookingRecipe.class))
-        );
+        List<RecipeHolder<CampfireCookingRecipe>> hideC = Stream.of(
+                        "water_bucket_from_campfire_cooking",
+                        "water_bottle_from_campfire_cooking",
+                        "terracotta_water_bowl_from_campfire_cooking")
+                .map(p -> ThirstJEI.<CampfireCookingRecipe>getHolder(level, ResourceLocation.fromNamespaceAndPath("thirst", p)))
+                .filter(Objects::nonNull)
+                .toList();
 
         manager.hideRecipes(RecipeTypes.SMELTING, hideS);
         manager.hideRecipes(RecipeTypes.CAMPFIRE_COOKING, hideC);
@@ -69,9 +80,8 @@ public class ThirstJEI implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration reg){
         ItemStack water_bottle = new ItemStack(Items.POTION);
-        PotionContents.createItemStack(water_bottle.getItem(), Potions.WATER);
-
-        ItemStack water_bucket = new ItemStack(Items.BUCKET);
+        water_bottle.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
+        ItemStack water_bucket = new ItemStack(Items.WATER_BUCKET);
 
         ItemStack terra = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL);
 
@@ -226,31 +236,35 @@ public class ThirstJEI implements IModPlugin {
         );
 
         // List
-        List<SmeltingRecipe> smelting = List.of(
-                bottle_accept2pur,
-                bottle_dirty2accept,
-                bottle_sightly2pur,
-                bucket_accept2pur,
-                bucket_sightly2pur,
-                bucket_dirty2accept,
-                terra_sightly2pur,
-                terra_accept2pur,
-                terra_dirty2accept
+        List<RecipeHolder<SmeltingRecipe>> smelting = List.of(
+                holder("waterbottle_accept2pur", bottle_accept2pur),
+                holder("waterbottle_dirty2accept", bottle_dirty2accept),
+                holder("waterbottle_sightly2pur", bottle_sightly2pur),
+                holder("bucket_accept2pur", bucket_accept2pur),
+                holder("bucket_sightly2pur", bucket_sightly2pur),
+                holder("bucket_dirty2accept", bucket_dirty2accept),
+                holder("terra_sightly2pur", terra_sightly2pur),
+                holder("terra_accept2pur", terra_accept2pur),
+                holder("terra_dirty2accept", terra_dirty2accept)
         );
 
-        List<CampfireCookingRecipe> cookingCamp = List.of(
-                bottle_sightly2accpetc,
-                bottle_dirty2sightlyc,
-                bottle_accept2purc,
-                bucket_sightly2acceptc,
-                bucket_accept2purc,
-                bucket_dirty2sightlyc,
-                terra_sightly2acceptc,
-                terra_accept2purc,
-                terra_dirty2sightlyc
+        List<RecipeHolder<CampfireCookingRecipe>> cookingCamp = List.of(
+                holder("bottle_sightly2accpetc", bottle_sightly2accpetc),
+                holder("bottle_dirty2sightlyc", bottle_dirty2sightlyc),
+                holder("bottle_accept2purc", bottle_accept2purc),
+                holder("bucket_sightly2acceptc", bucket_sightly2acceptc),
+                holder("bucket_accept2purc", bucket_accept2purc),
+                holder("bucket_dirty2sightlyc", bucket_dirty2sightlyc),
+                holder("terra_sightly2acceptc", terra_sightly2acceptc),
+                holder("terra_accept2purc", terra_accept2purc),
+                holder("terra_dirty2sightlyc", terra_dirty2sightlyc)
         );
 
         reg.addRecipes(RecipeTypes.SMELTING, smelting);
         reg.addRecipes(RecipeTypes.CAMPFIRE_COOKING, cookingCamp);
+    }
+
+    private static <T extends Recipe<?>> RecipeHolder<T> holder(String path, T recipe) {
+        return new RecipeHolder<>(ResourceLocation.fromNamespaceAndPath(MOD_ID, path), recipe);
     }
 }

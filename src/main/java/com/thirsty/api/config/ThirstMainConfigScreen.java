@@ -61,7 +61,7 @@ public class ThirstMainConfigScreen extends Screen {
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         context.drawString(this.font, "Thirst Was Taken Config", 40, 40 - this.font.lineHeight - 10, 0xFFFFFFFF, true);
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
     }
 }

@@ -4,7 +4,6 @@ import com.thirsty.api.config.CommonConfig;
 import com.thirsty.item.ItemInit;
 import com.thirsty.misc.MathHelper;
 import com.thirsty.misc.NbtHelper;
-import com.thirsty.misc.ReflectionUtil;
 import com.thirsty.misc.TickHelper;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
@@ -32,7 +31,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
@@ -44,7 +42,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -80,7 +77,7 @@ public class WaterPurity {
      * returns the already-modified purity
      * */
 
-    public static void init() throws NoSuchMethodException {
+    public static void init() {
         registerDispenserBehaviours();
         registerContainers();
         registerFillables();
@@ -384,10 +381,9 @@ public class WaterPurity {
      */
     public static ItemStack addPurity(ItemStack item, BlockPos pos, Level level)
     {
-        CompoundTag tag = NbtHelper.get(item);
-        tag.putInt("Purity", getBlockPurity(level, pos));
-
-        return  item;
+        int p = getBlockPurity(level, pos);
+        NbtHelper.edit(item, tag -> tag.putInt("Purity", p));
+        return item;
     }
 
 
@@ -396,8 +392,7 @@ public class WaterPurity {
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
-        CompoundTag tag = NbtHelper.get(item);
-        tag.putInt("Purity", purity);
+        NbtHelper.edit(item, tag -> tag.putInt("Purity", purity));
 
         return item;
     }
@@ -408,9 +403,7 @@ public class WaterPurity {
     public static FluidVariant addPurity(FluidVariant fluid, int purity)
     {
         if (fluid.isBlank()) return fluid;
-        CompoundTag tag = NbtHelper.get(fluid);
-        tag.putInt("Purity", purity);
-        return FluidVariant.of(fluid.getFluid());
+        return NbtHelper.edit(fluid, tag -> tag.putInt("Purity", purity));
     }
 
 
@@ -541,44 +534,28 @@ public class WaterPurity {
         return shouldRegenerate || config.QUENCH_THIRST_WHEN_DEBUFFED;
     }
 
-    static void registerDispenserBehaviours() throws NoSuchMethodException {
-        //mappings (the default is getDispenseMethod)
-        Method getDispenseMethod_ = DispenserBlock.class.getDeclaredMethod("getDispenseMethod", ItemStack.class);
-        getDispenseMethod_.setAccessible(true);
+    static void registerDispenserBehaviours() {
+        DispenseItemBehavior bucketDefault = DispenserBlock.DISPENSER_REGISTRY.get(Items.BUCKET);
+        DispenseItemBehavior bottleDefault = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
 
-        DispenseItemBehavior bucketDefaultBehaviour = (DispenseItemBehavior) ReflectionUtil.fuckYouReflections(getDispenseMethod_, Blocks.DISPENSER, new ItemStack(Items.BUCKET));
-        DispenseItemBehavior bottleDefaultBehaviour = (DispenseItemBehavior) ReflectionUtil.fuckYouReflections(getDispenseMethod_, Blocks.DISPENSER, new ItemStack(Items.GLASS_BOTTLE));
-
-        //mappings
-        Method execute = DefaultDispenseItemBehavior.class.getDeclaredMethod("execute", BlockSource.class, ItemStack.class);
-        execute.setAccessible(true);
-
-        DispenserBlock.registerBehavior(Items.BUCKET, (block, item) ->
-        {
+        DispenserBlock.registerBehavior(Items.BUCKET, (block, item) -> {
             Level level = block.level();
             BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
-            if(level.getFluidState(blockpos).is(FluidTags.WATER) && level.getBlockState(blockpos).getFluidState().isSource())
-            {
+            if (level.getFluidState(blockpos).is(FluidTags.WATER) && level.getBlockState(blockpos).getFluidState().isSource()) {
                 ItemStack result = new ItemStack(Items.WATER_BUCKET);
-                return getStack(block, item, level, blockpos, result,true);
+                return getStack(block, item, level, blockpos, result, true);
             }
-            else
-                return (ItemStack) ReflectionUtil.fuckYouReflections(execute, bucketDefaultBehaviour, block, item);
-
+            return bucketDefault.dispense(block, item);
         });
 
-        DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, (block, item) ->
-        {
+        DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, (block, item) -> {
             Level level = block.level();
             BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
-
-            if(level.getFluidState(blockpos).is(FluidTags.WATER))
-            {
-                ItemStack result = PotionContents.createItemStack(Items.POTION,Potions.WATER);
-                return getStack(block, item, level, blockpos, result,false);
+            if (level.getFluidState(blockpos).is(FluidTags.WATER)) {
+                ItemStack result = PotionContents.createItemStack(Items.POTION, Potions.WATER);
+                return getStack(block, item, level, blockpos, result, false);
             }
-            else
-                return (ItemStack) ReflectionUtil.fuckYouReflections(execute, bottleDefaultBehaviour, block, item);
+            return bottleDefault.dispense(block, item);
         });
     }
 

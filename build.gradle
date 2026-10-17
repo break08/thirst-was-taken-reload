@@ -24,11 +24,6 @@ repositories {
 		}
 	}
 
-	maven { url = "https://mvn.devos.one/snapshots" }
-	maven { url = "https://mvn.devos.one/releases/" }
-	maven { url = "https://maven.tterrag.com/" }
-	maven { url = "https://maven.jamieswhiteshirt.com/libs-release" }
-	maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" }
 
 	maven {
 		// location of the maven that hosts JEI files before January 2023
@@ -90,13 +85,18 @@ dependencies {
 	modImplementation "maven.modrinth:ge1sOdFH:dLxSK1xF"
 
 	// Farmer's Delight Refabricated
-	modImplementation "maven.modrinth:7vxePowz:7H1g1o5h"
+	modImplementation "maven.modrinth:7vxePowz:wbVXT4Ua"
 
 	// Glitch Core
-	modImplementation "maven.modrinth:s3dmwKy5:25HLOiOl"
+	modImplementation "maven.modrinth:s3dmwKy5:sux8kYHe"
 
 	// Jade
-	modImplementation "maven.modrinth:nvQzSEkH:ahavHbAT"
+	modImplementation "maven.modrinth:nvQzSEkH:adpNvTZS"
+
+	runtimeOnly "net.jodah:typetools:0.6.3"
+
+	runtimeOnly "com.electronwill.night-config:core:3.6.7"
+	runtimeOnly "com.electronwill.night-config:toml:3.6.7"
 
 	// Everything is unstable like somebody's SMP
 
