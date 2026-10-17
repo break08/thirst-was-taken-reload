@@ -16,7 +16,7 @@ public class ModEffect implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Registry.register(BuiltInRegistries.MOB_EFFECT, new ResourceLocation("thirst", "thirst"), DEHYDRATION);
-        Registry.register(BuiltInRegistries.MOB_EFFECT, new ResourceLocation("thirst", "quenchness"), QUENCHNESS);
+        Registry.register(BuiltInRegistries.MOB_EFFECT, ResourceLocation.fromNamespaceAndPath("thirst", "thirst"), DEHYDRATION);
+        Registry.register(BuiltInRegistries.MOB_EFFECT, ResourceLocation.fromNamespaceAndPath("thirst", "quenchness"), QUENCHNESS);
     }
 }

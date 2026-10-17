@@ -2,8 +2,11 @@ package com.thirsty.mixin.jade;
 
 import com.thirsty.purity.WaterPurity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +24,8 @@ public class MixinFluidView {
     private static Component read(JadeFluidObject fluidObject){
         Fluid instance = fluidObject.getType();
         CompoundTag tag = fluidObject.getTag();
-        FluidVariant variant = FluidVariant.of(instance, tag);
+        if (tag==null){return CommonProxy.getFluidName(fluidObject);}
+        FluidVariant variant = FluidVariant.of(instance, DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, CustomData.of(tag)).build());
 
         if(variant.isBlank()) return CommonProxy.getFluidName(fluidObject);
 

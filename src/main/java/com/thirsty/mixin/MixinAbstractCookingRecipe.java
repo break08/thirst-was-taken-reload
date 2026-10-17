@@ -1,6 +1,7 @@
 package com.thirsty.mixin;
 
 import com.thirsty.api.config.CommonConfig;
+import com.thirsty.misc.NbtHelper;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,7 @@ public class MixinAbstractCookingRecipe {
     public ItemStack matches(ItemStack itemStack){
         if(WaterPurity.isWaterFilledContainer(itemStack) && !WaterPurity.hasPurity(itemStack)){
             ItemStack matched = itemStack.copy();
-            CompoundTag tag = matched.getOrCreateTag();
+            CompoundTag tag = NbtHelper.get(matched);
             tag.putInt("Purity", AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY);
             return matched;
         }

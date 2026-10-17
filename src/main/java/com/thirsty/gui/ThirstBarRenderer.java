@@ -7,6 +7,7 @@ import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -16,14 +17,9 @@ import net.minecraft.world.entity.LivingEntity;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
-public class ThirstBarRenderer implements HudRenderCallback {
-    /**
-     * Called after rendering the whole hud, which is displayed in game, in a world.
-     *
-     */
-
-    public static final ResourceLocation THIRST_ICONS = new ResourceLocation(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
-    public static final ResourceLocation MC_ICONS = new ResourceLocation("minecraft", "textures/gui/icons.png");
+public class ThirstBarRenderer {
+    public static final ResourceLocation THIRST_ICONS = ResourceLocation.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
+    public static final ResourceLocation MC_ICONS = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
     public static Boolean cancelRender = false;
     public static ClientConfig clientConfig = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
@@ -42,10 +38,6 @@ public class ThirstBarRenderer implements HudRenderCallback {
         }
     }
 
-    @Override
-    public void onHudRender(GuiGraphics guiGraphics, float tickDelta) {
-        renderingHUD(guiGraphics, tickDelta);
-    }
 
     public static void renderingHUD(GuiGraphics guiGraphics, float tickDelta){
         unRender();
@@ -103,4 +95,5 @@ public class ThirstBarRenderer implements HudRenderCallback {
             RenderSystem.disableBlend();
         }
     }
+
 }

@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
@@ -30,7 +30,7 @@ public class ThirstJEI implements IModPlugin {
      */
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return new ResourceLocation("thirst", "jei_plugin");
+        return ResourceLocation.fromNamespaceAndPath("thirst", "jei_plugin");
     }
 
     @Override
@@ -43,15 +43,15 @@ public class ThirstJEI implements IModPlugin {
         }
 
         List<SmeltingRecipe> hideS = List.of(
-                Objects.requireNonNull(getRecipe(level, new ResourceLocation("thirst", "water_bucket_from_smelting"), SmeltingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, new ResourceLocation("thirst", "water_bottle_from_smelting"), SmeltingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, new ResourceLocation("thirst", "terracotta_water_bowl_from_smelting"), SmeltingRecipe.class))
+                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bucket_from_smelting"), SmeltingRecipe.class)),
+                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bottle_from_smelting"), SmeltingRecipe.class)),
+                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "terracotta_water_bowl_from_smelting"), SmeltingRecipe.class))
         );
 
         List<CampfireCookingRecipe> hideC = List.of(
-                Objects.requireNonNull(getRecipe(level, new ResourceLocation("thirst", "water_bucket_from_campfire_cooking"), CampfireCookingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, new ResourceLocation("thirst", "water_bottle_from_campfire_cooking"), CampfireCookingRecipe.class)),
-                Objects.requireNonNull(getRecipe(level, new ResourceLocation("thirst", "terracotta_water_bowl_from_campfire_cooking"), CampfireCookingRecipe.class))
+                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bucket_from_campfire_cooking"), CampfireCookingRecipe.class)),
+                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "water_bottle_from_campfire_cooking"), CampfireCookingRecipe.class)),
+                Objects.requireNonNull(getRecipe(level, ResourceLocation.fromNamespaceAndPath("thirst", "terracotta_water_bowl_from_campfire_cooking"), CampfireCookingRecipe.class))
         );
 
         manager.hideRecipes(RecipeTypes.SMELTING, hideS);
@@ -69,7 +69,7 @@ public class ThirstJEI implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration reg){
         ItemStack water_bottle = new ItemStack(Items.POTION);
-        PotionUtils.setPotion(water_bottle, Potions.WATER);
+        PotionContents.createItemStack(water_bottle.getItem(), Potions.WATER);
 
         ItemStack water_bucket = new ItemStack(Items.BUCKET);
 

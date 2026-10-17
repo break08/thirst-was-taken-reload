@@ -12,9 +12,10 @@ public class QuenchnessEffect extends InstantenousMobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity p_295892_, int p_296026_) {
+    public boolean applyEffectTick(LivingEntity p_295892_, int p_296026_) {
         if (!p_295892_.level().isClientSide && p_295892_ instanceof Player player) {
             ThirstData.drink(player, 1,1);
         }
+        return false;
     }
 }

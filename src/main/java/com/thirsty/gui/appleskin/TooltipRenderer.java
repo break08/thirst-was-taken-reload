@@ -1,6 +1,5 @@
 package com.thirsty.gui.appleskin;
 
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.thirsty.gui.ThirstBarRenderer;
@@ -17,8 +16,8 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import squeek.appleskin.ModConfig;
-import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.helpers.KeyHelper;
+import vectorwing.farmersdelight.common.FoodValues;
 
 import java.util.Optional;
 

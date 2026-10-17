@@ -3,7 +3,7 @@ package com.thirsty.item;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -14,7 +14,6 @@ import static com.thirsty.purity.WaterPurity.getPurityColor;
 import static com.thirsty.purity.WaterPurity.getPurityText;
 
 public class TooltipHelper {
-
     public static void addPurityTooltip(ItemStack itemStack, List<Component> list){
         if(isWaterFilledContainer(itemStack))
         {
@@ -27,7 +26,7 @@ public class TooltipHelper {
 
                 assert purityText != null;
                 list.add(MutableComponent
-                        .create(new LiteralContents(purityText))
+                        .create(new PlainTextContents.LiteralContents(purityText))
                         .setStyle(Style.EMPTY.withColor(purityColor)));
             }
         }

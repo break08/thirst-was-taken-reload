@@ -5,16 +5,17 @@ import com.thirsty.misc.FDEHelper;
 import com.thirsty.misc.ModDamageSource;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.purity.WaterPurity;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
@@ -45,7 +46,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
      * version.
      */
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
         thirst = tag.getInt("thirst");
         quenched = tag.getInt("quenched");
         exhaustion = tag.getFloat("exhaustion");
@@ -64,7 +65,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
      * @param tag a {@code NbtCompound} on which to write this component's serializable data
      */
     @Override
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
         tag.putInt("thirst", thirst);
         tag.putInt("quenched", quenched);
         tag.putFloat("exhaustion", exhaustion);

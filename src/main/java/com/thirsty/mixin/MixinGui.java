@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinGui {
     @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 1))
     private void render(GuiGraphics guiGraphics, CallbackInfo ci){
-
         if (FabricLoader.getInstance().isModLoaded("appleskin")){
             HUDOverlayHandler.onClientTick();
             HUDOverlayHandler.onRenderGuiOverlayPre(guiGraphics, 0);

@@ -9,13 +9,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -23,10 +23,12 @@ import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Map;
 import java.util.function.Predicate;
 
 @Mixin({Bootstrap.class})
@@ -41,11 +43,12 @@ public class MixinBootstrap
             )},
             remap = true)
     private static void modifyCauldronInteractions(CallbackInfo ci) {
-        CauldronInteraction.WATER.remove(Items.GLASS_BOTTLE);
-        CauldronInteraction.WATER.put(Items.GLASS_BOTTLE, (blockState, level, pos, player, hand, itemStack) -> {
+        Map<Item, CauldronInteraction> water = CauldronInteraction.WATER.map();
+
+        water.put(Items.GLASS_BOTTLE, (blockState, level, pos, player, hand, itemStack) -> {
             if (!level.isClientSide()) {
                 Item item = itemStack.getItem();
-                ItemStack result = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+                ItemStack result = PotionContents.createItemStack(Items.POTION, Potions.WATER);
                 WaterPurity.addPurity(result, pos, level);
                 player.setItemInHand(hand, ItemUtils.createFilledResult(itemStack, player, result));
                 player.awardStat(Stats.USE_CAULDRON);
@@ -54,25 +57,20 @@ public class MixinBootstrap
                 level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
             }
-
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         });
-        CauldronInteraction.WATER.remove(Items.BUCKET);
-        CauldronInteraction.WATER.put(Items.BUCKET, (blockState, level, pos, player, hand, item) ->
-                fillBucket(blockState,
-                        level,
-                        pos,
-                        player,
-                        hand,
-                        item,
+
+        water.put(Items.BUCKET, (blockState, level, pos, player, hand, item) ->
+                fillBucket(blockState, level, pos, player, hand, item,
                         WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), pos, level),
-                        (p_175660_) -> p_175660_.getValue(LayeredCauldronBlock.LEVEL) == 3, SoundEvents.BUCKET_FILL)
-        );
+                        s -> s.getValue(LayeredCauldronBlock.LEVEL) == 3,
+                        SoundEvents.BUCKET_FILL));
     }
 
-    private static InteractionResult fillBucket(BlockState p_175636_, Level p_175637_, BlockPos p_175638_, Player p_175639_, InteractionHand p_175640_, ItemStack p_175641_, ItemStack p_175642_, Predicate<BlockState> p_175643_, SoundEvent p_175644_) {
+    @Unique
+    private static ItemInteractionResult fillBucket(BlockState p_175636_, Level p_175637_, BlockPos p_175638_, Player p_175639_, InteractionHand p_175640_, ItemStack p_175641_, ItemStack p_175642_, Predicate<BlockState> p_175643_, SoundEvent p_175644_) {
         if (!p_175643_.test(p_175636_)) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         } else {
             if (!p_175637_.isClientSide()) {
                 Item item = p_175641_.getItem();
@@ -84,7 +82,7 @@ public class MixinBootstrap
                 p_175637_.gameEvent(null, GameEvent.FLUID_PICKUP, p_175638_);
             }
 
-            return InteractionResult.sidedSuccess(p_175637_.isClientSide);
+            return ItemInteractionResult.sidedSuccess(p_175637_.isClientSide);
         }
     }
 }

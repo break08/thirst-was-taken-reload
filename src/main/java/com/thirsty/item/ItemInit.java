@@ -13,6 +13,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 
@@ -40,15 +41,16 @@ public class ItemInit {
             "terracotta_water_bowl"
     );
 
+    // Creative Stuff for key word config test
     public static final Item porridge_test = register(
             // Ignore the food component for now, we'll cover it later in the food section.
-            new Item(new FabricItemSettings().food(new FoodProperties.Builder().alwaysEat().nutrition(1).build())),
+            new Item(new Item.Properties().food(new FoodProperties.Builder().alwaysEdible().nutrition(1).saturationModifier(1).build())),
             "porridge_thirst_test_item"
     );
 
     public static Item register(Item item, String id) {
 
-        ResourceLocation itemID = new ResourceLocation(ThirstWasTaken.MOD_ID, id);
+        ResourceLocation itemID = ResourceLocation.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, id);
 
         return Registry.register(BuiltInRegistries.ITEM, itemID, item);
     }
@@ -60,19 +62,16 @@ public class ItemInit {
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 1));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 2));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 3));
-            itemGroup.accept(WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), 0));
-            itemGroup.accept(WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), 1));
-            itemGroup.accept(WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), 2));
-            itemGroup.accept(WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), 3));
+            itemGroup.accept(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), 0));
+            itemGroup.accept(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), 1));
+            itemGroup.accept(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), 2));
+            itemGroup.accept(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), 3));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 0));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 1));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 2));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL), 3));
             itemGroup.accept(ItemInit.CLAY_BOWL.getDefaultInstance());
             itemGroup.accept(ItemInit.TERRACOTTA_BOWL.getDefaultInstance());
-            if (FabricLoader.getInstance().isModLoaded("create")){
-                itemGroup.accept(CreateRegistry.SAND_FILTER_BLOCK.get());
-            }
         });
     }
 }

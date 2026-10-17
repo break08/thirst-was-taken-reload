@@ -3,6 +3,7 @@ package com.thirsty.purity;
 import com.thirsty.api.config.CommonConfig;
 import com.thirsty.item.ItemInit;
 import com.thirsty.misc.MathHelper;
+import com.thirsty.misc.NbtHelper;
 import com.thirsty.misc.ReflectionUtil;
 import com.thirsty.misc.TickHelper;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -12,7 +13,8 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,10 +32,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -46,7 +49,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
-import com.thirsty.misc.ThirstHelper;
 import toughasnails.api.item.TANItems;
 import toughasnails.item.EmptyCanteenItem;
 
@@ -62,6 +64,11 @@ public class WaterPurity {
     public static final int MIN_PURITY = 0;
     public static final int MAX_PURITY = 3;
 
+    public static final IntegerProperty BLOCK_PURITY = IntegerProperty.create("purity", 0, 4);
+
+    public static boolean tanLoaded = false;
+
+
     /**
      * Specifies the purity of a block filled with water. Has to be incremented by one
      * number because while using Mixins, generally every block that
@@ -72,9 +79,6 @@ public class WaterPurity {
      * On the bright side, there is a function in this class which takes in a BlockState and
      * returns the already-modified purity
      * */
-    public static final IntegerProperty BLOCK_PURITY = IntegerProperty.create("purity", 0, 4);
-
-    public static boolean tanLoaded = false;
 
     public static void init() throws NoSuchMethodException {
         registerDispenserBehaviours();
@@ -91,8 +95,8 @@ public class WaterPurity {
     private static void registerContainers()
     {
         waterContainers.add(new ContainerWithPurity(new ItemStack(Items.GLASS_BOTTLE),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)).setEqualsFilled(itemStack ->
-                itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) == Potions.WATER));
+                PotionContents.createItemStack(Items.POTION,Potions.WATER)).setEqualsFilled(itemStack ->
+                itemStack.is(Items.POTION) && Objects.requireNonNull(itemStack.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(ItemInit.TERRACOTTA_BOWL),
                 new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(Items.BUCKET),
@@ -215,7 +219,7 @@ public class WaterPurity {
             if(item.getItem() == Items.GLASS_BOTTLE && !world.getFluidState(blockPos).isSource())
             {
                 sound = SoundEvents.BOTTLE_FILL;
-                filledItem = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+                filledItem = PotionContents.createItemStack(Items.POTION,Potions.WATER);
             }
             else if(item.getItem() == ItemInit.TERRACOTTA_BOWL)
             {
@@ -228,8 +232,7 @@ public class WaterPurity {
             world.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
             world.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
 
-            CompoundTag tag = filledItem.getOrCreateTag();
-            tag.putInt("Purity", getBlockPurity(world, blockPos));
+            NbtHelper.edit(filledItem, tag -> tag.putInt("Purity", getBlockPurity(world, blockPos)));
 
             ItemStack result = ItemUtils.createFilledResult(item, player, filledItem);
 
@@ -292,14 +295,15 @@ public class WaterPurity {
      */
     public static int getPurity(ItemStack item)
     {
-        if(item.getTag() == null || !item.getTag().contains("Purity"))
+        CompoundTag tag = NbtHelper.get(item);
+        if(!tag.contains("Purity"))
         {
             if (tanLoaded && Objects.equals(BuiltInRegistries.ITEM.getKey(item.getItem()).getNamespace(), "toughasnails"))
                 return tanPurity(item);
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         }
 
-        return item.getTag().getInt("Purity");
+        return tag.getInt("Purity");
     }
 
     public static int tanPurity(ItemStack item)
@@ -322,10 +326,11 @@ public class WaterPurity {
      */
     public static int getPurity(FluidVariant fluid)
     {
-        if(fluid.getNbt() == null || !fluid.getNbt().contains("Purity"))
+        CompoundTag tag = NbtHelper.get(fluid);
+        if(!tag.contains("Purity"))
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
 
-        return fluid.getNbt().getInt("Purity");
+        return tag.getInt("Purity");
     }
 
     /**
@@ -362,20 +367,15 @@ public class WaterPurity {
 
     public static boolean hasPurity(ItemStack item)
     {
-        if(!item.hasTag())
-            return false;
-        else {
-            assert item.getTag() != null;
-            return item.getTag().contains("Purity");
-        }
+        CompoundTag tag = NbtHelper.get(item);
+
+        return tag.contains("Purity");
     }
 
     public static boolean hasPurity(FluidVariant fluid)
     {
-        if(!fluid.hasNbt() || fluid.getNbt() == null)
-            return false;
-        else
-            return fluid.getNbt().contains("Purity");
+        CompoundTag tag = NbtHelper.get(fluid);
+        return tag.contains("Purity");
     }
 
     /**
@@ -384,7 +384,7 @@ public class WaterPurity {
      */
     public static ItemStack addPurity(ItemStack item, BlockPos pos, Level level)
     {
-        CompoundTag tag = item.getOrCreateTag();
+        CompoundTag tag = NbtHelper.get(item);
         tag.putInt("Purity", getBlockPurity(level, pos));
 
         return  item;
@@ -396,7 +396,7 @@ public class WaterPurity {
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
-        CompoundTag tag = item.getOrCreateTag();
+        CompoundTag tag = NbtHelper.get(item);
         tag.putInt("Purity", purity);
 
         return item;
@@ -408,9 +408,9 @@ public class WaterPurity {
     public static FluidVariant addPurity(FluidVariant fluid, int purity)
     {
         if (fluid.isBlank()) return fluid;
-        CompoundTag tag = fluid.copyOrCreateNbt();
+        CompoundTag tag = NbtHelper.get(fluid);
         tag.putInt("Purity", purity);
-        return FluidVariant.of(fluid.getFluid(), tag);
+        return FluidVariant.of(fluid.getFluid());
     }
 
 
@@ -555,8 +555,8 @@ public class WaterPurity {
 
         DispenserBlock.registerBehavior(Items.BUCKET, (block, item) ->
         {
-            Level level = block.getLevel();
-            BlockPos blockpos = block.getPos().relative(block.getBlockState().getValue(DispenserBlock.FACING));
+            Level level = block.level();
+            BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
             if(level.getFluidState(blockpos).is(FluidTags.WATER) && level.getBlockState(blockpos).getFluidState().isSource())
             {
                 ItemStack result = new ItemStack(Items.WATER_BUCKET);
@@ -569,12 +569,12 @@ public class WaterPurity {
 
         DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, (block, item) ->
         {
-            Level level = block.getLevel();
-            BlockPos blockpos = block.getPos().relative(block.getBlockState().getValue(DispenserBlock.FACING));
+            Level level = block.level();
+            BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
 
             if(level.getFluidState(blockpos).is(FluidTags.WATER))
             {
-                ItemStack result = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+                ItemStack result = PotionContents.createItemStack(Items.POTION,Potions.WATER);
                 return getStack(block, item, level, blockpos, result,false);
             }
             else
@@ -588,14 +588,14 @@ public class WaterPurity {
         addPurity(result, blockpos, level);
 
         if(pickupBlock)
-            ((BucketPickup)level.getBlockState(blockpos).getBlock()).pickupBlock(level, blockpos, level.getBlockState(blockpos));
+            ((BucketPickup)level.getBlockState(blockpos).getBlock()).pickupBlock(null, level, blockpos, level.getBlockState(blockpos));
 
         item.shrink(1);
         if (item.isEmpty()) {
             return result;
         } else
         {
-            if (block.<DispenserBlockEntity>getEntity().addItem(result) < 0)
+            if (!block.blockEntity().insertItem(result.copy()).isEmpty())
             {
                 new DefaultDispenseItemBehavior().dispense(block, result);
             }
@@ -604,15 +604,11 @@ public class WaterPurity {
         }
     }
 
-    public static boolean matchRecipe(FluidVariant stack, FluidVariant other) {
-        return (stack.getNbt() == null || stack.getNbt().isEmpty()) ?
-                (other.getNbt() == null || other.getNbt().isEmpty()) : other.getNbt() != null && stack.getNbt().equals(other.getNbt());
-    }
-
     public static void eventInit(){
         fillablesHandler();
         harvestRunningWater();
     }
+
 
 
 }

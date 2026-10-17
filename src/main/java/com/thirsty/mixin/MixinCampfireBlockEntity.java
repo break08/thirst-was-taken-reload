@@ -1,15 +1,17 @@
 package com.thirsty.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.thirsty.misc.NbtHelper;
 import com.thirsty.purity.WaterPurity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.level.Level;
@@ -23,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Mixin({CampfireBlockEntity.class})
@@ -73,7 +76,10 @@ public class MixinCampfireBlockEntity
         if (WaterPurity.getPurity(itemStack) == 3){
             cir.setReturnValue(Optional.empty());
         }
-        if (itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) != Potions.WATER){
+        if (itemStack.get(DataComponents.POTION_CONTENTS) == null){
+            return;
+        }
+        if (itemStack.is(Items.POTION) && Objects.requireNonNull(itemStack.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)){
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -92,14 +98,19 @@ public class MixinCampfireBlockEntity
         ItemStack itemStack = campfireBlockEntity.items.get(i);
         if (!WaterPurity.isWaterFilledContainer(itemStack)) return itemStack2;
 
-        CompoundTag tag = itemStack.getTag();
-        if (tag == null) return itemStack2;
+        CompoundTag tag = NbtHelper.get(itemStack);
 
         ItemStack result = itemStack.copy();
         result.setCount(1);
-        result.setTag(tag.copy());
-        if (PotionUtils.getPotion(itemStack) == Potions.EMPTY && !WaterPurity.isWaterFilledContainer(itemStack2)) {
-            PotionUtils.setPotion(result, Potions.WATER);
+
+        // result.setTag(tag.copy());
+        NbtHelper.set(result, tag.copy());
+
+        PotionContents contents = itemStack.get(DataComponents.POTION_CONTENTS);
+        boolean noPotion = contents == null || contents.potion().isEmpty();
+
+        if (noPotion && !WaterPurity.isWaterFilledContainer(itemStack2)) {
+            result.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
         }
         WaterPurity.addPurity(result, Math.min(WaterPurity.getPurity(itemStack) + 1, 3));
         return result;

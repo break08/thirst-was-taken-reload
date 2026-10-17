@@ -30,7 +30,7 @@ public class ConfigHelper
                 final String tagID = itemID.replace("#", "");
 
                 try {
-                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(tagID));
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagID));
                     for (Item item : getItemsInTag(tagKey)) {
                         map.put(item, new Number[]{(Number) entry.get(1), (Number) entry.get(2)});
                     }
@@ -40,7 +40,7 @@ public class ConfigHelper
             }
             else
             {
-                Item newItem = BuiltInRegistries.ITEM.get(new ResourceLocation(itemID));
+                Item newItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemID));
                 map.put(newItem, new Number[]{(Number) entry.get(1), (Number) entry.get(2)});
             }
         }
@@ -54,7 +54,7 @@ public class ConfigHelper
             {
                 final String tagID = itemID.replace("#", "");
                 try {
-                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(tagID));
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagID));
                     list.addAll(getItemsInTag(tagKey));
                 } catch (Exception e) {
                     System.out.print("[Thirst/ERROR] Bad Config:" + e);
@@ -62,7 +62,7 @@ public class ConfigHelper
             }
             else
             {
-                Item newItem = BuiltInRegistries.ITEM.get(new ResourceLocation(itemID));
+                Item newItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemID));
                 list.add(newItem);
             }
         }
@@ -97,7 +97,7 @@ public class ConfigHelper
                 final String tagID = itemID.replace("#", "");
 
                 try {
-                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(tagID));
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagID));
                     for (Item item : getItemsInTag(tagKey)) {
                         map.put(item, new Number[]{Integer.parseInt(catalog[1]), Integer.parseInt(catalog[2])});
                     }
@@ -107,7 +107,7 @@ public class ConfigHelper
             }
             else
             {
-                Item newItem = BuiltInRegistries.ITEM.get(new ResourceLocation(itemID));
+                Item newItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemID));
                 try {
                     map.put(newItem, new Number[]{Integer.parseInt(catalog[1]), Integer.parseInt(catalog[2])});
                 } catch (Exception e){

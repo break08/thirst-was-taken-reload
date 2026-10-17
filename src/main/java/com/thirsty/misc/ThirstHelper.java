@@ -8,7 +8,10 @@ import com.thirsty.purity.ContainerWithPurity;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -124,7 +127,7 @@ public class ThirstHelper {
     public static float getExhaustionFireProtModifier(Player player)
     {
         final float perLevelMultiplier = 0.0625f;
-        int totalLevels = EnchantmentHelper.getDamageProtection(player.getArmorSlots(), player.damageSources().onFire()) / 2;
+        float totalLevels = (EnchantmentHelper.getDamageProtection((ServerLevel) player.level(),player, player.damageSources().onFire()) / 2);
 
         return 1.0f - ((totalLevels * perLevelMultiplier) * 0.75f);
     }
@@ -134,8 +137,8 @@ public class ThirstHelper {
         if(!hasPurity(item))
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         else {
-            assert item.getTag() != null;
-            return item.getTag().getInt("Purity");
+            CompoundTag tag = NbtHelper.get(item);
+            return tag.getInt("Purity");
         }
     }
     public static int getThirst(ItemStack itemStack)
@@ -163,7 +166,7 @@ public class ThirstHelper {
         if(!AutoConfig.getConfigHolder(KeyWordConfig.class).getConfig().ENABLE_KEYWORD_CONFIG)
             return false;
 
-        if(!itemStack.isEdible())
+        if(!itemStack.has(DataComponents.FOOD))
             return false;
 
         if (itemConfig.ITEMS_BLACKLIST.contains(itemStack.getItem().toString())){
