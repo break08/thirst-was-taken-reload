@@ -16,6 +16,6 @@ public class QuenchnessEffect extends InstantenousMobEffect {
         if (!p_295892_.level().isClientSide && p_295892_ instanceof Player player) {
             ThirstData.drink(player, 1,1);
         }
-        return false;
+        return true;
     }
 }

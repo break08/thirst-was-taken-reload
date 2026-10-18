@@ -79,7 +79,7 @@ public class MixinCampfireBlockEntity
         if (itemStack.get(DataComponents.POTION_CONTENTS) == null){
             return;
         }
-        if (itemStack.is(Items.POTION) && Objects.requireNonNull(itemStack.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)){
+        if (itemStack.is(Items.POTION) && !Objects.requireNonNull(itemStack.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)){
             cir.setReturnValue(Optional.empty());
         }
     }

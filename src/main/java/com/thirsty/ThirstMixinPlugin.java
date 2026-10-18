@@ -10,8 +10,6 @@ public class ThirstMixinPlugin implements IMixinConfigPlugin {
             return FabricLoader.getInstance().isModLoaded("toughasnails");
         } else if (mixinClassName.contains(".jade.")){
             return FabricLoader.getInstance().isModLoaded("jade");
-        } else if (mixinClassName.contains(".brewinandchewin.")){
-            return FabricLoader.getInstance().isModLoaded("brewinandchewin");
         }
         return true;
     }

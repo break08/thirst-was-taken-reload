@@ -23,7 +23,7 @@ public class MixinAbstractFurnaceEntity {
     private static void canBurn(RegistryAccess registryAccess, RecipeHolder<?> recipeHolder, NonNullList<ItemStack> nonNullList, int i, CallbackInfoReturnable<Boolean> cir){
         ItemStack itemStack = nonNullList.get(0);
 
-        if (!WaterPurity.isWaterFilledContainer(itemStack) || !cir.getReturnValueZ()){return;}
+        if (!WaterPurity.isWaterFilledContainer(itemStack) || recipeHolder == null){return;}
 
         if (!WaterPurity.hasPurity(itemStack) || WaterPurity.getPurity(itemStack) == 3){
             cir.setReturnValue(false);
@@ -35,12 +35,17 @@ public class MixinAbstractFurnaceEntity {
             cir.setReturnValue(false);
         }
         ItemStack out = nonNullList.get(2);
+
+        int out_purity = WaterPurity.getPurity(out);
+
         if (!out.isEmpty()) {
             ItemStack expected = itemStack.copy();
             expected.setCount(1);
             WaterPurity.addPurity(expected, Math.min(3, WaterPurity.getPurity(itemStack) + 2));
             if (!ItemStack.isSameItem(out, expected)) {
                 cir.setReturnValue(false);
+            } else if (Math.min(3, WaterPurity.getPurity(itemStack) + 2) == out_purity){
+                cir.setReturnValue(true);
             }
         }
     }

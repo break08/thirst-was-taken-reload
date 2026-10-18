@@ -4,7 +4,6 @@ import com.thirsty.api.config.CommonConfig;
 import com.thirsty.misc.NbtHelper;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import org.spongepowered.asm.mixin.Mixin;

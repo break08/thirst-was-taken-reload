@@ -100,9 +100,6 @@ dependencies {
 
 	// Everything is unstable like somebody's SMP
 
-	// Brewin and chewin
-	modCompileOnly "maven.modrinth:hIu9KJTT:O3PobqCR"
-
 }
 
 processResources {
