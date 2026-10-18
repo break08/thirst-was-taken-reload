@@ -15,6 +15,7 @@
     "MixinLayeredCauldronBlock",
     "MixinPotionItem",
     "PurityTooltip",
+    "brewinandchewin.MixinKegBlockEntity",
     "jade.MixinFluidView",
     "toughasnails.MixinEmptyCanteenItem",
     "toughasnails.MixinServerConfig",

@@ -48,6 +48,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 import toughasnails.api.item.TANItems;
 import toughasnails.item.EmptyCanteenItem;
+import umpaz.brewinandchewin.common.registry.BnCItems;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -86,6 +87,10 @@ public class WaterPurity {
         {
             CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> registerToughAsNailsContainers());
             tanLoaded = true;
+        }
+
+        if (FabricLoader.getInstance().isModLoaded("brewinandchewin")){
+            CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> registerBrewinAndChewinContainers());
         }
     }
 
@@ -131,13 +136,27 @@ public class WaterPurity {
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.SWEET_BERRY_JUICE)));
     }
 
+    private static void registerBrewinAndChewinContainers()
+    {
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.BEER)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.VODKA)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.RICE_WINE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.STRONGROOT_ALE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.PALE_JANE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.SALTY_FOLLY)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.STEEL_TOE_STOUT)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.GLITTERING_GRENADINE)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.BLOODY_MARY)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.RED_RUM)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.WITHERING_DROSS)));
+        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.KOMBUCHA)));
+    }
+
     private static void registerFillables()
     {
         fillablesWithPurity.add(Blocks.CAULDRON);
         fillablesWithPurity.add(Blocks.WATER_CAULDRON);
     }
-
-
 
     static void fillablesHandler()
     {
