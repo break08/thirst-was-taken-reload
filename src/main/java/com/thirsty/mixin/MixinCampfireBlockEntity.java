@@ -95,7 +95,7 @@ public class MixinCampfireBlockEntity
                                                 CampfireBlockEntity campfireBlockEntity,
                                                 @Local(ordinal = 0) int i
     ) {
-        ItemStack itemStack = campfireBlockEntity.items.get(i);
+        ItemStack itemStack = campfireBlockEntity.getItems().get(i);
         if (!WaterPurity.isWaterFilledContainer(itemStack)) return itemStack2;
 
         CompoundTag tag = NbtHelper.get(itemStack);

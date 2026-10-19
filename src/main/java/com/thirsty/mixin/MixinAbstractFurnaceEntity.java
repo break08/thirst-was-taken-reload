@@ -19,9 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
 public class MixinAbstractFurnaceEntity {
+    // ok mojang make nbt harder in 1.21.1, they had better not do it
     @Inject(method = "canBurn",at= @At("RETURN"), cancellable = true)
     private static void canBurn(RegistryAccess registryAccess, RecipeHolder<?> recipeHolder, NonNullList<ItemStack> nonNullList, int i, CallbackInfoReturnable<Boolean> cir){
         ItemStack itemStack = nonNullList.get(0);
+
+        PotionContents contents = itemStack.get(DataComponents.POTION_CONTENTS);
+        if (contents == null){return;}
+        if (itemStack.is(Items.POTION) && !contents.is(Potions.WATER)){
+            cir.setReturnValue(false);
+        }
 
         if (!WaterPurity.isWaterFilledContainer(itemStack) || recipeHolder == null){return;}
 
@@ -29,25 +36,15 @@ public class MixinAbstractFurnaceEntity {
             cir.setReturnValue(false);
         }
 
-        PotionContents contents = itemStack.get(DataComponents.POTION_CONTENTS);
-        if (contents == null){return;}
-        if (itemStack.is(Items.POTION) && !contents.is(Potions.WATER)){
-            cir.setReturnValue(false);
-        }
         ItemStack out = nonNullList.get(2);
 
-        int out_purity = WaterPurity.getPurity(out);
+        if (out.isEmpty()) return;
 
-        if (!out.isEmpty()) {
-            ItemStack expected = itemStack.copy();
-            expected.setCount(1);
-            WaterPurity.addPurity(expected, Math.min(3, WaterPurity.getPurity(itemStack) + 2));
-            if (!ItemStack.isSameItem(out, expected)) {
-                cir.setReturnValue(false);
-            } else if (Math.min(3, WaterPurity.getPurity(itemStack) + 2) == out_purity){
-                cir.setReturnValue(true);
-            }
-        }
+        int expected = Math.min(3, WaterPurity.getPurity(itemStack) + 2);
+        boolean canStack = ItemStack.isSameItem(out, itemStack)
+                && WaterPurity.getPurity(out) == expected
+                && out.getCount() < Math.min(i, out.getMaxStackSize());
+        cir.setReturnValue(canStack);
     }
 
     @ModifyVariable(

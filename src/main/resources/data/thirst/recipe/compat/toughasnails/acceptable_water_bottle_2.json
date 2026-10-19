@@ -1,8 +1,10 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:mod_loaded",
-      "modid": "toughasnails"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "toughasnails"
+      ]
     }
   ],
   "type": "toughasnails:water_purifying",
@@ -11,12 +13,16 @@
     "item": "toughasnails:dirty_water_bottle"
   },
   "result": {
-    "Count": 1,
     "id": "minecraft:potion",
-    "tag": {
-      "Potion": "minecraft:water",
-      "Purity": 2
-    }
+    "components": {
+      "potion_contents": {
+        "potion": "minecraft:water"
+      },
+      "minecraft:custom_data": {
+        "Purity": 2
+      }
+    },
+    "count": 1
   },
   "purifytime": 200
 }

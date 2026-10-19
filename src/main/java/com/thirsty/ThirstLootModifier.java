@@ -24,26 +24,44 @@ public class ThirstLootModifier {
                 if (FabricLoader.getInstance().isModLoaded("farmersdelight")) {
                     addPool(tableBuilder, "chests_loot_modifier/abandoned_mineshaft_fr");
                 }
+                if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
+                    addPool(tableBuilder, "chests_loot_modifier/abandoned_mineshaft_bc");
+                }
+
             }
 
             // bastion
             if (target.equals(ResourceLocation.withDefaultNamespace("chests/bastion_other"))) {
                 addPool(tableBuilder, "chests_loot_modifier/bastion_other");
+
+                // b&c
+                if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
+                    addPool(tableBuilder, "chests_loot_modifier/bastion_other_bc");
+                }
             }
 
             // nether bridge
             if (target.equals(ResourceLocation.withDefaultNamespace("chests/nether_bridge"))) {
                 addPool(tableBuilder, "chests_loot_modifier/nether_bridge");
+                if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
+                    addPool(tableBuilder, "chests_loot_modifier/nether_bridge_bc");
+                }
             }
 
             // shipwreck
             if (target.equals(ResourceLocation.withDefaultNamespace("chests/shipwreck_supply"))) {
                 addPool(tableBuilder, "chests_loot_modifier/shipwreck_supply");
+                if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
+                    addPool(tableBuilder, "chests_loot_modifier/shipwreck_supply_bc");
+                }
             }
 
             // simple dungeon
             if (target.equals(ResourceLocation.withDefaultNamespace("chests/simple_dungeon"))) {
                 addPool(tableBuilder, "chests_loot_modifier/simple_dungeon");
+                if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
+                    addPool(tableBuilder, "chests_loot_modifier/simple_dungeon_bc");
+                }
             }
         });
     }

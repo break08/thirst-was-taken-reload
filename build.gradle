@@ -45,6 +45,7 @@ repositories {
 		url = "https://repo.sleeping.town/"
 	}
 	maven { url "https://maven.ryanliptak.com/" }
+	maven { url = "https://maven.greenhouse.lgbt/releases" }
 }
 
 dependencies {
@@ -71,7 +72,7 @@ dependencies {
 	modImplementation("com.terraformersmc:modmenu:${modmenu}")
 
 	// JEI
-	modImplementation("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
+	modCompileOnly("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
 
 	// EMI
 	modImplementation "dev.emi:emi-fabric:${emi_version}"
@@ -92,6 +93,13 @@ dependencies {
 
 	// Jade
 	modImplementation "maven.modrinth:nvQzSEkH:adpNvTZS"
+
+	// Brewin' and Chewin'
+	modImplementation "maven.modrinth:hIu9KJTT:O3PobqCR"
+        modApi "house.greenhouse:greenhouseconfig:2.2.3+1.21.1-fabric"
+    	include "house.greenhouse:greenhouseconfig:2.2.3+1.21.1-fabric"
+    	api "house.greenhouse:greenhouseconfig_toml:1.1.0"
+    	include "house.greenhouse:greenhouseconfig_toml:1.1.0"
 
 	runtimeOnly "net.jodah:typetools:0.6.3"
 
