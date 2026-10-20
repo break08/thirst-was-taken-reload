@@ -22,15 +22,16 @@ public class MixinAbstractFurnaceEntity {
     private static void canBurn(RegistryAccess registryAccess, Recipe<?> recipe, NonNullList<ItemStack> nonNullList, int i, CallbackInfoReturnable<Boolean> cir){
         ItemStack itemStack = nonNullList.get(0);
 
+        if (itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) != Potions.WATER){
+            cir.setReturnValue(false);
+        }
+
         if (!WaterPurity.isWaterFilledContainer(itemStack) || !cir.getReturnValueZ()){return;}
 
         if (!WaterPurity.hasPurity(itemStack) || WaterPurity.getPurity(itemStack) == 3){
             cir.setReturnValue(false);
         }
 
-        if (itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) != Potions.WATER){
-            cir.setReturnValue(false);
-        }
         ItemStack out = nonNullList.get(2);
         if (!out.isEmpty()) {
             ItemStack expected = itemStack.copy();
