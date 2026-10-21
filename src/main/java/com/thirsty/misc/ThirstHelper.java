@@ -12,11 +12,13 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -91,7 +93,7 @@ public class ThirstHelper {
         BlockPos pos = player.getOnPos();
         Level level = player.level();
 
-        if(level.dimensionType().ultraWarm())
+        if(level.dimension().equals(Level.NETHER))
             return (float)commonConfig.NETHER_THIRST_DEPLETION_MODIFIER;
         else
         {
@@ -137,7 +139,7 @@ public class ThirstHelper {
         if(!hasPurity(item))
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         else {
-            CompoundTag tag = NbtHelper.get(item);
+            CompoundTag tag = item.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
             return tag.getIntOr("Purity", -1);
         }
     }
@@ -175,14 +177,14 @@ public class ThirstHelper {
 
         String pattern = keywordBlackList;
         Matcher matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
+                .matcher(itemStack.getItem().getDescriptionId());
 
         if(matcher.find())
             return false;
 
         pattern = keywordDrink;
         matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
+                .matcher(itemStack.getItem().getDescriptionId());
 
         boolean hasWater=matcher.find();
         if(hasWater)
@@ -196,7 +198,7 @@ public class ThirstHelper {
 
         pattern = keywordSoup;
         matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
+                .matcher(itemStack.getItem().getDescriptionId());
 
         hasWater=matcher.find();
         if(hasWater)
@@ -210,7 +212,7 @@ public class ThirstHelper {
 
         pattern = keywordFruit;
         matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
+                .matcher(itemStack.getItem().getDescriptionId());
 
         hasWater = matcher.find();
         if(hasWater)

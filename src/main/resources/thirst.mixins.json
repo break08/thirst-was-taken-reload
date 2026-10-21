@@ -13,8 +13,6 @@
     "MixinItemStack",
     "MixinItemStackAppleSkinTooltipRender",
     "MixinLayeredCauldronBlock",
-    "PurityTooltip",
-    "jade.MixinFluidView",
     "toughasnails.MixinEmptyCanteenItem",
     "toughasnails.MixinServerConfig",
     "toughasnails.MixinThirstHandler",

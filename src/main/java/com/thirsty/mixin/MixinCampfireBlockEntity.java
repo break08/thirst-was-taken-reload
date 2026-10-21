@@ -1,7 +1,6 @@
 package com.thirsty.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.thirsty.misc.NbtHelper;
 import com.thirsty.purity.WaterPurity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
@@ -101,13 +101,13 @@ public class MixinCampfireBlockEntity
         ItemStack itemStack = entity.getItems().get(slot);
         if (!WaterPurity.isWaterFilledContainer(itemStack)) return result;
 
-        CompoundTag tag = NbtHelper.get(itemStack);
+        CompoundTag tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 
         ItemStack a = itemStack.copy();
         a.setCount(1);
 
-        // result.setTag(tag.copy());
-        NbtHelper.set(a, tag.copy());
+        // NbtHelper.set(a, tag.copy());
+        a.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 
         PotionContents contents = itemStack.get(DataComponents.POTION_CONTENTS);
         boolean noPotion = contents == null || contents.potion().isEmpty();
