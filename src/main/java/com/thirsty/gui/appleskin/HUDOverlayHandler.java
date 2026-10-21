@@ -1,25 +1,19 @@
 package com.thirsty.gui.appleskin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;
 import com.thirsty.api.config.ClientConfig;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import squeek.appleskin.ModConfig;
 import squeek.appleskin.util.IntPoint;
 import com.thirsty.gui.ThirstBarRenderer;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 import java.util.Vector;
@@ -144,10 +138,8 @@ public class HUDOverlayHandler {
         if (saturationLevel + saturationGained < 0)
             return;
 
-        enableAlpha(alpha);
 
         Identifier icons = modIcons;
-        RenderSystem.setShaderTexture(0, icons);
 
         float modifiedSaturation = Math.max(0, Math.min(saturationLevel + saturationGained, 20));
 
@@ -181,22 +173,16 @@ public class HUDOverlayHandler {
             else if (effectiveSaturationOfBar > .25)
                 u = iconSize;
 
-            guiGraphics.blit(icons, x, y, u, v, iconSize, iconSize);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, icons, x, y, u, v, iconSize, iconSize, 256, 256);
         }
 
-        // rebind default icons
-        RenderSystem.setShaderTexture(0, ThirstBarRenderer.MC_ICONS);
-        disableAlpha();
     }
 
     public static void drawHungerOverlay(int hungerRestored, int foodLevel, GuiGraphicsExtractor guiGraphics, int right, int top, float alpha) {
         if (hungerRestored <= 0)
             return;
 
-        enableAlpha(alpha);
-
         Identifier icons = ThirstBarRenderer.THIRST_ICONS;
-        RenderSystem.setShaderTexture(0, icons);
 
         int modifiedFood = Math.max(0, Math.min(20, foodLevel + hungerRestored));
 
@@ -223,17 +209,14 @@ public class HUDOverlayHandler {
             if (i * 2 + 1 == modifiedFood)
                 u -= iconSize - 1;
 
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
 
             guiGraphics.blit(icons, x, y, u, v, iconSize, iconSize, 25, 9);
         }
 
-        disableAlpha();
     }
 
     public static void drawExhaustionOverlay(float exhaustion, GuiGraphicsExtractor guiGraphics, int right, int top) {
         Identifier icons = modIcons;
-        RenderSystem.setShaderTexture(0, icons);
 
         float maxExhaustion = 4.0f;
         // clamp between 0 and 1
@@ -241,24 +224,11 @@ public class HUDOverlayHandler {
         int width = (int) (ratio * 81);
         int height = 9;
 
-        enableAlpha(.75f);
-        guiGraphics.blit(icons, right - width, top, 81 - width, 18, width, height);
-        disableAlpha();
-
-        // rebind default icons
-        RenderSystem.setShaderTexture(0, ThirstBarRenderer.MC_ICONS);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, icons,
+                right - width, top, 81 - width, 18, width, height, 256, 256);
     }
 
-    public static void enableAlpha(float alpha) {
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    }
 
-    public static void disableAlpha() {
-        RenderSystem.disableBlend();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    }
 
     // @SubscribeEvent
     public static void onClientTick() {

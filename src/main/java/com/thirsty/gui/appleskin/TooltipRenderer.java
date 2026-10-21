@@ -1,34 +1,36 @@
 package com.thirsty.gui.appleskin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.thirsty.gui.ThirstBarRenderer;
 import com.thirsty.ThirstWasTaken;
 import com.thirsty.misc.ThirstHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import squeek.appleskin.ModConfig;
 import squeek.appleskin.helpers.KeyHelper;
-import vectorwing.farmersdelight.common.FoodValues;
 
 import java.util.Optional;
 
 public class TooltipRenderer {
     public static void register(){
-        TooltipComponentCallback.EVENT.register(data -> {
-            if (data instanceof FoodTooltip food) {
+        ClientTooltipComponentCallback.EVENT.register(data -> {
+            if (data instanceof ThirstTooltip food) {
                 return new FoodTooltipRenderer(food);
             }
             return null;
         });
+    }
+
+    public static Optional<TooltipComponent> createTooltip(ItemStack stack) {
+        if (!shouldShowTooltip(stack)) return Optional.empty();
+        ThirstTooltip tooltip = new ThirstTooltip(stack);
+        return Optional.of(tooltip);
     }
 
     private static final Identifier modIcons;
@@ -87,161 +89,73 @@ public class TooltipRenderer {
         }
     }
 
-    public static class FoodTooltip implements TooltipComponent {
-        private FoodValues defaultFood;
-        private FoodValues modifiedFood;
-        private final int biggestHunger;
-        private final float biggestSaturationIncrement;
-        private int hungerBars;
-        private String hungerBarsText;
-        private int saturationBars;
-        private String saturationBarsText;
-        private final ItemStack itemStack;
+    static final class ThirstTooltip implements TooltipComponent {
+        private final ItemStack stack;
+        private final int thirstBars;
+        private final int quenchedBars;
+        private final String thirstText;
+        private final String quenchedText;
 
-        FoodTooltip(ItemStack itemStack) {
-            this.itemStack = itemStack;
-            this.biggestHunger = ThirstHelper.getThirst(itemStack);
-            this.biggestSaturationIncrement = ThirstHelper.getQuenched(itemStack);
-            this.hungerBars = (int)Math.ceil((float)Math.abs(this.biggestHunger) / 2.0F);
-            if (this.hungerBars > 10) {
-                this.hungerBarsText = "x" + (this.biggestHunger < 0 ? -1 : 1) * this.hungerBars;
-                this.hungerBars = 1;
-            }
-
-            this.saturationBars = (int)Math.ceil(Math.abs(this.biggestSaturationIncrement) / 2.0F);
-            if (this.saturationBars > 10 || this.saturationBars == 0) {
-                this.saturationBarsText = "x" + (this.biggestSaturationIncrement < 0.0F ? -1 : 1) * this.saturationBars;
-                this.saturationBars = 1;
-            }
-
+        private ThirstTooltip(ItemStack stack) {
+            this.stack = stack.copy();
+            int thirst = ThirstHelper.getThirst(stack);
+            float quenched = ThirstHelper.getQuenched(stack);
+            int rawThirstBars = (int) Math.ceil(Math.abs(thirst) / 2.0F);
+            int rawQuenchedBars = (int) Math.ceil(Math.abs(quenched) / 2.0F);
+            this.thirstBars = rawThirstBars > 10 ? 1 : rawThirstBars;
+            this.quenchedBars = rawQuenchedBars > 10 || rawQuenchedBars == 0 ? 1 : rawQuenchedBars;
+            this.thirstText = rawThirstBars > 10 ? "x" + rawThirstBars : null;
+            this.quenchedText = rawQuenchedBars > 10 || rawQuenchedBars == 0 ? "x" + rawQuenchedBars : null;
         }
 
-        boolean shouldRenderHungerBars() {
-            return this.hungerBars > 0;
-        }
+
     }
 
-    static class FoodTooltipRenderer implements ClientTooltipComponent {
-        private final FoodTooltip foodTooltip;
 
-        FoodTooltipRenderer(FoodTooltip foodTooltip) {
-            this.foodTooltip = foodTooltip;
+    static class FoodTooltipRenderer implements ClientTooltipComponent {
+        private final ThirstTooltip tooltip;
+
+        FoodTooltipRenderer(ThirstTooltip tooltip) {
+            this.tooltip = tooltip;
         }
 
-        public int getHeight() {
+        @Override
+        public int getHeight(@NotNull Font font) {
             return 20;
         }
 
+        @Override
         public int getWidth(@NotNull Font font) {
-            int hungerBarsWidth = this.foodTooltip.hungerBars * 9;
-            if (this.foodTooltip.hungerBarsText != null) {
-                hungerBarsWidth += font.width(this.foodTooltip.hungerBarsText);
-            }
-
-            int saturationBarsWidth = this.foodTooltip.saturationBars * 7;
-            if (this.foodTooltip.saturationBarsText != null) {
-                saturationBarsWidth += font.width(this.foodTooltip.saturationBarsText);
-            }
-
-            return Math.max(hungerBarsWidth, saturationBarsWidth) + 2;
+            int thirstWidth = tooltip.thirstBars * 9 + (tooltip.thirstText == null ? 0 : font.width(tooltip.thirstText));
+            int quenchedWidth = tooltip.quenchedBars * 7 + (tooltip.quenchedText == null ? 0 : font.width(tooltip.quenchedText));
+            return Math.max(thirstWidth, quenchedWidth) + 2;
         }
 
-        public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics guiGraphics) {
-            ItemStack itemStack = foodTooltip.itemStack;
-            Minecraft mc = Minecraft.getInstance();
-            if (!shouldShowTooltip(itemStack))
-                return;
+        @Override
+        public void extractImage(@NotNull Font font, int x, int y, int width, int height, @NotNull GuiGraphicsExtractor graphics) {
+            if (!shouldShowTooltip(tooltip.stack)) return;
 
-            Screen gui = mc.screen;
-            if (gui == null)
-                return;
-
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-
-            int offsetX = x;
-            int offsetY = y;
-
-            int thirst = ThirstHelper.getThirst(itemStack);
-
-            // Render from right to left so that the icons 'face' the right way
-            offsetX += (foodTooltip.hungerBars - 1) * 9;
-
-            Identifier icons = ThirstBarRenderer.THIRST_ICONS;
-            RenderSystem.setShaderTexture(0, icons);
-            for (int i = 0; i < foodTooltip.hungerBars * 2; i += 2)
-            {
-                if (thirst == i + 1)
-                    guiGraphics.blit(icons, offsetX, offsetY,0, 8, 0, 9, 9, 25, 9);
-                else
-                    guiGraphics.blit(icons, offsetX, offsetY,0, 16, 0, 9, 9, 25, 9);
-
-                offsetX -= 9;
+            int thirst = ThirstHelper.getThirst(tooltip.stack);
+            int iconX = x + (tooltip.thirstBars - 1) * 9;
+            for (int i = 0; i < tooltip.thirstBars * 2; i += 2) {
+                int u = thirst == i + 1 ? 8 : 16;
+                graphics.blit(RenderPipelines.GUI_TEXTURED, ThirstBarRenderer.THIRST_ICONS, iconX, y, u, 0, 9, 9, 25, 9);
+                iconX -= 9;
             }
-            if (foodTooltip.hungerBarsText != null)
-            {
-                PoseStack poseStack = guiGraphics.pose();
-                offsetX += 18;
-                poseStack.pushPose();
-                poseStack.translate(offsetX, offsetY, 0);
-                poseStack.scale(0.75f, 0.75f, 0.75f);
-                guiGraphics.drawCenteredString(font, foodTooltip.hungerBarsText, 2, 2, 0xFFAAAAAA);
-                poseStack.popPose();
+            if (tooltip.thirstText != null) graphics.text(font, tooltip.thirstText, x + 11, y + 1, 0xFFAAAAAA);
+
+            float quenched = ThirstHelper.getQuenched(tooltip.stack);
+            float absolute = Math.abs(quenched);
+            iconX = x + (tooltip.quenchedBars - 1) * 7;
+            for (int i = 0; i < tooltip.quenchedBars * 2; i += 2) {
+                float amount = (absolute - i) / 2.0F;
+                int u = amount >= 1 ? 21 : amount > .5F ? 14 : amount > .25F ? 7 : amount > 0 ? 0 : 28;
+                int color = absolute <= i ? 0x80FFFFFF : 0xFFFFFFFF;
+                graphics.blit(RenderPipelines.GUI_TEXTURED, modIcons, iconX, y + 10, u, quenched >= 0 ? 27 : 34, 7, 7, 256, 256, color);
+                iconX -= 7;
             }
-
-            offsetX = x;
-            offsetY += 10;
-
-            float modifiedSaturationIncrement = ThirstHelper.getQuenched(itemStack);
-            float absModifiedSaturationIncrement = Math.abs(modifiedSaturationIncrement);
-
-            // Render from right to left so that the icons 'face' the right way
-            offsetX += (foodTooltip.saturationBars - 1) * 7;
-
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-            Identifier appleskinIcons = modIcons;
-
-            RenderSystem.setShaderTexture(0, appleskinIcons);
-            for (int i = 0; i < foodTooltip.saturationBars * 2; i += 2)
-            {
-                float effectiveSaturationOfBar = (absModifiedSaturationIncrement - i) / 2f;
-
-                boolean shouldBeFaded = absModifiedSaturationIncrement <= i;
-                if (shouldBeFaded)
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, .5F);
-
-                guiGraphics.blit(appleskinIcons, offsetX, offsetY, 0, effectiveSaturationOfBar >= 1 ? 21 : effectiveSaturationOfBar > 0.5 ? 14 : effectiveSaturationOfBar > 0.25 ? 7 : effectiveSaturationOfBar > 0 ? 0 : 28, modifiedSaturationIncrement >= 0 ? 27 : 34, 7, 7, 256, 256);
-
-                if (shouldBeFaded)
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-                offsetX -= 7;
-            }
-            if (foodTooltip.saturationBarsText != null)
-            {
-                offsetX += 14;
-                PoseStack poseStack = guiGraphics.pose();
-                poseStack.pushPose();
-                poseStack.translate(offsetX, offsetY, 0);
-                poseStack.scale(0.75f, 0.75f, 0.75f);
-                guiGraphics.drawCenteredString(font, foodTooltip.saturationBarsText, 2, 1, 0xFFAAAAAA);
-                poseStack.popPose();
-            }
-
-            RenderSystem.disableBlend();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0,modIcons);
-
-            // reset to drawHoveringText state
-            RenderSystem.disableDepthTest();
+            if (tooltip.quenchedText != null) graphics.text(font, tooltip.quenchedText, x + 9, y + 10, 0xFFAAAAAA);
         }
     }
 
-    public static Optional<TooltipComponent> createTooltip(ItemStack stack) {
-        if (!shouldShowTooltip(stack)) return Optional.empty();
-        FoodTooltip tooltip = new FoodTooltip(stack);
-        return tooltip.shouldRenderHungerBars() ? Optional.of(tooltip) : Optional.empty();
-    }
 }

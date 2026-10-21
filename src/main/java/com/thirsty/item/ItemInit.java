@@ -2,10 +2,10 @@ package com.thirsty.item;
 
 import com.thirsty.ThirstWasTaken;
 import com.thirsty.purity.WaterPurity;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,14 +46,14 @@ public class ItemInit {
 
     public static Item register(Item item, String id) {
 
-        ResourceLocation itemID = ResourceLocation.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, id);
+        Identifier itemID = Identifier.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, id);
 
         return Registry.register(BuiltInRegistries.ITEM, itemID, item);
     }
 
     public static void initialize(){
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, THIRST_CREATIVE_TAB_KEY, THIRST_CREATIVE_TAB);
-        ItemGroupEvents.modifyEntriesEvent(THIRST_CREATIVE_TAB_KEY).register(itemGroup -> {
+        CreativeModeTabEvents.modifyOutputEvent(THIRST_CREATIVE_TAB_KEY).register(itemGroup -> {
             itemGroup.accept((WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0)));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 1));
             itemGroup.accept(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 2));

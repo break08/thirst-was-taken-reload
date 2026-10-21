@@ -1,6 +1,5 @@
 package com.thirsty.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.thirsty.ThirstWasTaken;
 import com.thirsty.api.config.ClientConfig;
 import com.thirsty.thirst.ThirstData;
@@ -54,7 +53,6 @@ public class ThirstBarRenderer {
             final RandomSource random = RandomSource.create();
             int level = thirstdata.getThirst();
 
-            RenderSystem.enableBlend();
             int width = guiGraphics.guiWidth();
             int height = guiGraphics.guiHeight();
             //+ ClientConfig.THIRST_BAR_X_OFFSET.get()
@@ -88,7 +86,7 @@ public class ThirstBarRenderer {
                 else if (idx == level)
                     guiGraphics.blit(THIRST_ICONS, x, y, 8, 0, 9, 9, 25, 9);
             }
-            RenderSystem.disableBlend();
+
         }
     }
 
