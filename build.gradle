@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -51,55 +51,44 @@ repositories {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	// DEPENDENCIES
 
 	// Fabric API
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// CARDINAL COMPONENTS API
-	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
-	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+	implementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+	implementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
 
 	// Cloth config
-	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config}") {
+	implementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
 	// Mod Menu
-	modImplementation("com.terraformersmc:modmenu:${modmenu}")
+	implementation("com.terraformersmc:modmenu:${modmenu}")
 
 	// JEI
-	modCompileOnly("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
-
-	// EMI
-	modImplementation "dev.emi:emi-fabric:${emi_version}"
+	localRuntime("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
 
 	// AppleSkin
-	modImplementation("squeek.appleskin:appleskin-fabric:${apple_skin}") {
+	implementation("squeek.appleskin:appleskin-fabric:${apple_skin}") {
 		transitive = false
 	}
 
 	// Tough As Nails
-	modImplementation "maven.modrinth:ge1sOdFH:dLxSK1xF"
+	implementation "maven.modrinth:ge1sOdFH:vCvDP82P"
 
 	// Farmer's Delight Refabricated
-	modImplementation "maven.modrinth:7vxePowz:wbVXT4Ua"
+	implementation "maven.modrinth:7vxePowz:DDCRIV2Z"
 
 	// Glitch Core
-	modImplementation "maven.modrinth:s3dmwKy5:sux8kYHe"
+	implementation "maven.modrinth:s3dmwKy5:WNtSATXw"
 
 	// Jade
-	modImplementation "maven.modrinth:nvQzSEkH:adpNvTZS"
+	implementation "maven.modrinth:nvQzSEkH:Yo9xOce3"
 
-	// Brewin' and Chewin'
-	modImplementation "maven.modrinth:hIu9KJTT:O3PobqCR"
-        modApi "house.greenhouse:greenhouseconfig:2.2.3+1.21.1-fabric"
-    	include "house.greenhouse:greenhouseconfig:2.2.3+1.21.1-fabric"
-    	api "house.greenhouse:greenhouseconfig_toml:1.1.0"
-    	include "house.greenhouse:greenhouseconfig_toml:1.1.0"
 
 	runtimeOnly "net.jodah:typetools:0.6.3"
 
@@ -120,7 +109,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 25
 }
 
 java {
@@ -129,8 +118,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -160,5 +149,5 @@ publishing {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/thirst.classtweaker")
+	accessWidenerPath = file("src/main/resources/thirst.accesswidener")
 }

@@ -34,11 +34,11 @@ public class TickHelper {
 
     static void runTasks()
     {
-        ServerTickEvents.END_WORLD_TICK.register(level -> {
-            if(level instanceof ServerLevel && tickTimerFsr == 0 && tickTasks.containsKey(level.getServer().getTickCount()))
+        ServerTickEvents.END_SERVER_TICK.register(level -> {
+            if(tickTimerFsr == 0 && tickTasks.containsKey(level.getTickCount()))
             {
-                tickTasks.get(level.getServer().getTickCount()).forEach(Runnable::run);
-                tickTasks.remove(level.getServer().getTickCount());
+                tickTasks.get(level.getTickCount()).forEach(Runnable::run);
+                tickTasks.remove(level.getTickCount());
 
                 tickTimerFsr += 3;
             }

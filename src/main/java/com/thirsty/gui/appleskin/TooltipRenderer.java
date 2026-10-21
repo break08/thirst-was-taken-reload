@@ -11,7 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public class TooltipRenderer {
         });
     }
 
-    private static final ResourceLocation modIcons;
+    private static final Identifier modIcons;
     private static final TextureOffsets normalBarTextureOffsets;
     private static final TextureOffsets rottenBarTextureOffsets;
 
@@ -168,7 +168,7 @@ public class TooltipRenderer {
             // Render from right to left so that the icons 'face' the right way
             offsetX += (foodTooltip.hungerBars - 1) * 9;
 
-            ResourceLocation icons = ThirstBarRenderer.THIRST_ICONS;
+            Identifier icons = ThirstBarRenderer.THIRST_ICONS;
             RenderSystem.setShaderTexture(0, icons);
             for (int i = 0; i < foodTooltip.hungerBars * 2; i += 2)
             {
@@ -201,7 +201,7 @@ public class TooltipRenderer {
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            ResourceLocation appleskinIcons = modIcons;
+            Identifier appleskinIcons = modIcons;
 
             RenderSystem.setShaderTexture(0, appleskinIcons);
             for (int i = 0; i < foodTooltip.saturationBars * 2; i += 2)

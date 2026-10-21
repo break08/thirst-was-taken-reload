@@ -12,7 +12,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class NbtHelper {
-    // stack.getTag() / getOrCreateTag()
+    private NbtHelper() {}
+
     public static CompoundTag get(ItemStack stack) {
         return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
     }
@@ -22,49 +23,17 @@ public class NbtHelper {
         else stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
-    public static void edit(ItemStack stack, Consumer<CompoundTag> action) {
-        CustomData.update(DataComponents.CUSTOM_DATA, stack, action);
+
+    // ---------- FluidVariant ----------
+    private static Optional<? extends CustomData> customData(FluidVariant v) {
+        Optional<? extends CustomData> opt = v.getComponents().getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().read();
+        return opt == null ? Optional.empty() : opt;
     }
 
-    // hasTag()
-    public static boolean has(ItemStack stack) {
-        return stack.has(DataComponents.CUSTOM_DATA);
-    }
 
     public static CompoundTag get(FluidVariant variant) {
-        Optional<? extends CustomData> opt =
-                variant.getComponents().get(DataComponents.CUSTOM_DATA);
-        return (opt != null && opt.isPresent()) ? opt.get().copyTag() : new CompoundTag();
+        return customData(variant).map(CustomData::copyTag).orElseGet(CompoundTag::new);
     }
 
-    public static boolean has(FluidVariant variant) {
-        Optional<? extends CustomData> opt =
-                variant.getComponents().get(DataComponents.CUSTOM_DATA);
-        return opt != null && opt.isPresent();
-    }
 
-    public static FluidVariant edit(FluidVariant variant, Consumer<CompoundTag> action) {
-        CompoundTag tag = get(variant);
-        action.accept(tag);
-        return set(variant, tag);
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static FluidVariant set(FluidVariant variant, CompoundTag tag) {
-        DataComponentPatch.Builder builder = DataComponentPatch.builder();
-
-        for (var e : variant.getComponents().entrySet()) {
-            if (e.getKey() == DataComponents.CUSTOM_DATA) continue;
-            if (e.getValue().isPresent()) {
-                builder.set((DataComponentType) e.getKey(), e.getValue().get());
-            } else {
-                builder.remove(e.getKey());
-            }
-        }
-
-        if (!tag.isEmpty()) {
-            builder.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
-        }
-        return FluidVariant.of(variant.getFluid(), builder.build());
-    }
 }

@@ -7,13 +7,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SpellParticleOption;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
@@ -26,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Mixin({CampfireBlockEntity.class})
 public class MixinCampfireBlockEntity
@@ -53,7 +54,7 @@ public class MixinCampfireBlockEntity
                     double d0 = (double)pos.getX() + 0.5 - (double)((float)direction.getStepX() * f) + (double)((float)direction.getClockWise().getStepX() * f);
                     double d1 = (double)pos.getY() + 0.6;
                     double d2 = (double)pos.getZ() + 0.5 - (double)((float)direction.getStepZ() * f) + (double)((float)direction.getClockWise().getStepZ() * f);
-                    level.addParticle(ParticleTypes.EFFECT, d0, d1, d2, 0.0, 0.001, 0.0);
+                    level.addParticle(SpellParticleOption.create(ParticleTypes.EFFECT, 0, 1), d0, d1, d2, 0.0, 0.001, 0.0);
                 }
             }
         }
@@ -71,48 +72,50 @@ public class MixinCampfireBlockEntity
 
     // go crazy because fabric does not support nbt crafting
 
-    @Inject(method = "getCookableRecipe", at = @At("TAIL"), cancellable = true)
-    private void removeInvalidPurity(ItemStack itemStack, CallbackInfoReturnable<Optional<CampfireCookingRecipe>> cir){
-        if (WaterPurity.getPurity(itemStack) == 3){
-            cir.setReturnValue(Optional.empty());
-        }
-        if (itemStack.get(DataComponents.POTION_CONTENTS) == null){
+    @Inject(method = "placeFood", at = @At("RETURN"), cancellable = true)
+    private void removeInvalidPurity(ServerLevel serverLevel, LivingEntity sourceEntity, ItemStack placeItem, CallbackInfoReturnable<Boolean> cir){
+        if (!WaterPurity.isWaterFilledContainer(placeItem) || !WaterPurity.hasPurity(placeItem)){
             return;
         }
-        if (itemStack.is(Items.POTION) && !Objects.requireNonNull(itemStack.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)){
-            cir.setReturnValue(Optional.empty());
+        if (WaterPurity.getPurity(placeItem) == 3){
+            cir.setReturnValue(false);
+        }
+        if (placeItem.get(DataComponents.POTION_CONTENTS) == null){
+            return;
+        }
+        if (placeItem.is(Items.POTION) && !Objects.requireNonNull(placeItem.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)){
+            cir.setReturnValue(false);
         }
     }
 
     @ModifyVariable(
             method = "cookTick",
             at = @At("STORE"),
-            ordinal = 1
-    )
-    private static ItemStack overrideItemStack2(ItemStack itemStack2,
-                                                Level level, BlockPos blockPos,
-                                                BlockState blockState,
-                                                CampfireBlockEntity campfireBlockEntity,
-                                                @Local(ordinal = 0) int i
+            name = "result")
+    private static ItemStack overrideItemStack2(ItemStack result,
+                                                @Local(argsOnly = true, name = "level") ServerLevel level, BlockPos pos,
+                                                BlockState state,
+                                                @Local(argsOnly = true, name = "entity") CampfireBlockEntity entity,
+                                                @Local(name = "slot") int slot
     ) {
-        ItemStack itemStack = campfireBlockEntity.getItems().get(i);
-        if (!WaterPurity.isWaterFilledContainer(itemStack)) return itemStack2;
+        ItemStack itemStack = entity.getItems().get(slot);
+        if (!WaterPurity.isWaterFilledContainer(itemStack)) return result;
 
         CompoundTag tag = NbtHelper.get(itemStack);
 
-        ItemStack result = itemStack.copy();
-        result.setCount(1);
+        ItemStack a = itemStack.copy();
+        a.setCount(1);
 
         // result.setTag(tag.copy());
-        NbtHelper.set(result, tag.copy());
+        NbtHelper.set(a, tag.copy());
 
         PotionContents contents = itemStack.get(DataComponents.POTION_CONTENTS);
         boolean noPotion = contents == null || contents.potion().isEmpty();
 
-        if (noPotion && !WaterPurity.isWaterFilledContainer(itemStack2)) {
-            result.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
+        if (noPotion && !WaterPurity.isWaterFilledContainer(result)) {
+            a.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
         }
-        WaterPurity.addPurity(result, Math.min(WaterPurity.getPurity(itemStack) + 1, 3));
-        return result;
+        WaterPurity.addPurity(a, Math.min(WaterPurity.getPurity(itemStack) + 1, 3));
+        return a;
     }
 }

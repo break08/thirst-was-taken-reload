@@ -11,7 +11,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,8 +34,8 @@ public class HUDOverlayHandler {
     protected static int foodIconsOffset;
     public static final Vector<IntPoint> foodBarOffsets = new Vector<>();
     private static final Random random = new Random();
-    private static final ResourceLocation modIcons;
-    static ResourceLocation THIRST_LEVEL_ELEMENT;
+    private static final Identifier modIcons;
+    static Identifier THIRST_LEVEL_ELEMENT;
     public static ClientConfig clientConfig = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
     public HUDOverlayHandler() {
@@ -47,7 +48,7 @@ public class HUDOverlayHandler {
     */
 
     // @SubscribeEvent
-    public static void onRenderGuiOverlayPre(GuiGraphics guiGraphics, float tickDelta) {
+    public static void onRenderGuiOverlayPre(GuiGraphicsExtractor guiGraphics, float tickDelta) {
             unRender();
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null){return;}
@@ -61,7 +62,7 @@ public class HUDOverlayHandler {
     }
 
     // @SubscribeEvent
-    public static void onRenderGuiOverlayPost(GuiGraphics guiGraphics, float tickDelta) {
+    public static void onRenderGuiOverlayPost(GuiGraphicsExtractor guiGraphics, float tickDelta) {
             unRender();
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null){return;}
@@ -75,7 +76,7 @@ public class HUDOverlayHandler {
             }
     }
 
-    public static void renderExhaustion(GuiGraphics mStack) {
+    public static void renderExhaustion(GuiGraphicsExtractor mStack) {
         foodIconsOffset = 49;
 
         Minecraft mc = Minecraft.getInstance();
@@ -96,7 +97,7 @@ public class HUDOverlayHandler {
         drawExhaustionOverlay(exhaustion, mStack, right, top);
     }
 
-    public static void renderThirstOverlay(GuiGraphics guiGraphics) {
+    public static void renderThirstOverlay(GuiGraphicsExtractor guiGraphics) {
         if (!shouldRenderAnyOverlays())
             return;
 
@@ -139,13 +140,13 @@ public class HUDOverlayHandler {
             drawSaturationOverlay(thirstQuenchedIncrement, thirstData.getQuenched(), guiGraphics, right, top, flashAlpha);
     }
 
-    public static void drawSaturationOverlay(float saturationGained, float saturationLevel, GuiGraphics guiGraphics, int right, int top, float alpha) {
+    public static void drawSaturationOverlay(float saturationGained, float saturationLevel, GuiGraphicsExtractor guiGraphics, int right, int top, float alpha) {
         if (saturationLevel + saturationGained < 0)
             return;
 
         enableAlpha(alpha);
 
-        ResourceLocation icons = modIcons;
+        Identifier icons = modIcons;
         RenderSystem.setShaderTexture(0, icons);
 
         float modifiedSaturation = Math.max(0, Math.min(saturationLevel + saturationGained, 20));
@@ -188,13 +189,13 @@ public class HUDOverlayHandler {
         disableAlpha();
     }
 
-    public static void drawHungerOverlay(int hungerRestored, int foodLevel, GuiGraphics guiGraphics, int right, int top, float alpha) {
+    public static void drawHungerOverlay(int hungerRestored, int foodLevel, GuiGraphicsExtractor guiGraphics, int right, int top, float alpha) {
         if (hungerRestored <= 0)
             return;
 
         enableAlpha(alpha);
 
-        ResourceLocation icons = ThirstBarRenderer.THIRST_ICONS;
+        Identifier icons = ThirstBarRenderer.THIRST_ICONS;
         RenderSystem.setShaderTexture(0, icons);
 
         int modifiedFood = Math.max(0, Math.min(20, foodLevel + hungerRestored));
@@ -230,8 +231,8 @@ public class HUDOverlayHandler {
         disableAlpha();
     }
 
-    public static void drawExhaustionOverlay(float exhaustion, GuiGraphics guiGraphics, int right, int top) {
-        ResourceLocation icons = modIcons;
+    public static void drawExhaustionOverlay(float exhaustion, GuiGraphicsExtractor guiGraphics, int right, int top) {
+        Identifier icons = modIcons;
         RenderSystem.setShaderTexture(0, icons);
 
         float maxExhaustion = 4.0f;

@@ -43,7 +43,7 @@
 			"thirst:player_thirst"
 		]
 	},
-	"accessWidener": "thirst.classtweaker",
+	"accessWidener": "thirst.accesswidener",
 	"suggests": {
 		"toughasnails": "*",
 		"appleskin": "*",

@@ -138,7 +138,7 @@ public class ThirstHelper {
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         else {
             CompoundTag tag = NbtHelper.get(item);
-            return tag.getInt("Purity");
+            return tag.getIntOr("Purity", -1);
         }
     }
     public static int getThirst(ItemStack itemStack)

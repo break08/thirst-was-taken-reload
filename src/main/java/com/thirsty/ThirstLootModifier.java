@@ -3,8 +3,9 @@ package com.thirsty;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
@@ -14,10 +15,10 @@ public class ThirstLootModifier {
 
     public static void init() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            ResourceLocation target = key.location();
+            Identifier target = key.identifier();
 
             // mineshaft
-            if (target.equals(ResourceLocation.withDefaultNamespace("chests/abandoned_mineshaft"))) {
+            if (target.equals(Identifier.withDefaultNamespace("chests/abandoned_mineshaft"))) {
                 addPool(tableBuilder, "chests_loot_modifier/abandoned_mineshaft");
 
                 // farmer's delight refabricated compat
@@ -31,7 +32,7 @@ public class ThirstLootModifier {
             }
 
             // bastion
-            if (target.equals(ResourceLocation.withDefaultNamespace("chests/bastion_other"))) {
+            if (target.equals(Identifier.withDefaultNamespace("chests/bastion_other"))) {
                 addPool(tableBuilder, "chests_loot_modifier/bastion_other");
 
                 // b&c
@@ -41,7 +42,7 @@ public class ThirstLootModifier {
             }
 
             // nether bridge
-            if (target.equals(ResourceLocation.withDefaultNamespace("chests/nether_bridge"))) {
+            if (target.equals(Identifier.withDefaultNamespace("chests/nether_bridge"))) {
                 addPool(tableBuilder, "chests_loot_modifier/nether_bridge");
                 if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
                     addPool(tableBuilder, "chests_loot_modifier/nether_bridge_bc");
@@ -49,7 +50,7 @@ public class ThirstLootModifier {
             }
 
             // shipwreck
-            if (target.equals(ResourceLocation.withDefaultNamespace("chests/shipwreck_supply"))) {
+            if (target.equals(Identifier.withDefaultNamespace("chests/shipwreck_supply"))) {
                 addPool(tableBuilder, "chests_loot_modifier/shipwreck_supply");
                 if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
                     addPool(tableBuilder, "chests_loot_modifier/shipwreck_supply_bc");
@@ -57,7 +58,7 @@ public class ThirstLootModifier {
             }
 
             // simple dungeon
-            if (target.equals(ResourceLocation.withDefaultNamespace("chests/simple_dungeon"))) {
+            if (target.equals(Identifier.withDefaultNamespace("chests/simple_dungeon"))) {
                 addPool(tableBuilder, "chests_loot_modifier/simple_dungeon");
                 if (FabricLoader.getInstance().isModLoaded("brewinandchewin")) {
                     addPool(tableBuilder, "chests_loot_modifier/simple_dungeon_bc");
@@ -68,7 +69,7 @@ public class ThirstLootModifier {
 
     private static void addPool(LootTable.Builder tableBuilder, String path) {
         ResourceKey<LootTable> ref = ResourceKey.create(Registries.LOOT_TABLE,
-                ResourceLocation.fromNamespaceAndPath(ID, path));
+                Identifier.fromNamespaceAndPath(ID, path));
         tableBuilder.withPool(LootPool.lootPool().add(NestedLootTable.lootTableReference(ref)));
     }
 }

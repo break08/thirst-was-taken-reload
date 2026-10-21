@@ -13,6 +13,8 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
@@ -46,17 +48,17 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
      * version.
      */
     @Override
-    public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
-        thirst = tag.getInt("thirst");
-        quenched = tag.getInt("quenched");
-        exhaustion = tag.getFloat("exhaustion");
-        damageTimer = tag.getInt("damageTimer");
-        syncTimer = tag.getInt("syncTimer");
-        prevTickExhaustion = tag.getFloat("prevTickExhaustion");
-        justHealed = tag.getBoolean("justHealed");
-        shouldTickThirst = tag.getBoolean("shouldTickThirst");
-        exhaustionRecalculate = tag.getBoolean("exhaustionRecalculate");
-        init = tag.getBoolean("init");
+    public void readData(ValueInput tag) {
+        thirst = tag.getIntOr("thirst", 10);
+        quenched = tag.getIntOr("quenched", 10);
+        exhaustion = tag.getFloatOr("exhaustion", 10);
+        damageTimer = tag.getIntOr("damageTimer", 10);
+        syncTimer = tag.getIntOr("syncTimer", 10);
+        prevTickExhaustion = tag.getFloatOr("prevTickExhaustion", 10);
+        justHealed = tag.getBooleanOr("justHealed", true);
+        shouldTickThirst = tag.getBooleanOr("shouldTickThirst", true);
+        exhaustionRecalculate = tag.getBooleanOr("exhaustionRecalculate", true);
+        init = tag.getBooleanOr("init", true);
     }
 
     /**
@@ -65,7 +67,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
      * @param tag a {@code NbtCompound} on which to write this component's serializable data
      */
     @Override
-    public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
+    public void writeData(ValueOutput tag) {
         tag.putInt("thirst", thirst);
         tag.putInt("quenched", quenched);
         tag.putFloat("exhaustion", exhaustion);
@@ -214,7 +216,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                 player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("saturated"));
         boolean isSitting = player.isPassenger();
 
-        if(player.getActiveEffects().stream().anyMatch(e->e.getEffect().equals(MobEffects.CONFUSION)) && config.DEPLETES_WHEN_NAUSEA){
+        if(player.getActiveEffects().stream().anyMatch(e->e.getEffect().equals(MobEffects.NAUSEA)) && config.DEPLETES_WHEN_NAUSEA){
             addExhaustion(player,0.06F);
         }
 
@@ -231,7 +233,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
         }
 
         if (isInit()) {
-            setPrevTickExhaustion(player.getFoodData().getExhaustionLevel());
+            setPrevTickExhaustion(player.getFoodData().exhaustionLevel);
             setInit(false);
         }
 
@@ -292,7 +294,7 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
     public void updateExhaustion(Player player)
     {
         float prev = getPrevTickExhaustion();
-        float current = player.getFoodData().getExhaustionLevel();
+        float current = player.getFoodData().exhaustionLevel;
 
         float delta = current < prev ? current + 4.0F - prev : current - prev;
 

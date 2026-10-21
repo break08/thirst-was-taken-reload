@@ -8,7 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +39,7 @@ public abstract class MixinEmptyCanteenItem {
     @Shadow public abstract Item getDirtyWaterCanteen();
 
     @Inject(method = "use",at =@At("HEAD"), cancellable = true)
-    private void use(Level world, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir){
+    private void use(Level world, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir){
         ItemStack stack = player.getItemInHand(hand);
         Level level = player.level();
 
@@ -47,7 +47,7 @@ public abstract class MixinEmptyCanteenItem {
         BlockState state = world.getBlockState(blockPos);
 
         if (!world.mayInteract(player, blockPos)){
-            cir.setReturnValue(InteractionResultHolder.pass(stack));
+            cir.setReturnValue(InteractionResult.PASS);
         }
 
         if(level.getFluidState(blockPos).is(FluidTags.WATER))
@@ -69,14 +69,14 @@ public abstract class MixinEmptyCanteenItem {
 
             ItemStack result = ItemUtils.createFilledResult(stack, player, filledItem);
 
-            cir.setReturnValue(InteractionResultHolder.sidedSuccess(replaceCanteen(stack, player, result), world.isClientSide()));
+            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(replaceCanteen(stack, player, result)));
         }
         else if (state.getBlock() instanceof RainCollectorBlock) {
             int waterLevel = state.getValue(RainCollectorBlock.LEVEL);
             if (waterLevel > 0 && !world.isClientSide()) {
                 world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
                 ((RainCollectorBlock) TANBlocks.RAIN_COLLECTOR).setWaterLevel(world, blockPos, state, waterLevel - 1);
-                cir.setReturnValue(InteractionResultHolder.success(replaceCanteen(stack, player, getPurifiedWaterCanteen().getDefaultInstance())));
+                cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(replaceCanteen(stack, player, getPurifiedWaterCanteen().getDefaultInstance())));
             }
         }
     }

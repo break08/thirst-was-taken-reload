@@ -2,6 +2,7 @@ package com.thirsty;
 
 import com.thirsty.api.config.*;
 import com.thirsty.item.ItemInit;
+import com.thirsty.item.TooltipHelper;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.misc.TickHelper;
 import com.thirsty.network.ThirstNetwork;
@@ -10,9 +11,10 @@ import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,21 +37,26 @@ public class ThirstWasTaken implements ModInitializer {
 		TickHelper.initialize();
 		WaterPurity.eventInit();
 		ThirstHelper.init();
-		PayloadTypeRegistry.playC2S().register(ThirstPayload.TYPE, ThirstPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(ThirstPayload.TYPE, ThirstPayload.CODEC);
 		ThirstNetwork.onInitialize();
 		CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> ThirstHelper.reload());
 
 		// Loot init
 		ThirstLootModifier.init();
+
+		// tooltip
+		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {
+			TooltipHelper.addPurityTooltip(stack, lines);
+		});
 	}
 
 
-	public static ResourceLocation asResource(String path)
+	public static Identifier asResource(String path)
 	{
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

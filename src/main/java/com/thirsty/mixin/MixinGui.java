@@ -4,7 +4,7 @@ import com.thirsty.gui.ThirstBarRenderer;
 import com.thirsty.gui.appleskin.HUDOverlayHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Gui.class)
 public class MixinGui {
-    @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 1))
-    private void render(GuiGraphics guiGraphics, CallbackInfo ci){
+    @Inject(method = "extractPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 1))
+    private void render(GuiGraphicsExtractor graphics, CallbackInfo ci){
         if (FabricLoader.getInstance().isModLoaded("appleskin")){
             HUDOverlayHandler.onClientTick();
-            HUDOverlayHandler.onRenderGuiOverlayPre(guiGraphics, 0);
+            HUDOverlayHandler.onRenderGuiOverlayPre(graphics, 0);
         }
-        ThirstBarRenderer.renderingHUD(guiGraphics, 0);
+        ThirstBarRenderer.renderingHUD(graphics, 0);
         if (FabricLoader.getInstance().isModLoaded("appleskin")){
-            HUDOverlayHandler.onRenderGuiOverlayPost(guiGraphics, 0);
+            HUDOverlayHandler.onRenderGuiOverlayPost(graphics, 0);
         }
     }
 

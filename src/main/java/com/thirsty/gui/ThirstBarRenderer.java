@@ -5,21 +5,17 @@ import com.thirsty.ThirstWasTaken;
 import com.thirsty.api.config.ClientConfig;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
 public class ThirstBarRenderer {
-    public static final ResourceLocation THIRST_ICONS = ResourceLocation.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
-    public static final ResourceLocation MC_ICONS = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
+    public static final Identifier THIRST_ICONS = Identifier.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, "textures/gui/thirst_icons.png");
+    public static final Identifier MC_ICONS = Identifier.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
     public static Boolean cancelRender = false;
     public static ClientConfig clientConfig = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
@@ -39,7 +35,7 @@ public class ThirstBarRenderer {
     }
 
 
-    public static void renderingHUD(GuiGraphics guiGraphics, float tickDelta){
+    public static void renderingHUD(GuiGraphicsExtractor guiGraphics, float tickDelta){
         unRender();
         if (cancelRender){
             return;

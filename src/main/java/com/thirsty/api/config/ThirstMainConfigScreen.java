@@ -2,7 +2,7 @@ package com.thirsty.api.config;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.components.Button;
@@ -59,9 +59,9 @@ public class ThirstMainConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.drawString(this.font, "Thirst Was Taken Config", 40, 40 - this.font.lineHeight - 10, 0xFFFFFFFF, true);
-        this.renderBackground(context, mouseX, mouseY, delta);
-        super.render(context, mouseX, mouseY, delta);
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, int delta) {
+        context.text(this.font, "Thirst Was Taken Config", 40, 40 - this.font.lineHeight - 10, 0xFFFFFFFF, true);
+        this.extractMenuBackground(context);
+        super.extractRenderState(context, mouseX, mouseY, delta);
     }
 }

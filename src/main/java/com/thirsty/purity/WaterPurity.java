@@ -3,7 +3,6 @@ package com.thirsty.purity;
 import com.thirsty.api.config.CommonConfig;
 import com.thirsty.item.ItemInit;
 import com.thirsty.misc.MathHelper;
-import com.thirsty.misc.NbtHelper;
 import com.thirsty.misc.TickHelper;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
@@ -12,6 +11,8 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -25,9 +26,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -36,6 +37,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -45,12 +47,11 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.NotNull;
 import toughasnails.api.item.TANItems;
 import toughasnails.item.EmptyCanteenItem;
-import umpaz.brewinandchewin.common.registry.BnCItems;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -89,9 +90,6 @@ public class WaterPurity {
             tanLoaded = true;
         }
 
-        if (FabricLoader.getInstance().isModLoaded("brewinandchewin")){
-            CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> registerBrewinAndChewinContainers());
-        }
     }
 
     private static void registerContainers()
@@ -134,22 +132,6 @@ public class WaterPurity {
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.MELON_JUICE)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.PUMPKIN_JUICE)));
         waterContainers.add(new ContainerWithPurity(new ItemStack(TANItems.SWEET_BERRY_JUICE)));
-    }
-
-    private static void registerBrewinAndChewinContainers()
-    {
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.BEER)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.VODKA)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.RICE_WINE)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.STRONGROOT_ALE)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.PALE_JANE)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.SALTY_FOLLY)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.STEEL_TOE_STOUT)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.GLITTERING_GRENADINE)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.BLOODY_MARY)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.RED_RUM)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.WITHERING_DROSS)));
-        waterContainers.add(new ContainerWithPurity(new ItemStack(BnCItems.KOMBUCHA)));
     }
 
     private static void registerFillables()
@@ -222,12 +204,12 @@ public class WaterPurity {
             ItemStack item = player.getItemInHand(hand);
 
             if (!canHarvestRunningWater(item))
-                return InteractionResultHolder.pass(item);
+                return InteractionResult.PASS;
 
             BlockPos blockPos = MathHelper.getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY).getBlockPos();
 
             if (!world.getFluidState(blockPos).is(FluidTags.WATER))
-                return InteractionResultHolder.pass(item);
+                return InteractionResult.PASS;
 
             SoundEvent sound;
             ItemStack filledItem;
@@ -243,17 +225,19 @@ public class WaterPurity {
                 filledItem = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL);
             }
             else
-                return InteractionResultHolder.pass(item);
+                return InteractionResult.PASS;
 
             world.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
             world.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
 
-            NbtHelper.edit(filledItem, tag -> tag.putInt("Purity", getBlockPurity(world, blockPos)));
+            CustomData.update(DataComponents.CUSTOM_DATA, filledItem, t -> t.putInt("Purity", getBlockPurity(world, blockPos)));
+
+            // NbtHelper.edit(filledItem, tag -> tag.putInt("Purity", getBlockPurity(world, blockPos)));
 
             ItemStack result = ItemUtils.createFilledResult(item, player, filledItem);
 
             player.setItemInHand(hand, result);
-            return InteractionResultHolder.success(result);
+            return InteractionResult.SUCCESS;
         });
 
     }
@@ -311,15 +295,19 @@ public class WaterPurity {
      */
     public static int getPurity(ItemStack item)
     {
-        CompoundTag tag = NbtHelper.get(item);
-        if(!tag.contains("Purity"))
+        CustomData cd = item.get(DataComponents.CUSTOM_DATA);
+        // CompoundTag tag = NbtHelper.get(item);
+        if (cd == null){
+            return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
+        }
+        if(!cd.copyTag().contains("Purity"))
         {
             if (tanLoaded && Objects.equals(BuiltInRegistries.ITEM.getKey(item.getItem()).getNamespace(), "toughasnails"))
                 return tanPurity(item);
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
         }
 
-        return tag.getInt("Purity");
+        return cd.copyTag().getIntOr("Purity", -1);
     }
 
     public static int tanPurity(ItemStack item)
@@ -342,11 +330,14 @@ public class WaterPurity {
      */
     public static int getPurity(FluidVariant fluid)
     {
-        CompoundTag tag = NbtHelper.get(fluid);
-        if(!tag.contains("Purity"))
+        CustomData cd = fluid.get(DataComponents.CUSTOM_DATA);
+        if (cd == null){
+            return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
+        }
+        if(!cd.copyTag().contains("Purity"))
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
 
-        return tag.getInt("Purity");
+        return cd.copyTag().getIntOr("Purity", -1);
     }
 
     /**
@@ -383,15 +374,16 @@ public class WaterPurity {
 
     public static boolean hasPurity(ItemStack item)
     {
-        CompoundTag tag = NbtHelper.get(item);
-
-        return tag.contains("Purity");
+        return item.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().contains("Purity");
     }
 
     public static boolean hasPurity(FluidVariant fluid)
     {
-        CompoundTag tag = NbtHelper.get(fluid);
-        return tag.contains("Purity");
+        CustomData cd = fluid.get(DataComponents.CUSTOM_DATA);
+        if (cd == null){
+            return false;
+        }
+        return cd.copyTag().contains("Purity");
     }
 
     /**
@@ -401,7 +393,8 @@ public class WaterPurity {
     public static ItemStack addPurity(ItemStack item, BlockPos pos, Level level)
     {
         int p = getBlockPurity(level, pos);
-        NbtHelper.edit(item, tag -> tag.putInt("Purity", p));
+        //NbtHelper.edit(item, tag -> tag.putInt("Purity", p));
+        CustomData.update(DataComponents.CUSTOM_DATA, item, t -> t.putInt("Purity", p));
         return item;
     }
 
@@ -411,18 +404,9 @@ public class WaterPurity {
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
-        NbtHelper.edit(item, tag -> tag.putInt("Purity", purity));
-
+        //NbtHelper.edit(item, tag -> tag.putInt("Purity", purity));
+        CustomData.update(DataComponents.CUSTOM_DATA, item, t -> t.putInt("Purity", purity));
         return item;
-    }
-
-    /**
-     * Adds the "Purity" tag to a fluid
-     */
-    public static FluidVariant addPurity(FluidVariant fluid, int purity)
-    {
-        if (fluid.isBlank()) return fluid;
-        return NbtHelper.edit(fluid, tag -> tag.putInt("Purity", purity));
     }
 
 
@@ -476,7 +460,7 @@ public class WaterPurity {
                 if (chance < config.DIRTY_NAUSEA_PERCENTAGE / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
+                        player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 5, 0));
                         player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
                     }
 
@@ -495,7 +479,7 @@ public class WaterPurity {
                 if (chance < config.SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
+                        player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 5, 0));
                         player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
                     }
 
@@ -514,7 +498,7 @@ public class WaterPurity {
                 if (chance < config.ACCEPTABLE_NAUSEA_PERCENTAGE / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
+                        player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 5, 0));
                         player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
                     }
 
@@ -533,7 +517,7 @@ public class WaterPurity {
                 if (chance < config.PURIFIED_NAUSEA_PERCENTAGE / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
+                        player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 5, 0));
                         player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
                     }
 

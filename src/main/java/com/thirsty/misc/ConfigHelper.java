@@ -3,7 +3,7 @@ package com.thirsty.misc;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
@@ -30,7 +30,7 @@ public class ConfigHelper
                 final String tagID = itemID.replace("#", "");
 
                 try {
-                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagID));
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, Identifier.parse(tagID));
                     for (Item item : getItemsInTag(tagKey)) {
                         map.put(item, new Number[]{(Number) entry.get(1), (Number) entry.get(2)});
                     }
@@ -40,7 +40,7 @@ public class ConfigHelper
             }
             else
             {
-                Item newItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemID));
+                Item newItem = BuiltInRegistries.ITEM.getValue(Identifier.parse(itemID));
                 map.put(newItem, new Number[]{(Number) entry.get(1), (Number) entry.get(2)});
             }
         }
@@ -54,7 +54,7 @@ public class ConfigHelper
             {
                 final String tagID = itemID.replace("#", "");
                 try {
-                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagID));
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, Identifier.parse(tagID));
                     list.addAll(getItemsInTag(tagKey));
                 } catch (Exception e) {
                     System.out.print("[Thirst/ERROR] Bad Config:" + e);
@@ -62,7 +62,7 @@ public class ConfigHelper
             }
             else
             {
-                Item newItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemID));
+                Item newItem = BuiltInRegistries.ITEM.getValue(Identifier.parse(itemID));
                 list.add(newItem);
             }
         }
@@ -72,7 +72,7 @@ public class ConfigHelper
     public static List<Item> getItemsInTag(TagKey<Item> tagKey) {
         List<Item> items = new ArrayList<>();
 
-        var optionalTag = BuiltInRegistries.ITEM.getTag(tagKey);
+        var optionalTag = BuiltInRegistries.ITEM.get(tagKey);
 
         if (optionalTag.isPresent()) {
             for (Holder<Item> holder : optionalTag.get()) {
@@ -97,7 +97,7 @@ public class ConfigHelper
                 final String tagID = itemID.replace("#", "");
 
                 try {
-                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagID));
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, Identifier.parse(tagID));
                     for (Item item : getItemsInTag(tagKey)) {
                         map.put(item, new Number[]{Integer.parseInt(catalog[1]), Integer.parseInt(catalog[2])});
                     }
@@ -107,7 +107,7 @@ public class ConfigHelper
             }
             else
             {
-                Item newItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemID));
+                Item newItem = BuiltInRegistries.ITEM.getValue(Identifier.parse(itemID));
                 try {
                     map.put(newItem, new Number[]{Integer.parseInt(catalog[1]), Integer.parseInt(catalog[2])});
                 } catch (Exception e){
