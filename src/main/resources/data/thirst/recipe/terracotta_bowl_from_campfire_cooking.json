@@ -1,11 +1,9 @@
 {
   "type": "minecraft:campfire_cooking",
-  "category": "misc",
-  "ingredient": {
-    "item": "thirst:clay_bowl"
-  },
+  "ingredient": "thirst:clay_bowl",
   "result": {
-    "id": "thirst:terracotta_bowl"
+    "id": "thirst:terracotta_bowl",
+    "count": 1
   },
   "experience": 0.35,
   "cookingtime": 300

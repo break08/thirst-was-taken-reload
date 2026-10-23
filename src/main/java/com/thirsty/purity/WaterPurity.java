@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.thirsty.misc.ToughAsNailsHelper.getToughAsNailsPurity;
+
 public class WaterPurity {
     private static final List<ContainerWithPurity> waterContainers = new ArrayList<>();
     private static final List<Block> fillablesWithPurity = new ArrayList<>();
@@ -81,8 +83,9 @@ public class WaterPurity {
 
     public static void init() {
         registerDispenserBehaviours();
-        registerContainers();
         registerFillables();
+
+        CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> registerContainers());
 
         if(FabricLoader.getInstance().isModLoaded("toughasnails"))
         {
@@ -296,15 +299,16 @@ public class WaterPurity {
     public static int getPurity(ItemStack item)
     {
         CustomData cd = item.get(DataComponents.CUSTOM_DATA);
+
+        if (tanLoaded && Objects.equals(BuiltInRegistries.ITEM.getKey(item.getItem()).getNamespace(), "toughasnails") && tanPurity(item) != -1)
+            return tanPurity(item);
         // CompoundTag tag = NbtHelper.get(item);
         if (cd == null){
             return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
-        }
-        if(!cd.copyTag().contains("Purity"))
-        {
-            if (tanLoaded && Objects.equals(BuiltInRegistries.ITEM.getKey(item.getItem()).getNamespace(), "toughasnails"))
-                return tanPurity(item);
-            return AutoConfig.getConfigHolder(CommonConfig.class).getConfig().DEFAULT_PURITY;
+        } else {
+            CompoundTag tag = cd.copyTag();
+            if (tag.contains("Purity"))
+                return tag.getIntOr("Purity", -1);
         }
 
         return cd.copyTag().getIntOr("Purity", -1);
@@ -312,17 +316,9 @@ public class WaterPurity {
 
     public static int tanPurity(ItemStack item)
     {
-        if(item.is(TANItems.DIRTY_WATER_BOTTLE))
-            return 0;
-
-        if(item.getItem() instanceof EmptyCanteenItem canteenItem){
-            if(item.getItem().equals(canteenItem.getDirtyWaterCanteen())){
-                return 0;
-            }else if(item.getItem().equals(canteenItem.getWaterCanteen())){
-                return 2;
-            }
-        }
-        return 3;
+        int purity = getToughAsNailsPurity(item);
+        addPurity(item, purity == -1 ? MAX_PURITY : purity);
+        return purity;
     }
 
     /**

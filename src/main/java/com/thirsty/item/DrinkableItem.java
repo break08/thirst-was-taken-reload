@@ -86,7 +86,8 @@ public class DrinkableItem extends Item{
         return item;
     }
 
-    public int getUseDuration(@NotNull ItemStack p_43001_) {
+    @Override
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
         return drinkDuration;
     }
 

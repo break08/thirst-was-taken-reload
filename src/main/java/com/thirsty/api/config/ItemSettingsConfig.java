@@ -19,7 +19,6 @@ public class ItemSettingsConfig implements ConfigData {
     public List<String> DRINKS = List.of(
                     "minecraft:potion,6,8",
                     "thirst:terracotta_water_bowl,4,5",
-                    "create:builders_tea,12,22",
                     "farmersdelight:apple_cider,8,13",
                     "farmersdelight:melon_juice,8,13",
                     "toughasnails:dirty_water_bottle,6,8",
@@ -51,22 +50,7 @@ public class ItemSettingsConfig implements ConfigData {
                     "toughasnails:suspicious_water_cup,8,13",
                     "toughasnails:pumpkin_juice,8,13",
                     "toughasnails:sweet_berry_juice,8,13",
-                    "toughasnails:ice_cream,6,12",
-	            "brewinandchewin:beer,10,14",
-		    "brewinandchewin:vodka,10,14",
-		    "brewinandchewin:rice_wine,10,14",
-		    "brewinandchewin:mead,10,14",
-		    "brewinandchewin:egg_grog,10,14",
-	            "brewinandchewin:glittering_grenadine,10,14",
-		    "brewinandchewin:bloody_mary,12,22",
-		    "brewinandchewin:salty_folly,12,22",
-		    "brewinandchewin:pale_jane,12,22",
-		    "brewinandchewin:saccharine_rum,12,22",
-		    "brewinandchewin:strongroot_ale,12,22",
-		    "brewinandchewin:dread_nog,12,22",
-		    "brewinandchewin:kombucha,14,22",
-		    "brewinandchewin:red_rum,14,22",
-		    "brewinandchewin:steel_toe_stout,14,22"
+                    "toughasnails:ice_cream,6,12"
     );
 
     @Comment("List of food and its thirst and quenchness values. Format: item_id,thirst,quenchness . No white space allowed")

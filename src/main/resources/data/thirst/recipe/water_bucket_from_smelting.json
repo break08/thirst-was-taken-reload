@@ -1,12 +1,8 @@
 {
   "type": "minecraft:smelting",
   "category": "misc",
-  "ingredient": {
-    "item": "minecraft:water_bucket"
-  },
-  "result": {
-    "id": "minecraft:water_bucket"
-  },
+  "ingredient": "minecraft:water_bucket",
+  "result": "minecraft:water_bucket",
   "experience": 0.35,
   "cookingtime": 200
 }

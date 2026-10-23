@@ -5,7 +5,8 @@ import com.thirsty.purity.WaterPurity;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,42 +14,39 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 
+import java.util.function.Function;
+
 import static com.thirsty.item.ThirstTab.THIRST_CREATIVE_TAB;
 import static com.thirsty.item.ThirstTab.THIRST_CREATIVE_TAB_KEY;
 
 public class ItemInit {
 
+    public static final Item CLAY_BOWL = register("clay_bowl", Item::new,
+            new Item.Properties().stacksTo(64));
 
-    public static final Item CLAY_BOWL = register(
-            // Ignore the food component for now, we'll cover it later in the food section.
-            new Item(new Item.Properties().stacksTo(64)),
-            "clay_bowl"
-    );
+    public static final Item TERRACOTTA_BOWL = register("terracotta_bowl", Item::new,
+            new Item.Properties().stacksTo(64));
 
-    public static final Item TERRACOTTA_BOWL = register(
-            // Ignore the food component for now, we'll cover it later in the food section.
-            new Item(new Item.Properties().stacksTo(64)),
-            "terracotta_bowl"
-    );
+    public static final Item TERRACOTTA_WATER_BOWL = register("terracotta_water_bowl",
+            props -> new DrinkableItem(props).setContainer(TERRACOTTA_BOWL),
+            new Item.Properties());
 
-    public static final Item TERRACOTTA_WATER_BOWL = register(
-            // Ignore the food component for now, we'll cover it later in the food section.
-            new DrinkableItem().setContainer(TERRACOTTA_BOWL),
-            "terracotta_water_bowl"
-    );
+    public static final Item porridge_test = register("porridge_thirst_test_item", Item::new,
+            new Item.Properties().food(new FoodProperties.Builder()
+                    .alwaysEdible().nutrition(1).saturationModifier(1).build()));
 
-    // Creative Stuff for key word config test
-    public static final Item porridge_test = register(
-            // Ignore the food component for now, we'll cover it later in the food section.
-            new Item(new Item.Properties().food(new FoodProperties.Builder().alwaysEdible().nutrition(1).saturationModifier(1).build())),
-            "porridge_thirst_test_item"
-    );
+    public static Item register(String name, Function<Item.Properties, Item> factory, Item.Properties settings) {
+        return register(create(name), factory, settings);
+    }
 
-    public static Item register(Item item, String id) {
+    public static ResourceKey<Item> create(String name) {
+        return ResourceKey.create(Registries.ITEM, ThirstWasTaken.id(name));
+    }
 
-        Identifier itemID = Identifier.fromNamespaceAndPath(ThirstWasTaken.MOD_ID, id);
-
-        return Registry.register(BuiltInRegistries.ITEM, itemID, item);
+    public static Item register(ResourceKey<Item> itemKey, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
+        Item item = itemFactory.apply(settings.setId(itemKey));
+        Registry.register(BuiltInRegistries.ITEM, itemKey, item);
+        return item;
     }
 
     public static void initialize(){

@@ -39,26 +39,26 @@ public abstract class MixinEmptyCanteenItem {
     @Shadow public abstract Item getDirtyWaterCanteen();
 
     @Inject(method = "use",at =@At("HEAD"), cancellable = true)
-    private void use(Level world, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir){
+    private void use(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir){
         ItemStack stack = player.getItemInHand(hand);
-        Level level = player.level();
+        Level player_level = player.level();
 
-        BlockPos blockPos = MathHelper.getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
-        BlockState state = world.getBlockState(blockPos);
+        BlockPos blockPos = MathHelper.getPlayerPOVHitResult(player_level, player, ClipContext.Fluid.ANY).getBlockPos();
+        BlockState state = level.getBlockState(blockPos);
 
-        if (!world.mayInteract(player, blockPos)){
+        if (!level.mayInteract(player, blockPos)){
             cir.setReturnValue(InteractionResult.PASS);
         }
 
-        if(level.getFluidState(blockPos).is(FluidTags.WATER))
+        if(player_level.getFluidState(blockPos).is(FluidTags.WATER))
         {
             SoundEvent sound= SoundEvents.BOTTLE_FILL;
             ItemStack filledItem;
 
-            level.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
-            level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
+            player_level.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
+            player_level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
 
-            int purity= WaterPurity.getBlockPurity(level, blockPos);
+            int purity= WaterPurity.getBlockPurity(player_level, blockPos);
             if(purity==3){
                 filledItem = getPurifiedWaterCanteen().getDefaultInstance();
             } else if (purity==2) {
@@ -73,9 +73,9 @@ public abstract class MixinEmptyCanteenItem {
         }
         else if (state.getBlock() instanceof RainCollectorBlock) {
             int waterLevel = state.getValue(RainCollectorBlock.LEVEL);
-            if (waterLevel > 0 && !world.isClientSide()) {
-                world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                ((RainCollectorBlock) TANBlocks.RAIN_COLLECTOR).setWaterLevel(world, blockPos, state, waterLevel - 1);
+            if (waterLevel > 0 && !level.isClientSide()) {
+                level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
+                ((RainCollectorBlock) TANBlocks.RAIN_COLLECTOR).setWaterLevel(level, blockPos, state, waterLevel - 1);
                 cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(replaceCanteen(stack, player, getPurifiedWaterCanteen().getDefaultInstance())));
             }
         }

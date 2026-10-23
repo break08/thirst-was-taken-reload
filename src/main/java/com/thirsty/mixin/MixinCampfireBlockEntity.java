@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SpellParticleOption;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
@@ -93,25 +91,15 @@ public class MixinCampfireBlockEntity
             at = @At("STORE"),
             name = "result")
     private static ItemStack overrideItemStack2(ItemStack result,
-                                                @Local(argsOnly = true, name = "level") ServerLevel level, BlockPos pos,
-                                                BlockState state,
-                                                @Local(argsOnly = true, name = "entity") CampfireBlockEntity entity,
-                                                @Local(name = "slot") int slot
+                                                @Local(name = "itemStack") ItemStack itemStack
     ) {
-        ItemStack itemStack = entity.getItems().get(slot);
         if (!WaterPurity.isWaterFilledContainer(itemStack)) return result;
-
-        CompoundTag tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 
         ItemStack a = itemStack.copy();
         a.setCount(1);
 
-        // NbtHelper.set(a, tag.copy());
-        a.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
-
         PotionContents contents = itemStack.get(DataComponents.POTION_CONTENTS);
         boolean noPotion = contents == null || contents.potion().isEmpty();
-
         if (noPotion && !WaterPurity.isWaterFilledContainer(result)) {
             a.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
         }

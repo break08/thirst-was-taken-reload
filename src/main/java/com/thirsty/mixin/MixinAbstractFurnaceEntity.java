@@ -47,8 +47,9 @@ public class MixinAbstractFurnaceEntity {
 
     @ModifyVariable(
             method = "burn",
-            at = @At(value = "STORE"),
-            argsOnly = true, name = "result")
+            at = @At("HEAD"),
+            argsOnly = true,
+            ordinal = 1)
     private static ItemStack overrideItemStack2(ItemStack result, @Local(argsOnly = true, name = "items") NonNullList<ItemStack> items){
         ItemStack itemStack = items.get(0);
         ItemStack stack2 = itemStack.copy();

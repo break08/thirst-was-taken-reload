@@ -6,7 +6,7 @@ import com.thirsty.misc.ModDamageSource;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.core.HolderLookup;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -18,6 +18,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
+
+import java.util.Objects;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 
@@ -49,15 +51,15 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
      */
     @Override
     public void readData(ValueInput tag) {
-        thirst = tag.getIntOr("thirst", 10);
-        quenched = tag.getIntOr("quenched", 10);
-        exhaustion = tag.getFloatOr("exhaustion", 10);
-        damageTimer = tag.getIntOr("damageTimer", 10);
-        syncTimer = tag.getIntOr("syncTimer", 10);
-        prevTickExhaustion = tag.getFloatOr("prevTickExhaustion", 10);
-        justHealed = tag.getBooleanOr("justHealed", true);
+        thirst = tag.getIntOr("thirst", 20);
+        quenched = tag.getIntOr("quenched", 5);
+        exhaustion = tag.getFloatOr("exhaustion", 0.0F);
+        damageTimer = tag.getIntOr("damageTimer", 0);
+        syncTimer = tag.getIntOr("syncTimer", 0);
+        prevTickExhaustion = tag.getFloatOr("prevTickExhaustion", 0.0F);
+        justHealed = tag.getBooleanOr("justHealed", false);
         shouldTickThirst = tag.getBooleanOr("shouldTickThirst", true);
-        exhaustionRecalculate = tag.getBooleanOr("exhaustionRecalculate", true);
+        exhaustionRecalculate = tag.getBooleanOr("exhaustionRecalculate", false);
         init = tag.getBooleanOr("init", true);
     }
 
@@ -216,15 +218,26 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                 player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("saturated"));
         boolean isSitting = player.isPassenger();
 
-        if(player.getActiveEffects().stream().anyMatch(e->e.getEffect().equals(MobEffects.NAUSEA)) && config.DEPLETES_WHEN_NAUSEA){
-            addExhaustion(player,0.06F);
+        if (player.getActiveEffects().stream().anyMatch(e -> e.getEffect().equals(MobEffects.NAUSEA)) && config.DEPLETES_WHEN_NAUSEA) {
+            addExhaustion(player, 0.06F);
         }
 
-        if(isHunger){
-            setExhaustion(exhaustion - (0.005F * (float)(player.getEffect(MobEffects.HUNGER).getAmplifier() + 1) *
+        if (isHunger) {
+            setExhaustion(exhaustion - (0.005F * (float) (Objects.requireNonNull(player.getEffect(MobEffects.HUNGER)).getAmplifier() + 1) *
                     ThirstHelper.getExhaustionBiomeModifier(player) *
-                    ThirstHelper.getExhaustionFireProtModifier(player)*
-                    ThirstHelper.getExhaustionFireResistanceModifier(player)));
+                    ThirstHelper.getExhaustionFireProtModifier(player) *
+                    ThirstHelper.getExhaustionFireResistanceModifier(player)
+            ));
+        }
+
+        if (WaterPurity.tanLoaded) {
+            float tanEx = ThirstHelper.getTanThirstEffectExhaustion(player);
+            if (tanEx > 0.0F) {
+                setExhaustion(exhaustion + tanEx
+                        * ThirstHelper.getExhaustionBiomeModifier(player)
+                        * ThirstHelper.getExhaustionFireProtModifier(player)
+                        * ThirstHelper.getExhaustionFireResistanceModifier(player));
+            }
         }
 
         if (!isSitting && !isNourished && !isStuffed && !isSaturated)

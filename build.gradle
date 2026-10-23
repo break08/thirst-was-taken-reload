@@ -69,9 +69,6 @@ dependencies {
 	// Mod Menu
 	implementation("com.terraformersmc:modmenu:${modmenu}")
 
-	// JEI
-	localRuntime("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
-
 	// AppleSkin
 	implementation("squeek.appleskin:appleskin-fabric:${apple_skin}") {
 		transitive = false
@@ -85,9 +82,6 @@ dependencies {
 
 	// Glitch Core
 	implementation "maven.modrinth:s3dmwKy5:WNtSATXw"
-
-	// Jade
-	implementation "maven.modrinth:nvQzSEkH:Yo9xOce3"
 
 
 	runtimeOnly "net.jodah:typetools:0.6.3"

@@ -1,12 +1,8 @@
 {
   "type": "minecraft:smelting",
   "category": "misc",
-  "ingredient": {
-    "item": "minecraft:potion"
-  },
-  "result": {
-    "id": "minecraft:potion"
-  },
+  "ingredient": "minecraft:potion",
+  "result": "minecraft:potion",
   "experience": 0.35,
   "cookingtime": 200
 }

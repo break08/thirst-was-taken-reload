@@ -2,7 +2,6 @@ package com.thirsty.mixin;
 
 import com.thirsty.purity.WaterPurity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.cauldron.CauldronInteractions;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.sounds.SoundEvent;

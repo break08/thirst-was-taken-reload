@@ -9,8 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import squeek.appleskin.ModConfig;
 import squeek.appleskin.util.IntPoint;
 import com.thirsty.gui.ThirstBarRenderer;
@@ -22,273 +25,132 @@ import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
 import static com.thirsty.gui.ThirstBarRenderer.unRender;
 
 public class HUDOverlayHandler {
-    private static float unclampedFlashAlpha = 0.0F;
-    private static float flashAlpha = 0.0F;
-    private static byte alphaDir = 1;
-    protected static int foodIconsOffset;
-    public static final Vector<IntPoint> foodBarOffsets = new Vector<>();
-    private static final Random random = new Random();
-    private static final Identifier modIcons;
-    static Identifier THIRST_LEVEL_ELEMENT;
+    private static final Identifier MOD_ICONS = ThirstWasTaken.asResource("textures/gui/appleskin_icons.png");
+    private static final Vector<IntPoint> BAR_OFFSETS = new Vector<>();
+    private static final RandomSource RANDOM = RandomSource.create();
+    private static float unclampedFlashAlpha;
+    private static float flashAlpha;
+    private static byte alphaDirection = 1;
     public static ClientConfig clientConfig = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
 
-    public HUDOverlayHandler() {
+
+    public static int getBarRight(int width)
+    {
+        return width / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET;
     }
 
-    /*
-    public static void init() {
-        Minecraf Forge.EVENT_BUS.register(new HUDOverlayHandler());
-    }
-    */
-
-    // @SubscribeEvent
-    public static void onRenderGuiOverlayPre(GuiGraphicsExtractor guiGraphics, float tickDelta) {
-            unRender();
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.player == null){return;}
-            boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
-            boolean isAlive = mc.player.isAlive();
-            boolean isSur = !mc.player.isCreative() && !mc.player.isSpectator();
-            //stop getExhaustion when player is dead to prevent error log spam
-            if (isAlive && ModConfig.INSTANCE.showFoodExhaustionHudUnderlay && !isMounted && !mc.options.hideGui && isSur && !ThirstBarRenderer.cancelRender) {
-                renderExhaustion(guiGraphics);
-            }
+    public static int getBarTop(int height)
+    {
+        return height - 49 + clientConfig.THIRST_BAR_Y_OFFSET;
     }
 
-    // @SubscribeEvent
-    public static void onRenderGuiOverlayPost(GuiGraphicsExtractor guiGraphics, float tickDelta) {
-            unRender();
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.player == null){return;}
-            boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
-            boolean isAlive = mc.player.isAlive();
-
-            boolean isSur = !mc.player.isCreative() && !mc.player.isSpectator();
-
-            if (isAlive && !isMounted && !mc.options.hideGui && isSur && !ThirstBarRenderer.cancelRender) {
-                renderThirstOverlay(guiGraphics);
-            }
+    private HUDOverlayHandler() {
     }
 
-    public static void renderExhaustion(GuiGraphicsExtractor mStack) {
-        foodIconsOffset = 49;
 
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        assert player != null;
 
-        // if (mc.player.getAirSupply() < mc.player.getMaxAirSupply()) {
-        //    foodIconsOffset = 60;
-        // }
+    public static void renderThirstOverlay(Player player, GuiGraphicsExtractor graphics, int guiTicks) {
+        ThirstData thirst = PLAYER_THIRST.get(player);
+        int right = getBarRight(graphics.guiWidth());
+        int top = getBarTop(graphics.guiHeight());
+        generateBarOffsets(guiTicks, thirst);
 
-        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET;
-
-        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset + clientConfig.THIRST_BAR_Y_OFFSET;
-
-        ThirstData thirstData = PLAYER_THIRST.get(player);
-        float exhaustion = thirstData.getExhaustion();
-
-        drawExhaustionOverlay(exhaustion, mStack, right, top);
-    }
-
-    public static void renderThirstOverlay(GuiGraphicsExtractor guiGraphics) {
-        if (!shouldRenderAnyOverlays())
-            return;
-
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        assert player != null;
-        ThirstData thirstData = PLAYER_THIRST.get(player);
-
-        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset + clientConfig.THIRST_BAR_Y_OFFSET;
-
-        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + clientConfig.THIRST_BAR_X_OFFSET; // right of food bar
-
-        generateHungerBarOffsets(top, right, mc.gui.getGuiTicks(), player);
         if (ModConfig.INSTANCE.showSaturationHudOverlay) {
-            drawSaturationOverlay(0, thirstData.getQuenched(), guiGraphics, right, top, 1f);
+            drawSaturationOverlay(0, thirst.getQuenched(), graphics, right, top, 1.0F);
         }
 
-        // try to get the item stack in the player hand
-        net.minecraft.world.item.ItemStack heldItem = player.getMainHandItem();
-        if (ModConfig.INSTANCE.showFoodValuesHudOverlayWhenOffhand && !ThirstHelper.itemRestoresThirst(heldItem))
+        ItemStack heldItem = player.getMainHandItem();
+        if (ModConfig.INSTANCE.showFoodValuesHudOverlayWhenOffhand && !ThirstHelper.itemRestoresThirst(heldItem)) {
             heldItem = player.getOffhandItem();
+        }
 
-        boolean shouldRenderHeldItemValues = !heldItem.isEmpty() && ThirstHelper.itemRestoresThirst(heldItem);
-        if (!shouldRenderHeldItemValues) {
+        if (heldItem.isEmpty() || !ThirstHelper.itemRestoresThirst(heldItem)) {
             resetFlash();
             return;
         }
 
-        ThirstValues thirstValues = new ThirstValues(ThirstHelper.getThirst(heldItem), ThirstHelper.getQuenched(heldItem));
-
-        // calculate the final hunger and saturation
-        int drinkThirst = thirstValues.thirst;
-        float thirstQuenchedIncrement = thirstValues.getQuenchedIncrement();
-
-        // restored hunger/saturation overlay while holding food
-        if (thirstData.getThirst() < 20)
-            drawHungerOverlay(drinkThirst, thirstData.getThirst(), guiGraphics, right, top, flashAlpha);
-        // Redraw saturation overlay for gained
-        if (!ThirstHelper.isFood(heldItem) || player.getFoodData().getFoodLevel() < 20)
-            drawSaturationOverlay(thirstQuenchedIncrement, thirstData.getQuenched(), guiGraphics, right, top, flashAlpha);
-    }
-
-    public static void drawSaturationOverlay(float saturationGained, float saturationLevel, GuiGraphicsExtractor guiGraphics, int right, int top, float alpha) {
-        if (saturationLevel + saturationGained < 0)
-            return;
-
-
-        Identifier icons = modIcons;
-
-        float modifiedSaturation = Math.max(0, Math.min(saturationLevel + saturationGained, 20));
-
-        int startSaturationBar = 0;
-        int endSaturationBar = (int) Math.ceil(modifiedSaturation / 2.0F);
-
-        // when require rendering the gained saturation, start should relocation to current saturation tail.
-        if (saturationGained != 0)
-            startSaturationBar = (int) Math.max(saturationLevel / 2.0F, 0);
-
-        int iconSize = 9;
-
-        for (int i = startSaturationBar; i < endSaturationBar; ++i) {
-            // gets the offset that needs to be rendered of icon
-            IntPoint offset = foodBarOffsets.get(i);
-            if (offset == null)
-                continue;
-
-            int x = right + offset.x;
-            int y = top + offset.y;
-
-            int v = 0;
-            int u = 0;
-
-            float effectiveSaturationOfBar = (modifiedSaturation / 2.0F) - i;
-
-            if (effectiveSaturationOfBar >= 1)
-                u = 3 * iconSize;
-            else if (effectiveSaturationOfBar > .5)
-                u = 2 * iconSize;
-            else if (effectiveSaturationOfBar > .25)
-                u = iconSize;
-
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, icons, x, y, u, v, iconSize, iconSize, 256, 256);
+        int restoredThirst = ThirstHelper.getThirst(heldItem);
+        float restoredQuenched = ThirstHelper.getQuenched(heldItem);
+        if (thirst.getThirst() < 20) {
+            drawThirstOverlay(restoredThirst, thirst.getThirst(), graphics, right, top, flashAlpha);
         }
-
-    }
-
-    public static void drawHungerOverlay(int hungerRestored, int foodLevel, GuiGraphicsExtractor guiGraphics, int right, int top, float alpha) {
-        if (hungerRestored <= 0)
-            return;
-
-        Identifier icons = ThirstBarRenderer.THIRST_ICONS;
-
-        int modifiedFood = Math.max(0, Math.min(20, foodLevel + hungerRestored));
-
-        int startFoodBars = Math.max(0, foodLevel / 2);
-        int endFoodBars = (int) Math.ceil(modifiedFood / 2.0F);
-
-        int iconStartOffset = 8 - 3;
-        int iconSize = 9;
-
-        for (int i = startFoodBars; i < endFoodBars; ++i) {
-            // gets the offset that needs to be rendered of icon
-            IntPoint offset = foodBarOffsets.get(i);
-            if (offset == null)
-                continue;
-
-            int x = right + offset.x;
-            int y = top + offset.y;
-
-            // location to normal food by default
-            int v = 3 * iconSize;
-            int u = iconStartOffset + 4 * iconSize;
-
-            // relocation to half food
-            if (i * 2 + 1 == modifiedFood)
-                u -= iconSize - 1;
-
-
-            guiGraphics.blit(icons, x, y, u, v, iconSize, iconSize, 25, 9);
+        if (!ThirstHelper.isFood(heldItem) || player.getFoodData().getFoodLevel() < 20) {
+            drawSaturationOverlay(restoredQuenched, thirst.getQuenched(), graphics, right, top, flashAlpha);
         }
-
     }
 
-    public static void drawExhaustionOverlay(float exhaustion, GuiGraphicsExtractor guiGraphics, int right, int top) {
-        Identifier icons = modIcons;
+    private static void drawSaturationOverlay(float gained, float current, GuiGraphicsExtractor graphics, int right, int top, float alpha) {
+        float value = Math.max(0, Math.min(current + gained, 20));
+        int start = gained == 0 ? 0 : Math.max((int) current / 2, 0);
+        int end = (int) Math.ceil(value / 2.0F);
+        int color = color(alpha);
 
-        float maxExhaustion = 4.0f;
-        // clamp between 0 and 1
-        float ratio = Math.min(1, Math.max(0, exhaustion / maxExhaustion));
-        int width = (int) (ratio * 81);
-        int height = 9;
-
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, icons,
-                right - width, top, 81 - width, 18, width, height, 256, 256);
+        for (int i = start; i < end && i < BAR_OFFSETS.size(); i++) {
+            IntPoint offset = BAR_OFFSETS.get(i);
+            if (offset == null) continue;
+            float amount = value / 2.0F - i;
+            int u = amount >= 1 ? 27 : amount > .5F ? 18 : amount > .25F ? 9 : 0;
+            graphics.blit(RenderPipelines.GUI_TEXTURED, MOD_ICONS, right + offset.x, top + offset.y, u, 0, 9, 9, 256, 256, color);
+        }
     }
 
+    private static void drawThirstOverlay(int restored, int current, GuiGraphicsExtractor graphics, int right, int top, float alpha) {
+        if (restored <= 0) return;
+        int value = Math.max(0, Math.min(20, current + restored));
+        int start = Math.max(0, current / 2);
+        int end = (int) Math.ceil(value / 2.0F);
+        int color = color(alpha);
 
+        for (int i = start; i < end && i < BAR_OFFSETS.size(); i++) {
+            IntPoint offset = BAR_OFFSETS.get(i);
+            if (offset == null) continue;
+            int u = i * 2 + 1 == value ? 8 : 16;
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ThirstBarRenderer.THIRST_ICONS, right + offset.x, top + offset.y, u, 0, 9, 9, 25, 9, color);
+        }
+    }
 
-    // @SubscribeEvent
+    public static void drawExhaustionOverlay(float exhaustion, GuiGraphicsExtractor graphics, int right, int top) {
+        int width = (int) (Math.clamp(exhaustion / 4.0F, 0, 1) * 81);
+        if (width > 0) {
+            graphics.blit(RenderPipelines.GUI_TEXTURED, MOD_ICONS, right - width, top, 81 - width, 18, width, 9, 256, 256, color(.75F));
+        }
+    }
+
     public static void onClientTick() {
-        unclampedFlashAlpha += alphaDir * 0.125f;
-        if (unclampedFlashAlpha >= 1.5f) {
-            alphaDir = -1;
-        } else if (unclampedFlashAlpha <= -0.5f) {
-            alphaDir = 1;
-        }
-        flashAlpha = Math.max(0F, Math.min(1F, unclampedFlashAlpha)) * 0.65f;
+        unclampedFlashAlpha += alphaDirection * 0.125F;
+        if (unclampedFlashAlpha >= 1.5F) alphaDirection = -1;
+        else if (unclampedFlashAlpha <= -0.5F) alphaDirection = 1;
+        flashAlpha = Math.clamp(unclampedFlashAlpha, 0, 1) * ModConfig.INSTANCE.maxHudOverlayFlashAlpha;
     }
 
-    public static void resetFlash() {
-        unclampedFlashAlpha = flashAlpha = 0f;
-        alphaDir = 1;
+    private static void resetFlash() {
+        unclampedFlashAlpha = flashAlpha = 0;
+        alphaDirection = 1;
     }
 
-    private static boolean shouldRenderAnyOverlays() {
-        return true;
-    }
-
-    private static void generateHungerBarOffsets(int top, int right, int ticks, Player player) {
-        final int preferFoodBars = 10;
-
-        boolean shouldAnimatedFood;
-
-        ThirstData thirstData = PLAYER_THIRST.get(player);
-
-        // in vanilla saturation level is zero will show hunger animation
-        float quenched = thirstData.getQuenched();
-        int thirst = thirstData.getThirst();
-        shouldAnimatedFood = quenched <= 0.0F && ticks % (thirst * 3 + 1) == 0;
-
-        if (foodBarOffsets.size() != preferFoodBars)
-            foodBarOffsets.setSize(preferFoodBars);
-
-        // right alignment, single row
-        for (int i = 0; i < preferFoodBars; ++i) {
-            int x = right - i * 8 - 9;
-            int y = top;
-
-            // apply the animated offset
-            if (shouldAnimatedFood)
-                y += random.nextInt(3) - 1;
-
-            // reuse the point object to reduce memory usage
-            IntPoint point = foodBarOffsets.get(i);
+    private static void generateBarOffsets(int ticks, ThirstData thirst) {
+        if (BAR_OFFSETS.size() != 10) BAR_OFFSETS.setSize(10);
+        boolean animate = thirst.getQuenched() <= 0 && ticks % (thirst.getThirst() * 3 + 1) == 0;
+        for (int i = 0; i < 10; i++) {
+            IntPoint point = BAR_OFFSETS.get(i);
             if (point == null) {
                 point = new IntPoint();
-                foodBarOffsets.set(i, point);
+                BAR_OFFSETS.set(i, point);
             }
-
-            point.x = x - right;
-            point.y = y - top;
+            point.x = -i * 8 - 9;
+            point.y = animate ? RANDOM.nextInt(3) - 1 : 0;
         }
     }
 
-    static {
-        modIcons = ThirstWasTaken.asResource("textures/gui/appleskin_icons.png");
-        THIRST_LEVEL_ELEMENT = ThirstWasTaken.asResource("thirst_level");
+    private static int color(float alpha) {
+        return Math.round(Math.clamp(alpha, 0, 1) * 255) << 24 | 0xFFFFFF;
     }
 
+    private static int lastFlashTick = -1;
+
+    public static void updateFlash(int guiTicks) {
+        if (guiTicks == lastFlashTick) return;
+        lastFlashTick = guiTicks;
+        onClientTick();
+    }
 }

@@ -12,7 +12,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -132,6 +131,14 @@ public class ThirstHelper {
         float totalLevels = (EnchantmentHelper.getDamageProtection((ServerLevel) player.level(),player, player.damageSources().onFire()) / 2);
 
         return 1.0f - ((totalLevels * perLevelMultiplier) * 0.75f);
+    }
+
+    public static float getTanThirstEffectExhaustion(Player player){
+        if (ToughAsNailsHelper.hasTanThirstEffect(player)){
+            int amplifier = ToughAsNailsHelper.getTanThirstAmplifier(player);
+            return 0.025F * (float)(amplifier + 1);
+        }
+        return 0;
     }
 
     public static int getPurity(ItemStack item)
