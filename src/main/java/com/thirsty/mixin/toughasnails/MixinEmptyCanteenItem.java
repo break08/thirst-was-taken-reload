@@ -15,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,27 +40,27 @@ public abstract class MixinEmptyCanteenItem {
 
     @Shadow public abstract Item getDirtyWaterCanteen();
 
-    @Inject(method = "use",at =@At("HEAD"), cancellable = true)
-    private void use(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir){
-        ItemStack stack = player.getItemInHand(hand);
-        Level player_level = player.level();
+    @Inject(method = "fillCanteen", at = @At("HEAD"), cancellable = true, remap = false)
+    private void fillCanteen(Level world, Player player, ItemStack stack, CallbackInfoReturnable<InteractionResult> cir){
+        Level level = player.level();
 
-        BlockPos blockPos = MathHelper.getPlayerPOVHitResult(player_level, player, ClipContext.Fluid.ANY).getBlockPos();
-        BlockState state = level.getBlockState(blockPos);
+        BlockPos blockPos = MathHelper.getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
+        BlockState state = world.getBlockState(blockPos);
 
-        if (!level.mayInteract(player, blockPos)){
+        if (!world.mayInteract(player, blockPos)){
             cir.setReturnValue(InteractionResult.PASS);
+            return;
         }
 
-        if(player_level.getFluidState(blockPos).is(FluidTags.WATER))
+        if(state.is(Blocks.WATER_CAULDRON))
         {
-            SoundEvent sound= SoundEvents.BOTTLE_FILL;
+            SoundEvent sound=SoundEvents.BOTTLE_FILL;
             ItemStack filledItem;
 
-            player_level.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
-            player_level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
+            level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
 
-            int purity= WaterPurity.getBlockPurity(player_level, blockPos);
+            int purity=WaterPurity.getBlockPurity(level, blockPos);
             if(purity==3){
                 filledItem = getPurifiedWaterCanteen().getDefaultInstance();
             } else if (purity==2) {
@@ -67,15 +69,15 @@ public abstract class MixinEmptyCanteenItem {
                 filledItem = getDirtyWaterCanteen().getDefaultInstance();
             }
 
-            ItemStack result = ItemUtils.createFilledResult(stack, player, filledItem);
+            LayeredCauldronBlock.lowerFillLevel(state, level, blockPos);
 
-            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(replaceCanteen(stack, player, result)));
+            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(replaceCanteen(stack, player, filledItem)));
         }
         else if (state.getBlock() instanceof RainCollectorBlock) {
             int waterLevel = state.getValue(RainCollectorBlock.LEVEL);
-            if (waterLevel > 0 && !level.isClientSide()) {
-                level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                ((RainCollectorBlock) TANBlocks.RAIN_COLLECTOR).setWaterLevel(level, blockPos, state, waterLevel - 1);
+            if (waterLevel > 0 && !world.isClientSide()) {
+                world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
+                ((RainCollectorBlock) TANBlocks.RAIN_COLLECTOR).setWaterLevel(world, blockPos, state, waterLevel - 1);
                 cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(replaceCanteen(stack, player, getPurifiedWaterCanteen().getDefaultInstance())));
             }
         }

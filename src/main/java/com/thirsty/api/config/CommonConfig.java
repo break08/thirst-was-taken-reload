@@ -90,7 +90,4 @@ public class CommonConfig implements ConfigData {
     @Comment("Whether dehydration from regenerating health (if enabled above) should take into account temperature and humidity")
     public boolean HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT = true;
 
-    public int FERMENTATION_MOLDING_THRESHOLD = 1;
-
-    public int FERMENTATION_MOLDING_HARSHNESS = 1;
 }

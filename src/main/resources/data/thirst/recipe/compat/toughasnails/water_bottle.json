@@ -1,12 +1,24 @@
 {
   "type": "toughasnails:water_purifying",
   "input": {
-    "Count": 1,
-    "id": "minecraft:potion"
+    "count": 1,
+    "id": "minecraft:potion",
+    "components": {
+      "minecraft:potion_contents": { "potion": "minecraft:water" },
+      "minecraft:custom_data": {
+        "Purity": 0
+      }
+    }
   },
   "purifytime": 200,
   "result": {
-    "Count": 1,
-    "id": "minecraft:potion"
+    "count": 1,
+    "id": "minecraft:potion",
+    "components": {
+      "minecraft:potion_contents": { "potion": "minecraft:water" },
+      "minecraft:custom_data": {
+        "Purity": 2
+      }
+    }
   }
 }
