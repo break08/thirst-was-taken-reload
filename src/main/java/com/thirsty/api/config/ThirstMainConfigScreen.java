@@ -18,29 +18,29 @@ public class ThirstMainConfigScreen extends Screen {
     @Override
     protected void init() {
         Button commonConfig = Button.builder(Component.nullToEmpty("Common Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(
+            Minecraft.getInstance().setScreenAndShow(
                     AutoConfigClient.getConfigScreen(CommonConfig.class, this).get()
             );
         }).bounds(40, 40, 120, 20).build();
 
         Button clientConfig = Button.builder(Component.nullToEmpty("Client Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(
+            Minecraft.getInstance().setScreenAndShow(
                     AutoConfigClient.getConfigScreen(ClientConfig.class, this).get()
             );
         }).bounds(40, 80, 120, 20).build();
 
         Button containerConfig = Button.builder(Component.nullToEmpty("Container Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(AutoConfigClient.getConfigScreen(ContainerConfig.class, this).get());
+            Minecraft.getInstance().setScreenAndShow(AutoConfigClient.getConfigScreen(ContainerConfig.class, this).get());
         }).bounds(40, 120, 120, 20).build();
 
         Button keyWordConfig = Button.builder(Component.nullToEmpty("Key Word Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(
+            Minecraft.getInstance().setScreenAndShow(
                     AutoConfigClient.getConfigScreen(KeyWordConfig.class, this).get()
             );
         }).bounds(40, 160, 120, 20).build();
 
         Button itemSettingsConfig = Button.builder(Component.nullToEmpty("Item Settings Config"), (btn) -> {
-            Minecraft.getInstance().setScreen(AutoConfigClient.getConfigScreen(ItemSettingsConfig.class, this).get());
+            Minecraft.getInstance().setScreenAndShow(AutoConfigClient.getConfigScreen(ItemSettingsConfig.class, this).get());
         }).bounds(40, 200, 120, 20).build();
 
 
@@ -53,7 +53,7 @@ public class ThirstMainConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreenAndShow(this.parent);
     }
 
     @Override

@@ -75,13 +75,13 @@ dependencies {
 	}
 
 	// Tough As Nails
-	implementation "maven.modrinth:ge1sOdFH:vCvDP82P"
+	implementation "maven.modrinth:ge1sOdFH:bZ9oibj4"
 
 	// Farmer's Delight Refabricated
-	implementation "maven.modrinth:7vxePowz:DDCRIV2Z"
+	implementation "maven.modrinth:7vxePowz:J6sAZl6u"
 
 	// Glitch Core
-	implementation "maven.modrinth:s3dmwKy5:WNtSATXw"
+	implementation "maven.modrinth:s3dmwKy5:SDUCBYRU"
 
 
 	runtimeOnly "net.jodah:typetools:0.6.3"

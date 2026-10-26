@@ -32,7 +32,7 @@ public class ThirstBarRenderer {
         boolean isMounted = minecraft.player.getVehicle() instanceof LivingEntity;
         boolean isSurvival = !minecraft.player.isCreative() && !minecraft.player.isSpectator();
 
-        if (isMounted && !minecraft.options.hideGui && isSurvival) {
+        if (isMounted && !Minecraft.getInstance().gui.hud.isHidden() && isSurvival) {
             ThirstData thirst = PLAYER_THIRST.get(minecraft.player);
             if (minecraft.player.isAlive() && !thirst.isShouldTickThirst()) {
                 cancelRender = true;
@@ -51,7 +51,7 @@ public class ThirstBarRenderer {
 
         ThirstData thirstData = PLAYER_THIRST.get(minecraft.player);
         int level = thirstData.getThirst();
-        int ticks = minecraft.gui.getGuiTicks();
+        int ticks = minecraft.gui.hud.getGuiTicks();
 
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();

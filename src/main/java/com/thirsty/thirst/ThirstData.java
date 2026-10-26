@@ -6,7 +6,6 @@ import com.thirsty.misc.ModDamageSource;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.purity.WaterPurity;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
