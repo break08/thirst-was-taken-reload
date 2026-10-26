@@ -78,12 +78,6 @@ dependencies {
 	// Create
 	modImplementation("com.simibubi.create:create-fabric-$minecraft_version:$create_version")
 
-	// JEI
-	modImplementation("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
-
-	// EMI
-	modImplementation "dev.emi:emi-fabric:${emi_version}"
-
 	// AppleSkin
 	modImplementation("squeek.appleskin:appleskin-fabric:${apple_skin}") {
 		transitive = false

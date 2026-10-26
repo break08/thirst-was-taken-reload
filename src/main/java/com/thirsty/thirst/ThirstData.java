@@ -224,6 +224,16 @@ public class ThirstData implements Component, AutoSyncedComponent, ServerTicking
                     ThirstHelper.getExhaustionFireResistanceModifier(player)));
         }
 
+        if (WaterPurity.tanLoaded) {
+            float tanEx = ThirstHelper.getTanThirstEffectExhaustion(player);
+            if (tanEx > 0.0F) {
+                setExhaustion(exhaustion + tanEx
+                        * ThirstHelper.getExhaustionBiomeModifier(player)
+                        * ThirstHelper.getExhaustionFireProtModifier(player)
+                        * ThirstHelper.getExhaustionFireResistanceModifier(player));
+            }
+        }
+
         if (!isSitting && !isNourished && !isStuffed && !isSaturated)
         {
             updateExhaustion(player);
