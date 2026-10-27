@@ -70,18 +70,19 @@ dependencies {
 	implementation("com.terraformersmc:modmenu:${modmenu}")
 
 	// AppleSkin
-	implementation("squeek.appleskin:appleskin-fabric:${apple_skin}") {
-		transitive = false
+	compileOnly("squeek.appleskin:appleskin-fabric:${apple_skin}") 
+        {
+		//transitive = false
 	}
 
 	// Tough As Nails
-	implementation "maven.modrinth:ge1sOdFH:bZ9oibj4"
+	compileOnly "maven.modrinth:ge1sOdFH:bZ9oibj4"
 
 	// Farmer's Delight Refabricated
-	implementation "maven.modrinth:7vxePowz:J6sAZl6u"
+	compileOnly "maven.modrinth:7vxePowz:J6sAZl6u"
 
 	// Glitch Core
-	implementation "maven.modrinth:s3dmwKy5:SDUCBYRU"
+	compileOnly "maven.modrinth:s3dmwKy5:SDUCBYRU"
 
 
 	runtimeOnly "net.jodah:typetools:0.6.3"

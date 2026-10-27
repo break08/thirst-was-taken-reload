@@ -52,7 +52,7 @@ public class MixinCampfireBlockEntity
                     double d0 = (double)pos.getX() + 0.5 - (double)((float)direction.getStepX() * f) + (double)((float)direction.getClockWise().getStepX() * f);
                     double d1 = (double)pos.getY() + 0.6;
                     double d2 = (double)pos.getZ() + 0.5 - (double)((float)direction.getStepZ() * f) + (double)((float)direction.getClockWise().getStepZ() * f);
-                    level.addParticle(SpellParticleOption.create(ParticleTypes.EFFECT, 0, 1), d0, d1, d2, 0.0, 0.001, 0.0);
+                    level.addParticle(SpellParticleOption.create(ParticleTypes.EFFECT, 0xFFFFFF, 1), d0, d1, d2, 0.0, 0.001, 0.0);
                 }
             }
         }
@@ -70,20 +70,25 @@ public class MixinCampfireBlockEntity
 
     // go crazy because fabric does not support nbt crafting
 
-    @Inject(method = "placeFood", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "placeFood", at = @At("HEAD"), cancellable = true)
     private void removeInvalidPurity(ServerLevel serverLevel, LivingEntity sourceEntity, ItemStack placeItem, CallbackInfoReturnable<Boolean> cir){
         if (!WaterPurity.isWaterFilledContainer(placeItem) || !WaterPurity.hasPurity(placeItem)){
             return;
         }
+
         if (WaterPurity.getPurity(placeItem) == 3){
             cir.setReturnValue(false);
+            return;
         }
+
         if (placeItem.get(DataComponents.POTION_CONTENTS) == null){
             return;
         }
+
         if (placeItem.is(Items.POTION) && !Objects.requireNonNull(placeItem.get(DataComponents.POTION_CONTENTS)).is(Potions.WATER)){
             cir.setReturnValue(false);
         }
+
     }
 
     @ModifyVariable(
