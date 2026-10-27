@@ -27,7 +27,7 @@
     "requireAnnotations": true
   },
   "client": [
-    "MixinGui",
+    "MixinHud",
     "MixinLocalPlayer"
   ],
   "plugin": "com.thirsty.ThirstMixinPlugin"

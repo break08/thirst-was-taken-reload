@@ -2,13 +2,13 @@ package com.thirsty.effect;
 
 import com.thirsty.thirst.ThirstData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.InstantenousMobEffect;
+import net.minecraft.world.effect.InstantaneousMobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.NonNull;
 
-public class DehydrationEffect extends InstantenousMobEffect {
+public class DehydrationEffect extends InstantaneousMobEffect {
     public DehydrationEffect(MobEffectCategory pCategory, int pColor) {
         super(pCategory, pColor);
     }

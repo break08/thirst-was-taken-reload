@@ -1,6 +1,6 @@
 package com.thirsty.mixin.toughasnails;
 
-import glitchcore.event.client.RenderGuiEvent;
+import glitchcore.event.client.RenderHudEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +12,7 @@ import toughasnails.thirst.ThirstOverlayRenderer;
 public class MixinThirstOverlayRenderer {
     // Destroy Thirst system of Tough as Nails
     @Inject(method = "onBeginRenderAir", at = @At("HEAD"), cancellable = true)
-    private static void beginRender(RenderGuiEvent.Pre event, CallbackInfo ci){
+    private static void beginRender(RenderHudEvent.Pre event, CallbackInfo ci){
         ci.cancel();
     }
 
