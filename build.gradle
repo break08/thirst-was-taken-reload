@@ -87,7 +87,7 @@ dependencies {
 	modImplementation "maven.modrinth:ge1sOdFH:VaFrDMPi"
 
 	// Farmer's Delight Refabricated
-	modCompileOnly "maven.modrinth:7vxePowz:7H1g1o5h"
+	modImplementation "maven.modrinth:7vxePowz:7H1g1o5h"
 
 	// Glitch Core
 	modImplementation "maven.modrinth:s3dmwKy5:25HLOiOl"
