@@ -132,6 +132,14 @@ public class ThirstHelper {
         return 1.0f - ((totalLevels * perLevelMultiplier) * 0.75f);
     }
 
+    public static float getTanThirstEffectExhaustion(Player player){
+        if (ToughAsNailsHelper.hasTanThirstEffect(player)){
+            int amplifier = ToughAsNailsHelper.getTanThirstAmplifier(player);
+            return 0.025F * (float)(amplifier + 1);
+        }
+        return 0;
+    }
+
     public static int getPurity(ItemStack item)
     {
         if(!hasPurity(item))
