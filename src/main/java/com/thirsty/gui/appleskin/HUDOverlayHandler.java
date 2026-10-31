@@ -5,24 +5,19 @@ import com.thirsty.api.config.ClientConfig;
 import com.thirsty.misc.ThirstHelper;
 import com.thirsty.thirst.ThirstData;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import squeek.appleskin.ModConfig;
 import squeek.appleskin.util.IntPoint;
 import com.thirsty.gui.ThirstBarRenderer;
 
-import java.util.Random;
 import java.util.Vector;
 
 import static com.thirsty.api.cca.PlayerThirst.PLAYER_THIRST;
-import static com.thirsty.gui.ThirstBarRenderer.unRender;
 
 public class HUDOverlayHandler {
     private static final Identifier MOD_ICONS = ThirstWasTaken.asResource("textures/gui/appleskin_icons.png");
