@@ -1,8 +1,10 @@
 package com.thirsty.item;
 
 import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +24,7 @@ public class DrinkableItem extends Item{
 
     public DrinkableItem()
     {
-        super(new Item.Properties().stacksTo(64));
+        super(new Item.Properties().stacksTo(64).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK));
     }
 
     public DrinkableItem(Item.Properties p_41383_)
@@ -78,7 +81,7 @@ public class DrinkableItem extends Item{
             {
                 ItemStack container = new ItemStack(this.container);
                 if (!player.getInventory().add(container)) {
-                    player.drop(container, false);
+                    player.drop(container, false, Prediction.SERVER_ONLY);
                 }
             }
         }
